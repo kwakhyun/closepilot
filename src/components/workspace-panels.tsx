@@ -13,6 +13,7 @@ import {
   Upload,
 } from "lucide-react";
 import { CHANNELS, CHANNEL_LABELS, FEE_BPS } from "@/domain/model";
+import { describeAuditEvent } from "@/domain/review-copy";
 import type { WorkspaceView } from "@/application/workbench";
 import { ChannelBadge } from "./transaction-table";
 import { money, timestamp } from "./format";
@@ -29,7 +30,7 @@ export function ChannelPanel({
       <div className="card-heading">
         <div>
           <h2>채널별 마감 현황</h2>
-          <p>연결된 판매 채널 3개</p>
+          <p>대사 대상 판매 채널 3개</p>
         </div>
         <span className="icon-muted">
           <FolderOpen size={18} />
@@ -45,7 +46,7 @@ export function ChannelPanel({
               <div className="channel-summary-top">
                 <ChannelBadge channel={channel} />
                 <span className={unresolved ? "tiny-warning" : "tiny-success"}>
-                  {unresolved ? `확인 ${unresolved}건` : "검토 완료"}
+                  {unresolved ? `미검토 ${unresolved}건` : "검토 완료"}
                 </span>
               </div>
               <div className="channel-summary-value">
@@ -64,7 +65,7 @@ export function ChannelPanel({
         })}
       </div>
       <button className="card-bottom-link" onClick={onOpen}>
-        연결된 자료 확인
+        원본 자료 확인
         <ArrowRight size={15} />
       </button>
     </section>
@@ -87,13 +88,13 @@ export function SourcesPanel({
           <section className="card connector-card" key={channel}>
             <div>
               <ChannelBadge channel={channel} />
-              <span className="soft-tag">CSV 어댑터</span>
+              <span className="soft-tag">CSV 가져오기</span>
             </div>
             <h3>정산 자료 표준화</h3>
-            <p>채널별 파일을 공통 주문·정산 스키마로 연결합니다.</p>
+            <p>채널별 CSV 열을 주문·정산 항목에 맞춰 가져옵니다.</p>
             <dl>
               <div>
-                <dt>가상 계약 수수료</dt>
+                <dt>데모 수수료율</dt>
                 <dd>{FEE_BPS[channel] / 100}%</dd>
               </div>
               <div>
@@ -101,7 +102,9 @@ export function SourcesPanel({
                 <dd>KRW · 원 단위</dd>
               </div>
             </dl>
-            <small>실제 {CHANNEL_LABELS[channel]} API 연동이나 계약 요율이 아닙니다.</small>
+            <small>
+              표시된 요율은 데모용 가정이며, {CHANNEL_LABELS[channel]} API는 연결하지 않았습니다.
+            </small>
           </section>
         ))}
       </div>
@@ -109,9 +112,9 @@ export function SourcesPanel({
         <div className="card-heading">
           <div>
             <h2>
-              수집한 자료 <span className="subtle-count">{workspace.sources.length}</span>
+              가져온 자료 <span className="subtle-count">{workspace.sources.length}</span>
             </h2>
-            <p>파일마다 행 수와 체크섬을 남겨 원본까지 추적합니다</p>
+            <p>자료별 행 수와 내용 확인용 체크섬을 저장합니다</p>
           </div>
           <button
             className="button primary small"
@@ -131,7 +134,7 @@ export function SourcesPanel({
               <div className="source-name">
                 <h3>{source.name}</h3>
                 <p>
-                  {source.kind === "orders" ? "주문 원장" : "채널 정산"} · {source.rows}행 ·{" "}
+                  {source.kind === "orders" ? "주문 자료" : "채널 정산 자료"} · {source.rows}행 ·{" "}
                   {timestamp(source.importedAt)}
                 </p>
                 <code>{source.id}</code>
@@ -139,15 +142,15 @@ export function SourcesPanel({
               <div className="source-checksum">
                 <span>
                   <CheckCheck size={14} />
-                  수집 완료
+                  반영 완료
                 </span>
                 <button
                   onClick={async () => {
                     try {
                       await navigator.clipboard.writeText(source.digest);
-                      toast("원본 체크섬을 복사했습니다.");
+                      toast("자료 체크섬을 복사했습니다.");
                     } catch {
-                      toast("복사 권한이 없습니다. 표시된 체크섬을 직접 선택하세요.");
+                      toast("복사하지 못했습니다. 표시된 체크섬을 직접 선택해 복사하세요.");
                     }
                   }}
                   title={source.digest}
@@ -163,18 +166,18 @@ export function SourcesPanel({
       <div className="notice source-notice">
         <ShieldCheck size={19} />
         <p>
-          동일한 파일 재업로드는 내용 해시로 차단합니다. 주문 키가 중복되면 전체 가져오기를
-          취소하며, 정산 ID 중복은 대사 예외로 남깁니다.
+          같은 내용의 파일은 다시 반영하지 않습니다. 같은 채널에 동일한 주문번호가 있으면 파일
+          전체를 반영하지 않으며, 정산번호 중복은 검토가 필요한 거래로 표시합니다.
         </p>
       </div>
       <div className="download-templates">
         <a href="/samples/orders.csv" download>
           <Download size={16} />
-          주문 CSV 템플릿
+          주문 CSV 샘플
         </a>
         <a href="/samples/settlements.csv" download>
           <Download size={16} />
-          정산 CSV 템플릿
+          정산 CSV 샘플
         </a>
       </div>
     </>
@@ -182,12 +185,12 @@ export function SourcesPanel({
 }
 
 const EVENT_LABELS = {
-  seeded: "자료 수집",
+  seeded: "데모 자료 준비",
   reconciled: "대사 실행",
-  imported: "자료 추가",
+  imported: "자료 반영",
   resolved: "검토 승인",
   closed: "마감 확정",
-  analysis_created: "분석 생성",
+  analysis_created: "검토 안내 생성",
 };
 export function AuditPanel({
   workspace,
@@ -204,25 +207,25 @@ export function AuditPanel({
         </div>
         <div>
           <span className="eyebrow">TRACEABLE BY DESIGN</span>
-          <h2>모든 결정에는, 근거가 남습니다.</h2>
-          <p>이전 이벤트의 해시와 연결하여 변경 기록의 누락·변조 여부를 검사합니다.</p>
+          <h2>마감까지의 변경 이력을 확인하세요.</h2>
+          <p>각 기록을 이전 기록의 해시와 연결해 내용이 바뀌었는지 검사합니다.</p>
         </div>
         <button className="button secondary" onClick={onVerify}>
           <ShieldCheck size={16} />
-          이력 검증
+          기록 다시 검증
         </button>
       </div>
       <section className="card audit-card">
         <div className="card-heading">
           <div>
             <h2>
-              감사 타임라인 <span className="subtle-count">{workspace.events.length}</span>
+              변경 이력 <span className="subtle-count">{workspace.events.length}</span>
             </h2>
-            <p>세션 내 모든 변경 · 시간대 Asia/Seoul</p>
+            <p>현재 데모의 변경 기록 · 한국 표준시(KST)</p>
           </div>
           <span className={`status-badge ${workspace.auditValid ? "matched" : "issue"}`}>
             <Check size={13} />
-            {workspace.auditValid ? "해시 연결 정상" : "무결성 오류"}
+            {workspace.auditValid ? "기록 검증 통과" : "기록 검증 실패"}
           </span>
         </div>
         <ol className="audit-timeline">
@@ -243,19 +246,19 @@ export function AuditPanel({
                   <span>{event.actor}</span>
                   <time dateTime={event.at}>{timestamp(event.at)}</time>
                 </div>
-                <p>{event.detail}</p>
+                <p>{describeAuditEvent(event)}</p>
                 <details>
                   <summary>
                     {event.id}
-                    <span>무결성 해시 확인</span>
+                    <span>체크섬 확인</span>
                   </summary>
                   <dl>
                     <div>
-                      <dt>현재</dt>
+                      <dt>현재 기록</dt>
                       <dd>{event.hash}</dd>
                     </div>
                     <div>
-                      <dt>이전</dt>
+                      <dt>이전 기록</dt>
                       <dd>{event.previousHash}</dd>
                     </div>
                   </dl>
@@ -266,8 +269,8 @@ export function AuditPanel({
         </ol>
       </section>
       <p className="audit-limit">
-        해시 연결은 애플리케이션의 무결성 확인 장치입니다. 외부 공증이나 전자서명이 아니며,
-        데이터베이스 관리자에 대한 변조 방지까지 보장하지 않습니다.
+        해시 연결은 기록의 내용이 달라졌는지 확인하는 장치입니다. 외부 공증이나 전자서명이 아니며,
+        데이터베이스 관리자가 기록을 바꾸는 상황까지 막지는 못합니다.
       </p>
     </>
   );

@@ -22,6 +22,19 @@ export const IMPORT_FIELDS = {
     "paid_date",
   ],
 } as const;
+export type ImportField = (typeof IMPORT_FIELDS)[ImportKind][number];
+export const IMPORT_FIELD_LABELS: Record<ImportField, string> = {
+  order_id: "주문번호",
+  channel: "판매 채널",
+  date: "주문일",
+  gross: "총액(환불 전)",
+  refund: "환불액",
+  settlement_id: "정산번호",
+  fee: "수수료",
+  net: "정산액",
+  due_date: "입금 예정일",
+  paid_date: "자료상 입금일",
+};
 const ALIASES: Record<string, string[]> = {
   order_id: ["order_id", "주문번호", "주문id"],
   channel: ["channel", "채널", "판매채널"],
@@ -37,7 +50,7 @@ const ALIASES: Record<string, string[]> = {
 
 export function parseCsv(text: string): string[][] {
   if (new TextEncoder().encode(text).length > 256_000)
-    throw new DomainError("FILE_TOO_LARGE", "CSV는 250KB 이하여야 합니다.");
+    throw new DomainError("FILE_TOO_LARGE", "250KB 이하의 CSV 파일을 선택하세요.");
   const input = text.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n");
   const rows: string[][] = [];
   let row: string[] = [],
@@ -79,11 +92,17 @@ export function parseCsv(text: string): string[][] {
   row.push(field.trim());
   if (row.some(Boolean)) rows.push(row);
   if (rows.length < 2)
-    throw new DomainError("EMPTY_CSV", "헤더와 1개 이상의 데이터 행이 필요합니다.");
+    throw new DomainError(
+      "EMPTY_CSV",
+      "첫 행에 열 이름을 입력하고, 데이터 행을 1개 이상 추가하세요.",
+    );
   if (rows.length > 501)
     throw new DomainError("TOO_MANY_ROWS", "한 파일에 최대 500행까지 업로드할 수 있습니다.");
   if (new Set(rows[0]).size !== rows[0].length || rows[0].some((header) => !header))
-    throw new DomainError("DUPLICATE_HEADER", "CSV 헤더는 비어 있거나 중복될 수 없습니다.");
+    throw new DomainError(
+      "DUPLICATE_HEADER",
+      "CSV의 열 이름은 빈칸 없이 입력하고, 서로 다르게 지정하세요.",
+    );
   if (rows[0].length > 40 || rows.some((entry) => entry.length !== rows[0].length))
     throw new DomainError("INVALID_COLUMNS", "모든 행의 열 개수가 일치해야 합니다(최대 40열).");
   return rows;
@@ -108,48 +127,61 @@ export function importCsv(
   const required = IMPORT_FIELDS[kind].filter((field) => field !== "paid_date");
   for (const field of required)
     if (!selected[field] || !headers.includes(selected[field]))
-      throw new DomainError("MISSING_MAPPING", `${field}에 연결할 열을 선택하세요.`);
+      throw new DomainError(
+        "MISSING_MAPPING",
+        `${IMPORT_FIELD_LABELS[field]}에 연결할 원본 열을 선택하세요.`,
+      );
   const mappedHeaders = IMPORT_FIELDS[kind].map((field) => selected[field]).filter(Boolean);
   if (new Set(mappedHeaders).size !== mappedHeaders.length)
-    throw new DomainError("DUPLICATE_MAPPING", "하나의 원본 열을 여러 필드에 연결할 수 없습니다.");
+    throw new DomainError("DUPLICATE_MAPPING", "각 항목에는 서로 다른 원본 열을 연결하세요.");
   const errors: string[] = [];
   const orders: Order[] = [],
     settlements: Settlement[] = [];
   for (const [index, row] of rows.entries()) {
-    const get = (field: string) => row[headers.indexOf(selected[field])] ?? "";
+    const get = (field: ImportField) => row[headers.indexOf(selected[field])] ?? "";
     try {
-      const id = (field: string) => {
+      const id = (field: ImportField) => {
         const value = get(field);
         if (!/^[a-zA-Z0-9_-]{1,64}$/.test(value))
-          throw new Error(`${field}: 영문·숫자·_·-로 된 1~64자 ID가 필요합니다.`);
+          throw new Error(
+            `${IMPORT_FIELD_LABELS[field]}: 영문, 숫자, 밑줄(_), 하이픈(-)을 사용해 1~64자로 입력하세요.`,
+          );
         return value;
       };
-      const amount = (field: string, signed = false) => {
+      const amount = (field: ImportField, signed = false) => {
         const raw = get(field);
         if (!(signed ? /^-?\d+$/ : /^\d+$/).test(raw))
-          throw new Error(`${field}: 원 단위 정수가 필요합니다(쉼표·소수·수식 불가).`);
+          throw new Error(
+            `${IMPORT_FIELD_LABELS[field]}: 원 단위 정수로 입력하세요. 쉼표, 소수점, 수식은 사용할 수 없습니다.`,
+          );
         const value = Number(raw);
         if (!Number.isSafeInteger(value) || Math.abs(value) > MAX_AMOUNT)
-          throw new Error(`${field}: 허용 금액 범위를 초과했습니다.`);
+          throw new Error(`${IMPORT_FIELD_LABELS[field]}: 금액의 절댓값은 1조 원 이하여야 합니다.`);
         return value;
       };
-      const date = (field: string) => {
+      const date = (field: ImportField) => {
         const value = get(field);
         if (
           !/^\d{4}-\d{2}-\d{2}$/.test(value) ||
           !Number.isFinite(Date.parse(value)) ||
           new Date(value).toISOString().slice(0, 10) !== value
         )
-          throw new Error(`${field}: 유효한 YYYY-MM-DD 날짜가 필요합니다.`);
+          throw new Error(
+            `${IMPORT_FIELD_LABELS[field]}: 실제로 존재하는 날짜를 YYYY-MM-DD 형식으로 입력하세요.`,
+          );
         return value;
       };
       const channel = get("channel") as Channel;
       if (!CHANNELS.includes(channel))
-        throw new Error("channel: d2c, naver, coupang 중 하나를 입력하세요.");
+        throw new Error(
+          "판매 채널: d2c(자사몰), naver(스마트스토어), coupang(쿠팡) 중 하나를 입력하세요.",
+        );
       const gross = amount("gross"),
         refund = amount("refund");
       if (refund > gross)
-        throw new Error("환불액은 총액을 초과할 수 없습니다. 환불 전용 전표는 MVP 범위 밖입니다.");
+        throw new Error(
+          "환불액은 총액을 초과할 수 없습니다. 환불만 별도로 기록한 자료는 이 데모에서 지원하지 않습니다.",
+        );
       if (kind === "orders") {
         const orderDate = date("date");
         if (!orderDate.startsWith(period))
@@ -176,7 +208,8 @@ export function importCsv(
   if (errors.length)
     throw new DomainError(
       "INVALID_ROWS",
-      errors.slice(0, 5).join("\n") + (errors.length > 5 ? `\n외 ${errors.length - 5}개 오류` : ""),
+      errors.slice(0, 5).join("\n") +
+        (errors.length > 5 ? `\n이 외에 오류 ${errors.length - 5}개가 더 있습니다.` : ""),
     );
   return {
     headers,

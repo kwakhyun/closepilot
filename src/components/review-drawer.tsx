@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check, FileText, ShieldCheck, Info } from "lucide-react";
 import type { Command, ReviewedRow, WorkspaceView } from "@/application/workbench";
 import { CHANNEL_LABELS, ISSUE_LABELS } from "@/domain/model";
+import { describeReconciliation, REVIEW_ACTION_LABELS } from "@/domain/review-copy";
 import { Modal } from "./modal";
 import { deltaMoney, money, timestamp } from "./format";
 import "./evidence.css";
@@ -30,12 +31,7 @@ export function ReviewDrawer({
       : row?.kind === "duplicate"
         ? "exclude_duplicate"
         : "accepted_variance";
-  const actionLabel =
-    disposition === "carry_forward"
-      ? "다음 달 이월 승인"
-      : disposition === "exclude_duplicate"
-        ? "중복 제외 검토 승인"
-        : "차이 검토 승인";
+  const actionLabel = REVIEW_ACTION_LABELS[disposition];
   return (
     <Modal open={!!row} onClose={onClose} title="거래 검토" drawer>
       {row && (
@@ -59,7 +55,7 @@ export function ReviewDrawer({
               <strong>{money(row.expectedNet)}</strong>
             </div>
             <div>
-              <span>실제 정산액</span>
+              <span>자료상 정산액</span>
               <strong>{money(row.actualNet)}</strong>
             </div>
             <div className={row.delta ? "has-delta" : ""}>
@@ -70,10 +66,10 @@ export function ReviewDrawer({
           <section className="explanation-box">
             <div>
               <ShieldCheck size={16} />
-              <b>규칙 엔진의 확인 결과</b>
-              <span>근거 기반</span>
+              <b>대사 결과 안내</b>
+              <span>규칙 기반</span>
             </div>
-            <p>{row.explanation}</p>
+            <p>{describeReconciliation(row)}</p>
           </section>
           <section className="detail-section">
             <h4>금액 비교</h4>
@@ -87,7 +83,7 @@ export function ReviewDrawer({
                 <dd>− {money(row.refund)}</dd>
               </div>
               <div>
-                <dt>예상 수수료 / 실제 수수료</dt>
+                <dt>예상 수수료 / 자료상 수수료</dt>
                 <dd>
                   {money(row.expectedFee)} / {money(row.actualFee)}
                 </dd>
@@ -97,14 +93,14 @@ export function ReviewDrawer({
                 <dd>{row.dueDate ?? "자료 없음"}</dd>
               </div>
               <div>
-                <dt>입금 확인일</dt>
+                <dt>자료상 입금일</dt>
                 <dd>{row.paidDate ?? "미확인"}</dd>
               </div>
             </dl>
           </section>
           <section className="detail-section">
             <h4>
-              연결된 원본 근거 <span>{row.sources.length}</span>
+              연결된 원본 자료 <span>{row.sources.length}</span>
             </h4>
             <div className="source-evidence">
               {row.sources.map((sourceId) => {
@@ -124,8 +120,8 @@ export function ReviewDrawer({
             </div>
             <p className="helper-text">
               {row.settlementIds.length
-                ? `정산 ID: ${row.settlementIds.join(", ")}`
-                : "연결된 정산 행이 없습니다."}
+                ? `정산번호: ${row.settlementIds.join(", ")}`
+                : "연결된 정산 내역이 없습니다."}
             </p>
             <SettlementEvidence row={row} workspace={workspace} />
           </section>
@@ -133,9 +129,9 @@ export function ReviewDrawer({
             <section className="resolution-receipt">
               <ShieldCheck size={21} />
               <div>
-                <h4>검토가 기록되었습니다</h4>
+                <h4>{REVIEW_ACTION_LABELS[row.resolution.disposition]} 완료</h4>
                 <p>{row.resolution.note}</p>
-                <p className="muted">근거: {row.resolution.evidence}</p>
+                <p className="muted">증빙 참조 정보: {row.resolution.evidence}</p>
                 <small>
                   {row.resolution.actor} · {timestamp(row.resolution.at)}
                 </small>
@@ -163,12 +159,12 @@ export function ReviewDrawer({
                   className="text-button"
                   onClick={() => {
                     setNote(
-                      `합성 데이터 검토 예시: ${ISSUE_LABELS[row.kind]} 사유와 원본 행을 확인했습니다. 실거래 승인에 사용하지 않습니다.`,
+                      `데모 검토 예시: '${ISSUE_LABELS[row.kind]}' 거래의 원본 자료와 검토 사유를 확인했습니다. 실제 거래에 대한 승인이 아닙니다.`,
                     );
-                    setEvidence(`DEMO-${row.sources[0]} / 합성 증빙`);
+                    setEvidence(`DEMO-${row.sources[0]} / 가상 증빙`);
                   }}
                 >
-                  데모 검토 예시
+                  검토 예시 불러오기
                 </button>
               </div>
               <label>
@@ -176,7 +172,7 @@ export function ReviewDrawer({
                 <textarea
                   value={note}
                   onChange={(event) => setNote(event.target.value)}
-                  placeholder="어떤 근거로 차이를 승인하는지 기록하세요 (10자 이상)"
+                  placeholder="차이를 확인한 근거와 처리 사유를 10자 이상 입력하세요"
                   minLength={10}
                   maxLength={600}
                   rows={3}
@@ -184,11 +180,11 @@ export function ReviewDrawer({
                 />
               </label>
               <label>
-                증빙 식별자 <span className="required">*</span>
+                증빙 참조 정보 <span className="required">*</span>
                 <input
                   value={evidence}
                   onChange={(event) => setEvidence(event.target.value)}
-                  placeholder="예: 정산 파일 ID / 확인 티켓 번호"
+                  placeholder="예: 정산 파일명, 문의 티켓 번호 (5자 이상)"
                   minLength={5}
                   maxLength={200}
                   required
@@ -201,14 +197,18 @@ export function ReviewDrawer({
                   onChange={(event) => setConfirmed(event.target.checked)}
                   required
                 />
-                <span>원본 근거를 확인했습니다. 이 승인은 원본 금액을 수정하지 않습니다.</span>
+                <span>
+                  원본 자료와 검토 사유를 확인했습니다. 승인해도 원본 금액은 바뀌지 않습니다.
+                </span>
               </label>
               <div className="inline-notice">
                 <Info size={15} />
                 <p>
                   {row.kind === "duplicate"
-                    ? "중복 제외 판단을 검토 기록에 남깁니다. 실제 합계에서 원본 행을 삭제하거나 차이를 숨기지 않습니다."
-                    : "금액과 일치율은 그대로 유지됩니다. 승인 사유와 증빙이 마감 패키지에 함께 저장됩니다."}
+                    ? "중복으로 판단한 사유를 기록합니다. 원본 행을 삭제하거나 합계에서 빼지는 않습니다."
+                    : row.kind === "timing"
+                      ? "다음 달로 이월할 사유를 기록합니다. 다음 달 자료를 자동으로 만들거나 원본 금액을 바꾸지는 않습니다."
+                      : "원본 금액과 자동 일치율은 유지됩니다. 검토 사유와 증빙 참조 정보는 마감 증빙 파일에 함께 저장됩니다."}
                 </p>
               </div>
               <button
@@ -243,8 +243,11 @@ function SettlementEvidence({ row, workspace }: { row: ReviewedRow; workspace: W
   if (!entries.length) return null;
   return (
     <details className="raw-evidence">
-      <summary>정규화된 정산 원본 {entries.length}행 보기</summary>
-      <p>중복 행도 삭제하지 않고 모두 표시합니다. 은행 입금 내역과 대조한 결과는 아닙니다.</p>
+      <summary>연결된 정산 내역 {entries.length}행 보기</summary>
+      <p>
+        표준 형식으로 정리한 정산 자료입니다. 중복 행도 모두 표시하며, 은행 입금 내역과 대조한
+        결과는 아닙니다.
+      </p>
       {entries.map((entry, index) => (
         <div key={`${entry.id}-${index}`}>
           <strong>
@@ -252,19 +255,19 @@ function SettlementEvidence({ row, workspace }: { row: ReviewedRow; workspace: W
           </strong>
           <dl>
             <div>
-              <dt>정산 자료 매출 / 환불</dt>
+              <dt>총액(환불 전) / 환불액</dt>
               <dd>
                 {money(entry.gross)} / {money(entry.refund)}
               </dd>
             </div>
             <div>
-              <dt>수수료 / 순정산액</dt>
+              <dt>수수료 / 정산액</dt>
               <dd>
                 {money(entry.fee)} / {money(entry.net)}
               </dd>
             </div>
             <div>
-              <dt>예정일 / 입금 필드</dt>
+              <dt>입금 예정일 / 자료상 입금일</dt>
               <dd>
                 {entry.dueDate} / {entry.paidDate ?? "없음"}
               </dd>

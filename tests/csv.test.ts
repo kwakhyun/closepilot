@@ -33,7 +33,7 @@ describe("onboarding boundary", () => {
     expect(() => parse(sample.replace("100000", "$100"))).toThrow();
   });
   it("rejects invalid dates and out-of-period orders", () => {
-    expect(() => parse(sample.replace("2026-08-30", "2026-02-30"))).toThrow("유효한");
+    expect(() => parse(sample.replace("2026-08-30", "2026-02-30"))).toThrow("실제로 존재하는 날짜");
     expect(() => parse(sample.replace("2026-08-30", "2026-09-01"))).toThrow("현재 마감 월");
   });
   it("rejects refunds larger than the original payment", () => {
@@ -54,7 +54,7 @@ describe("onboarding boundary", () => {
         "SOURCE",
         "2026-08",
       ),
-    ).toThrow("여러 필드");
+    ).toThrow("서로 다른 원본 열");
   });
   it("bounds byte length and row count", () => {
     expect(() => parseCsv("x".repeat(256001))).toThrow("250KB");

@@ -30,10 +30,19 @@ export function assertSameOrigin(request: Request) {
 }
 export async function readJson(request: Request): Promise<unknown> {
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json"))
-    throw new DomainError("JSON_REQUIRED", "application/json 요청이 필요합니다.", 415);
+    throw new DomainError(
+      "JSON_REQUIRED",
+      "Content-Type을 application/json으로 지정하고 JSON 형식으로 요청하세요.",
+      415,
+    );
   if (Number(request.headers.get("content-length") || 0) > 300_000)
-    throw new DomainError("BODY_TOO_LARGE", "요청 크기가 제한을 초과했습니다.", 413);
-  if (!request.body) throw new DomainError("INVALID_JSON", "JSON 본문이 필요합니다.", 400);
+    throw new DomainError(
+      "BODY_TOO_LARGE",
+      "요청에 포함된 데이터가 너무 큽니다. 크기를 줄인 뒤 다시 시도하세요.",
+      413,
+    );
+  if (!request.body)
+    throw new DomainError("INVALID_JSON", "요청 본문에 JSON 데이터를 입력하세요.", 400);
   const reader = request.body.getReader();
   const decoder = new TextDecoder();
   let text = "",
@@ -45,7 +54,11 @@ export async function readJson(request: Request): Promise<unknown> {
       bytes += value.byteLength;
       if (bytes > 300_000) {
         await reader.cancel();
-        throw new DomainError("BODY_TOO_LARGE", "요청 크기가 제한을 초과했습니다.", 413);
+        throw new DomainError(
+          "BODY_TOO_LARGE",
+          "요청에 포함된 데이터가 너무 큽니다. 크기를 줄인 뒤 다시 시도하세요.",
+          413,
+        );
       }
       text += decoder.decode(value, { stream: true });
     }
@@ -53,7 +66,7 @@ export async function readJson(request: Request): Promise<unknown> {
     return JSON.parse(text);
   } catch (error) {
     if (error instanceof DomainError) throw error;
-    throw new DomainError("INVALID_JSON", "유효한 JSON 본문이 필요합니다.", 400);
+    throw new DomainError("INVALID_JSON", "요청 본문의 JSON 형식을 확인하세요.", 400);
   }
 }
 export function json(data: unknown, status = 200, requestId = randomUUID()) {
@@ -70,7 +83,7 @@ export function apiError(error: unknown) {
       {
         error: {
           code: "VALIDATION_ERROR",
-          message: "입력값을 확인하세요.",
+          message: "입력한 항목의 형식과 길이를 확인한 뒤 다시 시도하세요.",
           fields: error.issues.map((issue) => ({
             path: issue.path.join("."),
             message: issue.message,

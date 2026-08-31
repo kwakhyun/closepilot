@@ -40,10 +40,14 @@ export function TrendChart({ workspace }: { workspace: WorkspaceView }) {
     <section className="card chart-card" aria-label="정산 금액 차트">
       <div className="card-heading">
         <div>
-          <h2>정산 흐름</h2>
-          <p>주문일 기준 예상 금액과 정산 자료를 비교합니다</p>
+          <h2>정산액 비교</h2>
+          <p>
+            {mode === "daily"
+              ? "주문일별로 예상 정산액과 자료상 정산액을 비교합니다"
+              : "판매 채널별로 예상 정산액과 자료상 정산액을 비교합니다"}
+          </p>
         </div>
-        <div className="segmented" aria-label="차트 단위">
+        <div className="segmented" aria-label="차트 집계 기준">
           <button
             aria-pressed={mode === "daily"}
             className={mode === "daily" ? "active" : ""}
@@ -73,15 +77,15 @@ export function TrendChart({ workspace }: { workspace: WorkspaceView }) {
         </span>
         <span>
           <i className="legend-actual" />
-          실제 정산액
+          자료상 정산액
         </span>
-        <span className="chart-unit">단위: 원 · KRW</span>
+        <span className="chart-unit">단위: 원(KRW)</span>
       </div>
       <div className="chart-wrap">
         <svg
           viewBox={`0 0 ${width} 220`}
           role="img"
-          aria-label={`${mode === "daily" ? "일별" : "채널별"} 예상 정산액과 실제 정산액 비교 막대 차트`}
+          aria-label={`${mode === "daily" ? "일별" : "채널별"} 예상 정산액과 자료상 정산액 비교 막대 차트`}
         >
           {[0, 1, 2, 3].map((tick) => {
             const value = (maximum * tick) / 3,
@@ -142,7 +146,7 @@ export function TrendChart({ workspace }: { workspace: WorkspaceView }) {
                   </text>
                 )}
                 <title>
-                  {value.label}: 예상 {money(value.expected)}, 실제 {money(value.actual)}
+                  {value.label}: 예상 {money(value.expected)}, 자료상 {money(value.actual)}
                 </title>
               </g>
             );
@@ -152,23 +156,23 @@ export function TrendChart({ workspace }: { workspace: WorkspaceView }) {
           <div className="chart-tooltip">
             <b>{values[hovered].label}</b>
             <span>예상 {money(values[hovered].expected)}</span>
-            <span>실제 {money(values[hovered].actual)}</span>
+            <span>자료상 {money(values[hovered].actual)}</span>
           </div>
         )}
       </div>
       <div className="chart-footnote">
         <span className="live-dot" />
-        입금일별 현금 흐름이 아닌 주문일별 정산 대사입니다.
+        정산 자료에 기록된 금액을 비교한 결과입니다. 은행 입금 내역은 조회하지 않습니다.
       </div>
       <details className="chart-data">
-        <summary>차트 데이터 표로 보기</summary>
+        <summary>차트 데이터를 표로 보기</summary>
         <table>
-          <caption className="sr-only">정산 흐름 원본 수치</caption>
+          <caption className="sr-only">정산액 비교 차트의 집계 수치</caption>
           <thead>
             <tr>
               <th>구분</th>
               <th>예상 정산액</th>
-              <th>실제 정산액</th>
+              <th>자료상 정산액</th>
             </tr>
           </thead>
           <tbody>

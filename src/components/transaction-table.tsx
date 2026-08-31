@@ -71,18 +71,16 @@ export function TransactionTable({
       <div className="card-heading">
         <div>
           <h2>
-            {expanded ? "전체 거래 대사" : "지금 확인할 거래"}
+            거래별 대사 결과
             <span className="subtle-count">{workspace.summary.total}</span>
           </h2>
           <p>
-            {expanded
-              ? "원본 금액과 검토 근거를 거래 단위로 추적합니다"
-              : "작은 차이도 놓치지 않도록, 확인이 필요한 건부터"}
+            {expanded ? "주문별 금액과 검토 근거를 확인하세요" : "차액과 원본 자료를 확인하세요"}
           </p>
         </div>
         <a className="button ghost small" href="/api/export?format=csv" download>
           <Download size={15} />
-          <span>전체 CSV</span>
+          <span>전체 CSV 다운로드</span>
         </a>
       </div>
       <div className="table-toolbar">
@@ -132,8 +130,8 @@ export function TransactionTable({
             <label className="table-search">
               <Search size={15} />
               <input
-                aria-label="거래번호 검색"
-                placeholder="거래번호 검색"
+                aria-label="주문번호 검색"
+                placeholder="주문번호 검색"
                 value={search}
                 onChange={(event) => {
                   setSearch(event.target.value);
@@ -152,16 +150,19 @@ export function TransactionTable({
               <th>주문번호 / 주문일</th>
               <th>판매 채널</th>
               <th className="numeric">예상 정산액</th>
-              <th className="numeric">실제 정산액</th>
+              <th className="numeric">자료상 정산액</th>
               <th className="numeric" aria-sort={ascending ? "ascending" : "descending"}>
-                <button onClick={() => setAscending(!ascending)}>
+                <button
+                  onClick={() => setAscending(!ascending)}
+                  title="차액의 절댓값을 기준으로 정렬"
+                >
                   차이 금액
                   <ArrowDownUp size={12} />
                 </button>
               </th>
               <th>검토 상태</th>
               <th>
-                <span className="sr-only">상세보기</span>
+                <span className="sr-only">상세 보기</span>
               </th>
             </tr>
           </thead>
@@ -220,13 +221,17 @@ export function TransactionTable({
           <CheckCircle2 size={30} />
           <h3>
             {filter === "issues" && !search && channel === "all"
-              ? "확인할 거래를 모두 검토했어요"
-              : "조건에 맞는 거래가 없어요"}
+              ? "모든 예외 거래를 검토했습니다"
+              : "조건에 맞는 거래가 없습니다"}
           </h3>
           <p>
-            {filter === "reviewed"
-              ? "거래 상세에서 근거를 기록하면 이곳에 표시됩니다."
-              : "다른 상태나 판매 채널로 다시 확인해 보세요."}
+            {filter === "issues" && !search && channel === "all"
+              ? workspace.close
+                ? "마감 증빙 보기에서 확정한 결과를 내려받을 수 있습니다."
+                : "마감 점검에서 남은 조건을 확인하고 마감을 확정하세요."
+              : filter === "reviewed" && !search && channel === "all"
+                ? "거래 상세에서 검토를 승인하면 이 목록에 표시됩니다."
+                : "검색어나 판매 채널, 검토 상태를 바꿔 다시 확인하세요."}
           </p>
           {(search || channel !== "all") && (
             <button
@@ -247,7 +252,7 @@ export function TransactionTable({
             ? `${rows.length}건 중 ${currentPage * pageSize + 1}–${Math.min((currentPage + 1) * pageSize, rows.length)}건`
             : "0건"}
           <span className="table-footer-note">
-            <span className="footer-dot">·</span>원본 금액은 승인 후에도 유지됩니다
+            <span className="footer-dot">·</span>검토 승인 후에도 원본 금액은 유지됩니다
           </span>
         </span>
         <div className="pagination">

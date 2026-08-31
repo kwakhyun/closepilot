@@ -48,7 +48,7 @@ describe("evidence-first reconciliation", () => {
     expect(rows.map((row) => row.kind).sort()).toEqual(["missing", "orphan"]);
   });
   it("blocks duplicate order keys", () => {
-    expect(() => reconcile([order, order], [])).toThrow("중복 주문");
+    expect(() => reconcile([order, order], [])).toThrow("동일한 주문번호");
   });
   it("retains duplicate settlement amounts as an explicit exception", () => {
     expect(reconcile([order], [settlement, settlement])[0]).toMatchObject({

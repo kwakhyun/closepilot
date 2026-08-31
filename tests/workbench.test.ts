@@ -41,7 +41,7 @@ describe("close state machine", () => {
   it("blocks close while a single unresolved exception remains", () => {
     expect(() =>
       applyCommand(seedWorkspace(now), { action: "close", expectedVersion: 1 }, now),
-    ).toThrow("미해결");
+    ).toThrow("아직 검토하지 않은 거래");
   });
   it("does not mutate the input aggregate", () => {
     const workspace = seedWorkspace(now);
@@ -81,7 +81,7 @@ describe("close state machine", () => {
         note: "This is a test review note",
         evidence: "DEMO-SOURCE",
       }),
-    ).toThrow("이월 승인");
+    ).toThrow("이월 검토 승인");
   });
   it("preserves monetary variance and automatic match rate after approval", () => {
     const before = workspaceView(seedWorkspace(now));
@@ -118,7 +118,7 @@ describe("close state machine", () => {
       },
     ];
     for (const command of attempts)
-      expect(() => applyCommand(closed, command)).toThrow("확정된 마감");
+      expect(() => applyCommand(closed, command)).toThrow("마감이 확정되어");
   });
   it("requires another run after an import", () => {
     const reviewed = resolveAll(seedWorkspace(now));
@@ -153,7 +153,7 @@ describe("close state machine", () => {
         filename: "two.csv",
         csv: sample.replace(/\r?\n/g, "\r\n"),
       }),
-    ).toThrow("이미 반영");
+    ).toThrow("이미 가져왔습니다");
   });
   it("invalidates reviews if supporting settlement data changes", () => {
     const workspace = resolveAll(seedWorkspace(now));

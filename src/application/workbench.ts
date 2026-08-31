@@ -12,6 +12,7 @@ import { reconcile } from "@/domain/reconcile";
 import { appendEvent, verifyAudit } from "@/domain/audit";
 import { digest } from "@/domain/canonical";
 import { importCsv } from "@/domain/csv";
+import { describeReconciliation } from "@/domain/review-copy";
 
 const revision = { expectedVersion: z.number().int().positive() };
 export const commandSchema = z.discriminatedUnion("action", [
@@ -86,13 +87,13 @@ export function applyCommand(
   if (current.version !== command.expectedVersion)
     throw new DomainError(
       "VERSION_CONFLICT",
-      "다른 요청이 데이터를 변경했습니다. 새로고침 후 다시 시도하세요.",
+      "다른 요청으로 자료가 변경되었습니다. 최신 상태를 확인한 뒤 다시 시도하세요.",
       409,
     );
   if (current.status === "closed")
     throw new DomainError(
       "CLOSE_LOCKED",
-      "확정된 마감은 수정할 수 없습니다. 새로운 데모 세션에서 시작하세요.",
+      "마감이 확정되어 자료와 검토 기록을 수정할 수 없습니다. 새 데모를 시작하세요.",
       409,
     );
   if (!verifyAudit(current.events))
@@ -104,7 +105,7 @@ export function applyCommand(
     if (workspace.sources.some((source) => source.digest === fileDigest))
       throw new DomainError(
         "ALREADY_IMPORTED",
-        "동일한 내용의 파일이 이미 반영되어 있습니다. 중복 반영하지 않았습니다.",
+        "같은 내용의 파일을 이미 가져왔습니다. 자료는 추가하지 않았습니다.",
         409,
       );
     if (workspace.sources.length >= 12)
@@ -121,7 +122,10 @@ export function applyCommand(
       workspace.orders.length + parsed.orders.length > 500 ||
       workspace.settlements.length + parsed.settlements.length > 1_000
     )
-      throw new DomainError("ROW_LIMIT", "데모는 주문 500건·정산 1,000행으로 제한됩니다.");
+      throw new DomainError(
+        "ROW_LIMIT",
+        "데모에 저장할 수 있는 자료는 주문 500건, 정산 1,000행까지입니다.",
+      );
     workspace.orders.push(...parsed.orders);
     workspace.settlements.push(...parsed.settlements);
     reconcile(workspace.orders, workspace.settlements, workspace.asOf);
@@ -166,16 +170,22 @@ export function applyCommand(
     if (row.kind === "timing" && command.disposition !== "carry_forward")
       throw new DomainError(
         "INVALID_DISPOSITION",
-        "입금 시차는 근거 확인 후 이월 승인만 가능합니다.",
+        "입금 확인이 필요한 거래는 근거를 확인한 뒤 '이월 검토 승인'으로 처리하세요.",
       );
     if (row.kind === "duplicate" && command.disposition !== "exclude_duplicate")
-      throw new DomainError("INVALID_DISPOSITION", "중복 정산은 중복 제외 검토만 가능합니다.");
+      throw new DomainError(
+        "INVALID_DISPOSITION",
+        "중복 정산은 근거를 확인한 뒤 '중복 확인 승인'으로 처리하세요.",
+      );
     if (
       row.kind !== "timing" &&
       row.kind !== "duplicate" &&
       command.disposition !== "accepted_variance"
     )
-      throw new DomainError("INVALID_DISPOSITION", "금액 차이는 차이 승인으로 검토하세요.");
+      throw new DomainError(
+        "INVALID_DISPOSITION",
+        "이 거래는 사유와 증빙을 확인한 뒤 '차이 검토 승인'으로 처리하세요.",
+      );
     workspace.resolutions[row.key] = {
       rowKey: row.key,
       disposition: command.disposition,
@@ -203,7 +213,7 @@ export function applyCommand(
     if (view.summary.unresolved)
       throw new DomainError(
         "UNRESOLVED_ISSUES",
-        `미해결 차이 ${view.summary.unresolved}건이 남아 있어 마감을 확정할 수 없습니다.`,
+        `아직 검토하지 않은 거래가 ${view.summary.unresolved}건 있습니다. 모두 검토한 뒤 마감을 확정하세요.`,
         409,
       );
     const body: Omit<CloseSnapshot, "hash"> = {
@@ -246,18 +256,18 @@ export function explainIssues(workspace: Workspace) {
   return {
     mode: "deterministic" as const,
     title: issues.length
-      ? `${issues.length}건을 확인하면 이번 달 마감을 준비할 수 있어요.`
-      : "모든 예외 거래의 검토가 완료되었어요.",
-    summary: `원본 ${workspace.sources.length}개 파일과 ${RULE_VERSION}의 대사 결과를 기준으로 작성했습니다. 금액 차이는 상계하지 않고 절댓값 합계로 확인합니다.`,
+      ? `마감 전에 확인할 거래가 ${issues.length}건 남아 있습니다.`
+      : "모든 예외 거래의 검토를 완료했습니다.",
+    summary: `원본 파일 ${workspace.sources.length}개와 대사 규칙 ${RULE_VERSION}을 기준으로 정리했습니다. 차이 금액은 거래별 절댓값을 더해 표시하며, 실제 회수할 금액을 뜻하지 않습니다.`,
     steps: issues.slice(0, 4).map((row) => ({
       rowKey: row.key,
       orderId: row.orderId,
       kind: row.kind,
-      explanation: row.explanation,
+      explanation: describeReconciliation(row),
       evidence: row.sources,
       delta: row.delta,
     })),
     guardrail:
-      "규칙 기반 분석입니다. AI가 생성한 결과가 아니며, 자동 승인·송금·회계 전표 생성은 수행하지 않습니다.",
+      "정해진 대사 규칙으로 작성한 안내이며 LLM을 호출하지 않습니다. 검토 승인은 사용자가 직접 해야 하며, 송금이나 회계 전표 생성 기능은 없습니다.",
   };
 }

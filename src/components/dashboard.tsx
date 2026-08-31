@@ -46,7 +46,7 @@ type Analysis = ReturnType<typeof explainIssues>;
 const SECTIONS = {
   overview: "마감 대시보드",
   transactions: "거래 대사",
-  sources: "데이터 연결",
+  sources: "자료 관리",
   audit: "감사 기록",
 };
 
@@ -140,12 +140,12 @@ export function Dashboard() {
       setWorkspace(data);
       showToast(
         command.action === "resolve"
-          ? "검토 사유와 증빙을 감사 기록에 저장했습니다."
+          ? "검토 사유와 증빙 참조 정보를 기록했습니다."
           : command.action === "close"
-            ? "8월 마감이 확정되었습니다. 증빙 패키지를 내려받을 수 있어요."
+            ? "8월 마감을 확정했습니다. 마감 증빙 파일을 내려받을 수 있습니다."
             : command.action === "import"
-              ? "자료를 가져왔습니다. 대사를 다시 실행해 주세요."
-              : "대사가 완료되었습니다. 최신 자료로 결과를 갱신했어요.",
+              ? "자료를 반영했습니다. 대사를 다시 실행해 주세요."
+              : "대사를 완료했습니다. 최신 자료로 결과를 갱신했습니다.",
       );
       return true;
     } catch (failure) {
@@ -171,7 +171,7 @@ export function Dashboard() {
       setSearch("");
       setFilter("issues");
       setError("");
-      showToast("새로운 데모 세션을 시작했습니다.");
+      showToast("새 데모를 시작했습니다.");
     } catch (failure) {
       showToast((failure as Error).message, true);
     } finally {
@@ -235,7 +235,7 @@ export function Dashboard() {
           <span className="workspace-monogram">L</span>
           <div>
             <strong>LUMIÈRE</strong>
-            <span>Demo workspace</span>
+            <span>가상 브랜드 · 체험용</span>
           </div>
         </div>
         <span className="nav-caption">WORKSPACE</span>
@@ -262,7 +262,7 @@ export function Dashboard() {
             onClick={() => navigate("sources")}
           >
             <Database size={18} />
-            데이터 연결
+            자료 관리
           </button>
           <button className={section === "audit" ? "active" : ""} onClick={() => navigate("audit")}>
             <ShieldCheck size={18} />
@@ -274,7 +274,7 @@ export function Dashboard() {
         <nav>
           <Link href="/guide">
             <BookOpen size={18} />
-            프로젝트 가이드
+            제품 가이드
             <ArrowUpRight className="nav-external" size={14} />
           </Link>
           <a href="https://github.com/kwakhyun/closepilot" target="_blank" rel="noreferrer">
@@ -287,14 +287,14 @@ export function Dashboard() {
         <div className="sidebar-close-card">
           <div>
             <span className="live-dot" />
-            <span>8월 마감 워크스페이스</span>
+            <span>8월 마감 현황</span>
           </div>
-          <h3>{workspace?.close ? "마감이 완료됐어요." : "마무리까지, 한 걸음 더."}</h3>
+          <h3>{workspace?.close ? "8월 마감을 완료했습니다." : "마감 조건을 확인하세요."}</h3>
           <div className="sidebar-progress">
             <span style={{ width: `${progress}%` }} />
           </div>
-          <p>
-            {workspace ? `검토 진행률 ${progress}%` : "자료를 준비하고 있어요"}
+          <p title="자동 일치 거래와 검토 승인 거래를 합산한 비율입니다">
+            {workspace ? `확인 완료율 ${progress}%` : "자료를 준비하고 있습니다"}
             <b>
               {workspace
                 ? `${workspace.summary.total - workspace.summary.unresolved}/${workspace.summary.total}`
@@ -310,7 +310,7 @@ export function Dashboard() {
           <div className="avatar">D</div>
           <div>
             <strong>데모 검토자</strong>
-            <span>독립된 체험 세션</span>
+            <span>방문자별 체험 공간</span>
           </div>
           <button onClick={() => setResetOpen(true)} aria-label="새 데모 시작" title="새 데모 시작">
             <RotateCcw size={16} />
@@ -327,7 +327,7 @@ export function Dashboard() {
             >
               <Menu size={20} />
             </button>
-            <span className="breadcrumb-workspace">워크스페이스</span>
+            <span className="breadcrumb-workspace">마감 작업</span>
             <span className="breadcrumb-divider">/</span>
             <strong>{SECTIONS[section]}</strong>
           </div>
@@ -336,9 +336,9 @@ export function Dashboard() {
               <Search size={15} />
               <input
                 ref={searchInput}
-                aria-label="전체 거래번호 검색"
+                aria-label="전체 주문번호 검색"
                 value={search}
-                placeholder="거래번호 검색"
+                placeholder="주문번호 검색"
                 onFocus={() => {
                   setSection("transactions");
                   setFilter("all");
@@ -351,7 +351,7 @@ export function Dashboard() {
             </label>
             <span className="demo-badge">
               <span />
-              가상 데이터 데모
+              가상 데이터 · 데모
             </span>
             <Link className="icon-button help-button" href="/guide" aria-label="사용 가이드">
               <CircleHelp size={19} />
@@ -374,12 +374,16 @@ export function Dashboard() {
               </h1>
               <p>
                 {section === "overview"
-                  ? "흩어진 매출을 연결하고, 확신 있게 마감하세요."
+                  ? workspace?.close
+                    ? "확정한 마감 결과와 검토 근거를 확인하세요."
+                    : "주문과 정산 자료를 비교하고, 차이를 확인해 마감하세요."
                   : section === "transactions"
-                    ? "주문에서 정산까지. 차이의 원인을 한눈에 확인하세요."
+                    ? "주문별 정산 결과와 차이의 원인을 확인하세요."
                     : section === "sources"
-                      ? "서로 다른 양식을, 하나의 기준으로 연결하세요."
-                      : "누가, 무엇을, 왜 바꿨는지 투명하게 확인하세요."}
+                      ? workspace?.close
+                        ? "마감에 사용한 CSV 자료와 원본 정보를 확인하세요."
+                        : "채널별 CSV를 같은 형식으로 정리하고 원본 자료를 관리하세요."
+                      : "자료 반영부터 검토 승인과 마감까지 변경 이력을 확인하세요."}
               </p>
             </div>
             <div className="page-actions">
@@ -393,7 +397,7 @@ export function Dashboard() {
                 disabled={!workspace || workspace.status === "closed"}
               >
                 <Upload size={16} />
-                자료 업로드
+                자료 가져오기
               </button>
               <button
                 className="button primary"
@@ -413,7 +417,7 @@ export function Dashboard() {
               {error ? (
                 <>
                   <ShieldCheck size={36} />
-                  <h2>워크스페이스를 불러오지 못했어요</h2>
+                  <h2>마감 자료를 불러오지 못했습니다</h2>
                   <p>{error}</p>
                   <button className="button primary" disabled={busy} onClick={() => void reset()}>
                     새 데모 시작
@@ -424,8 +428,8 @@ export function Dashboard() {
                   <span className="loading-logo">
                     <Brand compact />
                   </span>
-                  <h2>마감 자료를 준비하고 있어요</h2>
-                  <p>독립된 세션에 가상 주문과 정산 자료를 연결합니다.</p>
+                  <h2>마감 자료를 준비하고 있습니다</h2>
+                  <p>이 데모에서 사용할 가상 주문과 정산 자료를 불러옵니다.</p>
                   <LoaderCircle size={22} className="spin" />
                 </>
               )}
@@ -436,8 +440,8 @@ export function Dashboard() {
                 <div className="notice warm stale-notice">
                   <RefreshCw size={18} />
                   <p>
-                    <b>새로운 자료가 반영됐습니다.</b> 아래 수치는 미리보기입니다. 대사를 실행한 뒤
-                    검토·마감을 진행하세요.
+                    <b>새 자료를 반영했습니다.</b> 아래 수치는 미리보기입니다. 대사를 다시 실행해야
+                    검토 승인과 마감 확정을 진행할 수 있습니다.
                   </p>
                 </div>
               )}
@@ -445,15 +449,15 @@ export function Dashboard() {
                 <>
                   <div className="metrics-grid">
                     <Metric
-                      label="총 매출"
+                      label="주문 총액"
                       value={money(workspace.summary.gross)}
-                      detail={`${workspace.orders.length}건의 주문 원장 기준`}
+                      detail={`주문 ${workspace.orders.length}건 · 환불 차감 전`}
                       icon={<BarChart3 size={17} />}
                     />
                     <Metric
                       label="예상 정산액"
                       value={money(workspace.summary.expectedNet)}
-                      detail="환불과 가상 계약 수수료 반영"
+                      detail="환불액과 데모 수수료 차감 후"
                       icon={<FileCheck2 size={17} />}
                     />
                     <Metric
@@ -466,10 +470,10 @@ export function Dashboard() {
                       }
                     />
                     <Metric
-                      label="확인 필요한 거래"
+                      label="검토가 필요한 거래"
                       value={`${workspace.summary.unresolved}`}
                       suffix="건"
-                      detail={`미해결 금액 차이 ${money(workspace.rows.filter((row) => row.kind !== "matched" && !row.resolution).reduce((sum, row) => sum + Math.abs(row.delta), 0))}`}
+                      detail={`미검토 차액 절댓값 합계 ${money(workspace.rows.filter((row) => row.kind !== "matched" && !row.resolution).reduce((sum, row) => sum + Math.abs(row.delta), 0))}`}
                       icon={<ClipboardCheck size={17} />}
                       warning={workspace.summary.unresolved > 0}
                     />
@@ -481,20 +485,20 @@ export function Dashboard() {
                     <div className="insight-copy">
                       <h2>
                         {workspace.summary.unresolved
-                          ? `${workspace.summary.unresolved}건만 확인하면, 마감에 한 걸음 더 가까워져요.`
+                          ? `마감 전에 검토할 거래가 ${workspace.summary.unresolved}건 남아 있습니다.`
                           : workspace.close
-                            ? "8월의 숫자와 근거가 하나의 마감 패키지로 묶였어요."
-                            : "예외 검토가 끝났어요. 마감 전 마지막 확인을 진행하세요."}
+                            ? "8월 마감 결과와 검토 근거를 저장했습니다."
+                            : "예외 거래 검토를 완료했습니다. 마감 전 점검을 진행하세요."}
                       </h2>
                       <p>
                         {workspace.summary.unresolved
-                          ? `정산 누락·수수료 차이부터 입금 시차까지, 확인할 근거를 모아뒀어요.`
-                          : "승인된 차이와 원본 수치는 그대로 보존되어 감사 기록에서 추적할 수 있습니다."}
+                          ? "정산 누락, 수수료 차이, 입금 확인이 필요한 거래의 원본 자료를 살펴보세요."
+                          : "원본 금액은 그대로 유지되며, 검토 사유와 증빙 참조 정보를 감사 기록에서 확인할 수 있습니다."}
                         <span className="insight-label">규칙 기반 가이드</span>
                       </p>
                     </div>
                     <button onClick={() => void analyze()} disabled={analysisLoading}>
-                      {analysisLoading ? "분석 중…" : "검토 가이드"}
+                      {analysisLoading ? "안내를 불러오는 중…" : "검토 가이드"}
                       <ArrowRight size={16} />
                     </button>
                   </div>
@@ -513,10 +517,10 @@ export function Dashboard() {
                   <div className="overview-bottom">
                     <div>
                       <ShieldCheck size={16} />
-                      <span>모든 금액은 정수 연산 · 모든 승인은 근거와 함께</span>
+                      <span>원 단위로 대사하고, 검토 근거를 기록합니다</span>
                     </div>
                     <button className="text-button" onClick={() => setCloseOpen(true)}>
-                      {workspace.close ? "마감 패키지 보기" : "마감 체크리스트"}
+                      {workspace.close ? "마감 증빙 보기" : "마감 체크리스트"}
                       <ArrowRight size={14} />
                     </button>
                   </div>
@@ -526,7 +530,7 @@ export function Dashboard() {
                 <>
                   <div className="transaction-overview">
                     <div>
-                      <span>전체 대사</span>
+                      <span>대사 대상</span>
                       <strong>
                         {workspace.summary.total}
                         <small>건</small>
@@ -584,8 +588,8 @@ export function Dashboard() {
                       if (view)
                         showToast(
                           view.auditValid
-                            ? `${view.events.length}개 이벤트의 해시 연결이 정상입니다.`
-                            : "감사 기록 무결성 오류가 발견되었습니다.",
+                            ? `감사 기록 ${view.events.length}건의 해시 연결을 확인했습니다. 이상이 없습니다.`
+                            : "감사 기록의 해시가 일치하지 않습니다. 기록을 확인해 주세요.",
                           !view.auditValid,
                         );
                     })
@@ -596,7 +600,7 @@ export function Dashboard() {
           )}
           <footer className="app-footer">
             <span>
-              ClosePilot<span className="footer-dot">·</span>근거 있는 마감의 시작
+              ClosePilot<span className="footer-dot">·</span>근거를 남기는 매출 마감
             </span>
             <span>
               개인 포트폴리오 · PortOne 비공식 · 실제 결제 없음
@@ -640,7 +644,7 @@ export function Dashboard() {
           <div className="analysis-body">
             <div className="analysis-label">
               <Sparkles size={16} />
-              규칙 기반 분석<span>LLM 미사용</span>
+              규칙 기반 검토 안내<span>LLM 미사용</span>
             </div>
             <h3>{analysis.title}</h3>
             <p>{analysis.summary}</p>
@@ -660,7 +664,7 @@ export function Dashboard() {
                     </button>
                     <strong>{deltaMoney(step.delta)}</strong>
                     <p>{step.explanation}</p>
-                    <small>근거: {step.evidence.join(" · ")}</small>
+                    <small>원본 자료: {step.evidence.join(" · ")}</small>
                   </div>
                 </li>
               ))}
@@ -675,8 +679,8 @@ export function Dashboard() {
       <Modal open={resetOpen} onClose={() => setResetOpen(false)} title="새 데모를 시작할까요?">
         <div className="reset-body">
           <p>
-            지금까지의 검토 내용을 보려면 먼저 CSV 또는 마감 패키지를 내려받으세요. 새 세션에서는
-            가상 자료와 진행 상태를 처음부터 체험합니다.
+            새 데모를 시작하면 현재 자료와 검토 기록에 다시 접근할 수 없습니다. 필요한 결과를 먼저
+            CSV로 내려받으세요. 마감을 확정했다면 마감 증빙 파일도 저장해 주세요.
           </p>
           {workspace && (
             <a href="/api/export?format=csv" download className="text-button">

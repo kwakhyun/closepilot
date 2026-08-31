@@ -1,11 +1,11 @@
 openapi: 3.1.0
 info:
-  title: ClosePilot sandbox REST API
+  title: ClosePilot 데모 REST API
   version: 1.0.0
   description: |
-    Synthetic-data portfolio only. No payment, transfer, journal posting or LLM calls.
-    Changing requests require the exact site Origin. Commands require a session,
-    expectedVersion and Idempotency-Key. Amounts are integer KRW.
+    가상 데이터를 사용하는 포트폴리오 데모입니다. 실제 결제, 송금, 회계 전표 생성, LLM 호출은 수행하지 않습니다.
+    자료를 변경하는 요청에는 사이트 주소와 일치하는 Origin이 필요합니다.
+    명령 실행에는 세션, expectedVersion, Idempotency-Key가 필요하며 금액은 원 단위 정수로 처리합니다.
 servers:
   - url: /
 security:
@@ -15,10 +15,10 @@ paths:
     get:
       operationId: health
       security: []
-      summary: Verify database connectivity
+      summary: 데이터베이스 연결 확인
       responses:
         "200":
-          description: Database SELECT 1 succeeded
+          description: 데이터베이스에서 SELECT 1 실행에 성공했습니다.
           content:
             application/json:
               schema:
@@ -28,17 +28,20 @@ paths:
                   service: { const: closepilot }
                   storage: { enum: [postgresql, embedded-postgresql] }
                   mode: { const: synthetic-sandbox }
-        "503": { description: Database unavailable; credentials are never returned }
+        "503":
+          {
+            description: 데이터베이스에 연결할 수 없습니다. 접속 비밀값은 응답에 포함하지 않습니다.,
+          }
   /api/session:
     post:
       operationId: createSession
-      summary: Create an isolated six-hour synthetic workspace
+      summary: 6시간 동안 사용할 별도의 데모 작업 공간 생성
       security: []
       parameters:
         - $ref: "#/components/parameters/Origin"
       responses:
         "201":
-          description: Seeded workspace; HttpOnly, SameSite=Lax cookie (Secure in production)
+          description: 가상 자료를 포함한 작업 공간과 HttpOnly·SameSite=Lax 쿠키를 생성합니다. 공개 배포에서는 Secure도 적용합니다.
           headers:
             Set-Cookie: { schema: { type: string } }
           content:
@@ -50,10 +53,10 @@ paths:
   /api/workspace:
     get:
       operationId: getWorkspace
-      summary: Read current workspace, calculated rows and effective approvals
+      summary: 현재 작업 상태, 대사 결과, 유효한 검토 승인 조회
       responses:
         "200":
-          description: Private, no-store response
+          description: 사용자별 응답이며 캐시 저장을 허용하지 않습니다.
           content:
             application/json:
               schema: { $ref: "#/components/schemas/WorkspaceView" }
@@ -62,11 +65,11 @@ paths:
   /api/commands:
     post:
       operationId: executeCommand
-      summary: Apply one versioned, idempotent workspace command
+      summary: 버전과 중복 요청을 확인하고 명령 실행
       description: |
-        A replay with the same key and payload returns the latest workspace without
-        applying the command again. A reused key with a different payload is 409.
-        All state, events and receipt writes commit atomically.
+        같은 요청 키와 본문으로 재시도하면 명령을 다시 적용하지 않고 최신 작업 상태를 반환합니다.
+        같은 키에 다른 본문을 보내면 HTTP 409를 반환합니다.
+        상태, 감사 이벤트, 요청 처리 이력은 하나의 트랜잭션에 저장합니다.
       parameters:
         - $ref: "#/components/parameters/Origin"
         - name: Idempotency-Key
@@ -86,7 +89,7 @@ paths:
               discriminator: { propertyName: action }
       responses:
         "200":
-          description: Updated workspace; original amounts remain unchanged on approval
+          description: 처리 후 작업 상태를 반환합니다. 검토를 승인해도 원본 금액은 바뀌지 않습니다.
           headers:
             Idempotency-Replayed: { schema: { type: string, enum: ["true", "false"] } }
           content:
@@ -96,7 +99,7 @@ paths:
         "401": { $ref: "#/components/responses/Error" }
         "403": { $ref: "#/components/responses/Error" }
         "409":
-          description: Version/idempotency conflict, stale reconciliation, unresolved issues, locked close, or already imported content
+          description: 버전·요청 키 충돌, 재대사 필요, 미검토 거래, 마감 후 수정 또는 파일 중복 반영으로 요청을 거부했습니다.
           content:
             application/json:
               schema: { $ref: "#/components/schemas/ErrorBody" }
@@ -108,7 +111,7 @@ paths:
   /api/imports/preview:
     post:
       operationId: previewImport
-      summary: Preview header mapping and validate a CSV without writing workspace state
+      summary: 작업 상태를 바꾸지 않고 CSV 열 연결과 내용 미리보기
       parameters:
         - $ref: "#/components/parameters/Origin"
       requestBody:
@@ -125,7 +128,7 @@ paths:
                 mapping: { $ref: "#/components/schemas/Mapping" }
       responses:
         "200":
-          description: Field validation errors are returned as valid=false; malformed CSV can return 422
+          description: 항목 검증에 실패하면 valid=false로 반환합니다. CSV 형식 자체가 잘못되면 HTTP 422를 반환할 수 있습니다.
           content:
             application/json:
               schema:
@@ -147,10 +150,11 @@ paths:
   /api/analysis:
     get:
       operationId: deterministicGuide
-      summary: Read evidence-linked deterministic guidance; does not call an LLM
+      summary: 원본 자료에 근거한 규칙 기반 검토 안내 조회
+      description: LLM을 호출하지 않습니다. 표시용 설명은 저장된 대사 결과의 설명과 별도로 구성합니다.
       responses:
         "200":
-          description: Unresolved issues only; up to four evidence-linked suggestions
+          description: 미검토 거래를 대상으로 원본 자료가 연결된 안내를 최대 4건 제공합니다.
           content:
             application/json:
               schema:
@@ -165,14 +169,14 @@ paths:
   /api/export:
     get:
       operationId: exportEvidence
-      summary: Download reconciliation CSV or immutable close JSON package
+      summary: 대사 결과 CSV 또는 확정한 마감 증빙 JSON 다운로드
       parameters:
         - name: format
           in: query
           schema: { type: string, enum: [csv, json], default: csv }
       responses:
         "200":
-          description: Attachment. JSON requires closed state. CSV neutralizes untrusted formula-like fields.
+          description: 파일 다운로드 응답입니다. JSON은 마감 확정 후에만 내려받을 수 있습니다. CSV의 사용자 입력값은 스프레드시트 수식으로 실행되지 않도록 처리합니다.
           content:
             text/csv:
               schema: { type: string }
@@ -184,7 +188,7 @@ paths:
                   snapshot:
                     {
                       type: object,
-                      description: "Typed contract is CloseSnapshot in src/domain/model.ts; executable fixture in fixtures/closed-package.json",
+                      description: "전체 타입은 src/domain/model.ts의 CloseSnapshot을, 재현 가능한 예시는 fixtures/closed-package.json을 참고하세요.",
                     }
                   audit: { type: array, items: { type: object } }
                   notice: { type: string }
@@ -202,11 +206,11 @@ components:
       name: Origin
       in: header
       required: true
-      description: Exact origin of the site, including scheme and non-default port
+      description: 프로토콜과 기본값이 아닌 포트 번호를 포함한 사이트의 정확한 출처 주소입니다.
       schema: { type: string, format: uri }
   responses:
     Error:
-      description: Structured error; inspect error.code and error.message
+      description: 구조화된 오류 응답입니다. error.code와 error.message를 확인하세요.
       content:
         application/json:
           schema: { $ref: "#/components/schemas/ErrorBody" }
@@ -225,7 +229,7 @@ components:
             fields: { type: array, items: { type: object } }
     Mapping:
       type: object
-      description: Canonical field name to uploaded CSV header; unknown source columns are discarded
+      description: 표준 항목명과 업로드한 CSV 열 이름의 대응 관계입니다. 연결하지 않은 원본 열은 저장하지 않습니다.
       additionalProperties: { type: string, maxLength: 100 }
     ReconcileCommand:
       type: object
@@ -265,13 +269,13 @@ components:
             type: string,
             minLength: 1,
             maxLength: 100,
-            description: ".csv; letters, digits, Korean characters, spaces, dots, underscores, parentheses and hyphens",
+            description: ".csv 확장자를 사용합니다. 파일명에는 영문, 숫자, 한글, 공백, 마침표, 밑줄, 괄호, 하이픈을 사용할 수 있습니다.",
           }
         csv: { type: string, minLength: 1, maxLength: 256000 }
         mapping: { $ref: "#/components/schemas/Mapping" }
     WorkspaceView:
       type: object
-      description: Full typed shape is WorkspaceView in src/application/workbench.ts. Synthetic session data only.
+      description: 전체 타입은 src/application/workbench.ts의 WorkspaceView를 참고하세요. 세션의 가상 데이터만 포함합니다.
       required:
         [
           version,
@@ -300,7 +304,7 @@ components:
         summary:
           {
             type: object,
-            description: "Integer KRW totals and counts; approved variances are not subtracted from original amounts",
+            description: "원 단위 정수 합계와 건수입니다. 검토를 승인한 차액도 원본 금액에서 빼지 않습니다.",
           }
         events: { type: array, items: { type: object } }
         auditValid: { type: boolean }

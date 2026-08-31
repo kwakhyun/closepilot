@@ -10,7 +10,7 @@ import {
   AlertCircle,
   RefreshCw,
 } from "lucide-react";
-import { IMPORT_FIELDS, type ImportKind } from "@/domain/csv";
+import { IMPORT_FIELDS, IMPORT_FIELD_LABELS, type ImportKind } from "@/domain/csv";
 import type { Command } from "@/application/workbench";
 import { Modal } from "./modal";
 
@@ -88,7 +88,7 @@ export function ImportModal({
     await validate(text);
   }
   return (
-    <Modal open={open} onClose={onClose} title="새로운 자료 가져오기" wide>
+    <Modal open={open} onClose={onClose} title="CSV 자료 가져오기" wide>
       <div className="import-body">
         <div className="import-steps">
           <span className="active">
@@ -96,18 +96,18 @@ export function ImportModal({
           </span>
           <ArrowRight size={14} />
           <span className={csv ? "active" : ""}>
-            <i>2</i>열 매핑·검증
+            <i>2</i>열 연결·검증
           </span>
           <ArrowRight size={14} />
           <span className={preview?.valid ? "active" : ""}>
-            <i>3</i>가져오기
+            <i>3</i>자료 반영
           </span>
         </div>
         <div className="notice warm">
           <AlertCircle size={18} />
           <p>
-            <b>합성 데이터만 업로드하세요.</b> 실제 고객·결제 정보는 사용하지 마세요. 필수 열만
-            수집하며, 세션 데이터는 6시간 후 만료됩니다.
+            <b>가상 데이터만 업로드하세요.</b> 실제 고객 정보나 결제 내역은 올리지 마세요. 연결한
+            열만 저장하며, 데모를 시작한 시점부터 6시간 동안 자료에 접근할 수 있습니다.
           </p>
         </div>
         <fieldset className="import-kind">
@@ -128,7 +128,7 @@ export function ImportModal({
             />
             <FileSpreadsheet size={20} />
             <span>
-              <b>주문 원장</b>
+              <b>주문 자료</b>
               <small>주문·결제·환불 내역</small>
             </span>
           </label>
@@ -149,7 +149,7 @@ export function ImportModal({
             <FileSpreadsheet size={20} />
             <span>
               <b>채널 정산 자료</b>
-              <small>수수료·정산·입금 내역</small>
+              <small>수수료·정산액·입금일 정보</small>
             </span>
           </label>
         </fieldset>
@@ -174,7 +174,7 @@ export function ImportModal({
             <Upload size={23} />
           </span>
           <strong>{filename || "CSV 파일을 끌어놓거나 클릭해서 선택"}</strong>
-          <span>UTF-8 CSV · 최대 250KB / 500행</span>
+          <span>UTF-8 CSV · 최대 250KB · 데이터 500행</span>
         </button>
         <div className="sample-actions">
           <button className="text-button" onClick={() => void sample()} disabled={validating}>
@@ -183,12 +183,12 @@ export function ImportModal({
           </button>
           <a href={`/samples/${kind}.csv`} download>
             <Download size={14} />
-            CSV 템플릿
+            CSV 샘플 다운로드
           </a>
         </div>
         {validating && (
           <div className="notice">
-            <RefreshCw className="spin" size={16} />열 형식과 금액·날짜를 검증하고 있어요.
+            <RefreshCw className="spin" size={16} />열 연결과 금액·날짜 형식을 확인하고 있습니다.
           </div>
         )}
         {error && (
@@ -199,14 +199,14 @@ export function ImportModal({
         {preview && (
           <section className="mapping-section">
             <div className="section-heading">
-              <h3>원본 열 연결</h3>
-              <span className="soft-tag">자동 매핑 · 직접 수정 가능</span>
+              <h3>원본 열 연결 확인</h3>
+              <span className="soft-tag">자동 연결 · 직접 수정 가능</span>
             </div>
             <div className="mapping-grid">
               {IMPORT_FIELDS[kind].map((field) => (
                 <label key={field}>
                   <span>
-                    {field}
+                    {IMPORT_FIELD_LABELS[field]}
                     {field !== "paid_date" && <small>필수</small>}
                   </span>
                   <select
@@ -219,7 +219,7 @@ export function ImportModal({
                       })
                     }
                   >
-                    <option value="">열 선택</option>
+                    <option value="">원본 열 선택</option>
                     {preview.headers.map((header) => (
                       <option key={header} value={header}>
                         {header}
@@ -234,8 +234,7 @@ export function ImportModal({
               disabled={validating}
               onClick={() => void validate(csv, preview.mapping)}
             >
-              <RefreshCw size={14} />
-              매핑 다시 검증
+              <RefreshCw size={14} />열 연결 다시 확인
             </button>
             {preview.errors.length > 0 && (
               <div className="validation-errors" role="alert">
@@ -251,7 +250,7 @@ export function ImportModal({
               <>
                 <div className="validation-success">
                   <CheckCircle2 size={17} />
-                  {preview.count}행 검증 완료 · 전체 파일을 하나의 트랜잭션으로 반영합니다.
+                  {preview.count}행 검증 완료 · 자료 반영을 누르면 전체 내용을 한 번에 저장합니다.
                 </div>
                 <div className="preview-table-wrap">
                   <table className="preview-table">
@@ -259,7 +258,7 @@ export function ImportModal({
                     <thead>
                       <tr>
                         {IMPORT_FIELDS[kind].map((field) => (
-                          <th key={field}>{field}</th>
+                          <th key={field}>{IMPORT_FIELD_LABELS[field]}</th>
                         ))}
                       </tr>
                     </thead>
@@ -279,7 +278,7 @@ export function ImportModal({
           </section>
         )}
         <div className="modal-footer">
-          <p>반영 후 대사를 다시 실행하면 결과에 적용됩니다.</p>
+          <p>자료를 반영한 뒤 대사를 다시 실행하세요.</p>
           <button
             className="button primary"
             disabled={!preview?.valid || validating || busy}
@@ -302,7 +301,7 @@ export function ImportModal({
               }
             }}
           >
-            {busy ? "가져오는 중…" : "자료 가져오기"}
+            {busy ? "반영하는 중…" : "자료 반영"}
             <ArrowRight size={16} />
           </button>
         </div>

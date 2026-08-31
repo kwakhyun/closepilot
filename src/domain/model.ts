@@ -13,7 +13,10 @@ export type Won = number & { readonly __won: unique symbol };
 
 export function won(value: number): Won {
   if (!Number.isSafeInteger(value) || Math.abs(value) > MAX_AMOUNT) {
-    throw new DomainError("INVALID_MONEY", "금액은 허용 범위 내의 원 단위 정수여야 합니다.");
+    throw new DomainError(
+      "INVALID_MONEY",
+      "금액은 -1조 원부터 1조 원까지 원 단위 정수로 입력하세요.",
+    );
   }
   return value as Won;
 }
@@ -25,7 +28,7 @@ export function sumWon(values: number[]): Won {
 export function feeFor(netSales: number, basisPoints: number): Won {
   won(netSales);
   if (netSales < 0 || !Number.isInteger(basisPoints) || basisPoints < 0 || basisPoints > 10_000) {
-    throw new DomainError("INVALID_FEE", "수수료율 또는 순매출이 유효하지 않습니다.");
+    throw new DomainError("INVALID_FEE", "수수료율과 환불 차감 후 금액을 확인하세요.");
   }
   return won(Number((BigInt(netSales) * BigInt(basisPoints) + 5_000n) / 10_000n));
 }
@@ -58,10 +61,10 @@ export const ISSUE_LABELS: Record<IssueKind, string> = {
   missing: "정산 누락",
   orphan: "주문 미확인",
   duplicate: "중복 정산",
-  refund: "환불 불일치",
+  refund: "환불액 차이",
   fee: "수수료 차이",
-  amount: "금액 불일치",
-  timing: "입금 시차",
+  amount: "금액 차이",
+  timing: "입금 확인 필요",
 };
 export interface ReconciliationRow {
   key: string;

@@ -19,7 +19,8 @@ export function reconcile(
   const orderMap = new Map<string, Order>();
   for (const order of orders) {
     const key = `${order.channel}:${order.id}`;
-    if (orderMap.has(key)) throw new DomainError("DUPLICATE_ORDER", `중복 주문 키: ${key}`);
+    if (orderMap.has(key))
+      throw new DomainError("DUPLICATE_ORDER", `같은 채널에 동일한 주문번호가 있습니다: ${key}`);
     orderMap.set(key, order);
   }
   const groups = new Map<string, Settlement[]>();
@@ -46,6 +47,8 @@ export function reconcile(
       const actualNet = sumWon(entries.map((entry) => entry.net));
       const duplicate = entries.some((entry) => (ids.get(`${channel}:${entry.id}`) ?? 0) > 1);
       let kind: IssueKind = "matched";
+      // These v1 explanations are part of persisted review fingerprints.
+      // Use review-copy.ts for wording changes that do not change the calculation rules.
       let explanation = "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.";
       if (duplicate) {
         kind = "duplicate";

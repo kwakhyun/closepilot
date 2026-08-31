@@ -8,9 +8,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# ClosePilot engineering contract
+# ClosePilot engineering guidelines
 
-This is a synthetic-data portfolio, not a live payment or accounting service.
+This portfolio uses synthetic data. It does not process live payments or accounting entries.
 Do not claim customer interviews, measured operational savings, real PG/bank
 integration, enterprise access controls, or LLM calls that do not exist.
 
@@ -30,11 +30,12 @@ connection strings, cookie values or actual customer data in commits or logs.
 - Approvals cannot rewrite source amounts, change matches or delete duplicates.
 - New data requires reconciliation before approval or close.
 - Changed result fingerprints invalidate the corresponding prior approval.
-- No unresolved issue may close. Closed state is immutable.
-- A command, its audit events and idempotency receipt commit together.
+- A close cannot be finalized while any issue remains unreviewed. Closed state is immutable.
+- A command, its audit events and request-processing receipt commit together.
 - Sessions are opaque bearer capabilities, not enterprise user accounts.
 - Hashes check integrity; they are not signatures or protection from DB admins.
 - The public review guide is deterministic and must be labelled as such.
+- Copy-only changes must preserve existing fingerprints, stored review notes and closed packages. Follow `docs/copy-guide.md`.
 
 ## Change workflow
 
@@ -52,4 +53,4 @@ Do not use a production database as `TEST_DATABASE_URL`. Do not bypass a failing
 test, Origin check, version check or approval precondition to make a demo work.
 
 The optional `.githooks/pre-commit` hook and CI execute the same architecture,
-type and domain checks. They complement code review, not financial assurance.
+type and domain checks. They support code review but do not provide financial assurance.

@@ -31,7 +31,7 @@ async function consumeLimit(
   if (counter.hits > maximum)
     throw new DomainError(
       "RATE_LIMITED",
-      "데모 요청 한도를 초과했습니다. 잠시 후 다시 시도하세요.",
+      "데모 세션 생성 한도를 초과했습니다. 나중에 다시 시도하세요.",
       429,
     );
 }
@@ -86,7 +86,7 @@ export class WorkspaceRepository {
     if (!/^[a-zA-Z0-9_-]{16,100}$/.test(key))
       throw new DomainError(
         "INVALID_IDEMPOTENCY_KEY",
-        "16~100자의 Idempotency-Key 헤더가 필요합니다.",
+        "Idempotency-Key 헤더에 영문, 숫자, 밑줄(_), 하이픈(-)으로 구성된 16~100자의 요청 키를 입력하세요.",
         400,
       );
     const requestHash = digest(command);
@@ -117,7 +117,7 @@ export class WorkspaceRepository {
       if (result.state.events.length >= 100)
         throw new DomainError(
           "COMMAND_LIMIT",
-          "데모 세션은 최대 100개의 변경 기록을 지원합니다. 새 세션을 시작하세요.",
+          "데모의 변경 기록이 최대 100개에 도달했습니다. 필요한 결과를 내려받은 뒤 새 데모를 시작하세요.",
           429,
         );
       const workspace = applyCommand(result.state, command);
