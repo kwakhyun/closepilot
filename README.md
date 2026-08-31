@@ -1,5 +1,7 @@
 # ClosePilot
 
+[![Verify portfolio](https://github.com/kwakhyun/closepilot/actions/workflows/verify.yml/badge.svg?branch=codex%2Fclosepilot)](https://github.com/kwakhyun/closepilot/actions/workflows/verify.yml)
+
 **흩어진 커머스 정산 자료를, 설명할 수 있는 월 마감으로.**
 
 K-브랜드 재무 담당자가 주문과 정산 자료의 차이를 발견하고, 근거를 검토하고, 확정된 결과를 다시 검증할 수 있는 매출 마감 워크벤치입니다.
@@ -102,6 +104,7 @@ flowchart LR
 - TypeScript **77개 테스트**: 금액, CSV, 도메인 상태, HTTP 보안, DB 트랜잭션·동시성·세션 격리.
 - Kotlin **6개 테스트**: 고정 패키지 재계산, 중복, 체크섬·계산값·감사 기록 변조 거부.
 - HTTP **20개 검증 단계**: 실제 서버에서 세션 생성부터 CSV 반영·예외 승인·마감·내보내기까지.
+- [GitHub Actions 실행](https://github.com/kwakhyun/closepilot/actions/runs/33348712211): PostgreSQL 17 웹 검증과 JDK 21 Kotlin 검증 모두 통과.
 - 브라우저 확인과 배포 결과는 [검증 기록](docs/verification.md)에 환경과 한계를 함께 기록합니다.
 
 ## 로컬 실행
@@ -133,7 +136,7 @@ bash gradlew run --args='/absolute/path/to/closepilot-2026-08-close.json'
 
 Windows에서는 `JAVA_HOME`을 JDK 21로 설정하고 루트에서 `./scripts/verify-kotlin.ps1`을 실행합니다. 한글 경로에서 Gradle 테스트 작업자의 classpath가 깨지는 문제를 피하도록 임시 ASCII 빌드 경로를 사용합니다.
 
-Docker 설정도 제공합니다: `docker compose up --build`. 이 환경에서는 Docker 실행을 검증하지 않았습니다. GitHub Actions의 웹 검증은 별도의 PostgreSQL 서비스에서 수행하도록 구성했습니다.
+Docker 설정도 제공합니다: `docker compose up --build`. 이 환경에서는 Docker 실행을 검증하지 않았습니다. GitHub Actions의 웹 검증은 별도의 PostgreSQL 17 서비스에서 실행해 통과했습니다.
 
 ## AI 사용과 재현 가능한 개발
 

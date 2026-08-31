@@ -10,6 +10,8 @@ PostgreSQL을 사용할 때 `DATABASE_URL`을 서버 환경에 설정한다. 프
 
 Vercel 프로젝트에 새 Neon DB를 연결하고 production/preview 환경 변수를 확인한다. 기존 서비스 DB를 공유하지 않는다. 이 프로젝트의 함수/DB 리전은 Singapore다. 무료 플랜을 사용하지만 플랫폼 정책과 할당량은 변경될 수 있으므로 사용량을 확인한다.
 
+현재 공개 배포는 Vercel CLI로 수행했다. GitHub Actions는 검증을 실행하며, Git push에 따른 Vercel 자동 배포는 연결하지 않았다. 따라서 변경 내용을 공개하려면 검증 통과 후 아래 배포 명령을 실행해야 한다. Git 자동 연결은 저장소 접근·웹훅 권한을 별도로 검토한 뒤 추가할 수 있다.
+
 ```bash
 npm run verify
 vercel deploy --prod

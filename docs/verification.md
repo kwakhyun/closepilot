@@ -4,17 +4,26 @@
 
 ## 실행한 검사
 
-| 경계               | 방법                    | 확인한 내용                                                |
-| ------------------ | ----------------------- | ---------------------------------------------------------- |
-| Domain/Application | Vitest                  | 정수/반올림, CSV, 예외7종, 검토 fingerprint, 마감 조건     |
-| HTTP               | Vitest + 실행 중 서버   | Origin, body 크기, JSON, 안전한 오류/요청ID, 세션          |
-| Repository/DB      | PGlite PostgreSQL 엔진  | 행 잠금, 멱등성, 동시 수정, 격리, rollback, DB 불변 트리거 |
-| Web 전체 흐름      | `scripts/smoke-api.mjs` | CSV 반영 → 재대사 → 승인 → 확정 → JSON/CSV 내보내기        |
-| Kotlin/JVM         | JDK21 + Gradle          | 원본 재계산, 승인 fingerprint, 감사 해시, 변조 거부        |
+| 경계               | 방법                           | 확인한 내용                                                |
+| ------------------ | ------------------------------ | ---------------------------------------------------------- |
+| Domain/Application | Vitest                         | 정수/반올림, CSV, 예외7종, 검토 fingerprint, 마감 조건     |
+| HTTP               | Vitest + 실행 중 서버          | Origin, body 크기, JSON, 안전한 오류/요청ID, 세션          |
+| Repository/DB      | 로컬 PGlite / CI PostgreSQL 17 | 행 잠금, 멱등성, 동시 수정, 격리, rollback, DB 불변 트리거 |
+| Web 전체 흐름      | `scripts/smoke-api.mjs`        | CSV 반영 → 재대사 → 승인 → 확정 → JSON/CSV 내보내기        |
+| Kotlin/JVM         | JDK21 + Gradle                 | 원본 재계산, 승인 fingerprint, 감사 해시, 변조 거부        |
 
 TypeScript 테스트는 77개, Kotlin 테스트는 6개다. HTTP smoke는 한 시나리오를 20개 체크포인트로 검증하며 이를 별도의 20개 단위 테스트라고 부르지 않는다.
 
 로컬 API 기록: [api-smoke-local.json](evidence/api-smoke-local.json). 기준 패키지: [closed-package.json](../fixtures/closed-package.json), 기준 합계: [baseline.json](../fixtures/baseline.json).
+
+## GitHub Actions 실행 결과
+
+2026-08-31, 커밋 `e9dab668427f5475df6b8107067e9c9c16ad3a0d`의 [실행 #33348712211](https://github.com/kwakhyun/closepilot/actions/runs/33348712211)에서 `web`, `kotlin` 작업 모두 `success`로 완료됐다.
+
+- **Web / Ubuntu / Node.js 24 / PostgreSQL 17**: 포맷, 레이어 경계, 타입, lint, TypeScript 테스트 77개, 프로덕션 빌드, 고정 데이터 재생성 일치, 실행 중인 API의 20개 검증 단계를 통과했다. DB 테스트와 HTTP 흐름 모두 실제 PostgreSQL 서비스에 연결했다.
+- **Kotlin / Ubuntu / JDK 21**: 테스트와 독립 패키지 재계산을 통과했다. 출력은 `128 rows, 120 matches, 8 evidence-backed reviews, 11 audit events`였다.
+
+실행 페이지의 `web-verification` 아티팩트에는 HTTP 결과 JSON과 서버 로그, `kotlin-verification`에는 테스트 HTML 보고서가 있다. 아티팩트는 GitHub 보존 기간이 지나면 만료될 수 있으며, 아래 명령과 저장소의 고정 입력으로 재실행할 수 있다. CI 통과는 해당 입력·환경의 정확성 검증이며 운영 부하나 SLA 검증이 아니다.
 
 ## 고정 입력 재현
 
@@ -50,4 +59,4 @@ bash gradlew test run --args='../fixtures/closed-package.json'
 
 화면 증빙: [대시보드](evidence/dashboard.jpg), [원본 근거와 거래 검토](evidence/review.jpg), [모바일](evidence/mobile.jpg). 공개 데모의 데스크톱 화면에서 브라우저 console 로그를 확인했을 때 반환된 항목은0개였다. 이 결과는 해당 관찰 시점의 콘솔이며 모든 미래 오류가 없다는 보장은 아니다.
 
-실제 PG/은행 연결, 실제 고객 자료, 대량 트래픽/장기 부하, 다수 승인자, 보안 침투 테스트, 백업 복구, Docker 런타임, 법정 회계·개인정보 준수는 검증하지 않았다. GitHub CI의 PostgreSQL17 실행 여부는 실제 Actions 결과를 확인한 뒤 구분해 기록한다. 로컬 PGlite 통과를 클라우드 PostgreSQL 운영 성능의 증거로 사용하지 않는다.
+실제 PG/은행 연결, 실제 고객 자료, 대량 트래픽/장기 부하, 다수 승인자, 보안 침투 테스트, 백업 복구, Docker 런타임, 법정 회계·개인정보 준수는 검증하지 않았다. 로컬 PGlite와 CI PostgreSQL 통과를 클라우드 PostgreSQL 운영 성능의 증거로 사용하지 않는다.
