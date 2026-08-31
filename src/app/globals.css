@@ -518,10 +518,12 @@ a svg {
   background: #99a69b;
   border-radius: 50%;
 }
-.page-header h1 {
+.page-title-row {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+.page-header h1 {
   font-size: 27px;
   font-weight: 730;
   line-height: 1.25;
@@ -793,11 +795,14 @@ a svg {
   color: #66796c;
   font-size: 11px;
 }
-.insight-banner > button {
+.insight-actions {
   display: flex;
   align-items: center;
-  gap: 9px;
+  justify-content: flex-end;
+  gap: 12px;
   white-space: nowrap;
+}
+.insight-actions .text-button {
   font-size: 12px;
   color: #637b4d;
   font-weight: 600;
@@ -807,6 +812,9 @@ a svg {
   grid-template-columns: minmax(0, 1.9fr) minmax(260px, 1fr);
   gap: 18px;
   margin-bottom: 23px;
+}
+.overview-analytics {
+  margin-top: 23px;
 }
 .chart-card {
   min-width: 0;
@@ -1054,6 +1062,10 @@ a svg {
 }
 .transactions-card {
   overflow: hidden;
+}
+.transaction-tabpanel:focus-visible {
+  outline: 2px solid #507e66;
+  outline-offset: -2px;
 }
 .transactions-card .card-heading {
   padding-bottom: 19px;
@@ -1850,6 +1862,28 @@ a svg {
   margin: 0 8px;
   color: #66796c;
 }
+.review-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  margin-top: 18px;
+  border-top: 1px solid #edf1e8;
+  border-bottom: 1px solid #edf1e8;
+}
+.review-navigation > span {
+  color: #5b6d61;
+  font-size: 12px;
+}
+.review-navigation > span b {
+  color: #315f49;
+  font-weight: 700;
+}
+.review-navigation > div {
+  display: flex;
+  gap: 7px;
+}
 .comparison-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -2073,6 +2107,35 @@ a svg {
   flex-shrink: 0;
   margin-top: 2px;
 }
+.review-readiness {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px 12px;
+  margin: 0 0 16px;
+  padding: 13px;
+  border: 1px solid #e5eadf;
+  border-radius: 7px;
+  background: #fafbf8;
+  list-style: none;
+}
+.review-readiness li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #7a6a56;
+  font-size: 11px;
+}
+.review-readiness li.is-ready {
+  color: #3e704f;
+}
+.review-submit-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr);
+  gap: 8px;
+}
+.review-submit-actions > :only-child {
+  grid-column: 1 / -1;
+}
 .resolution-receipt {
   display: flex;
   gap: 10px;
@@ -2105,8 +2168,25 @@ a svg {
   display: block;
   margin-top: 12px;
 }
+.import-modal {
+  overflow: hidden;
+}
+.import-modal .modal-shell {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 50px);
+}
 .import-body {
-  padding: 22px 28px 26px;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+.import-scroll {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 22px 28px 0;
 }
 .import-steps {
   display: flex;
@@ -2341,6 +2421,14 @@ a svg {
 .modal-footer p {
   font-size: 12px;
   color: #66796c;
+}
+.import-footer {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 16px 28px 20px;
+  background: #fffffff5;
+  box-shadow: 0 -12px 28px #173f350a;
+  backdrop-filter: blur(8px);
 }
 .form-error {
   font-size: 13px;
@@ -2860,13 +2948,13 @@ a svg {
     font-size: 13px;
   }
   .insight-copy p {
-    font-size: 10px;
+    font-size: 12px;
   }
   .insight-icon {
     width: 33px;
     height: 33px;
   }
-  .insight-banner > button {
+  .insight-actions .text-button {
     font-size: 11px;
     gap: 6px;
   }
@@ -3082,15 +3170,15 @@ a svg {
     font-size: 13px;
   }
   .metric-card p {
-    font-size: 11px;
+    font-size: 12px;
   }
   .insight-copy h2 {
     font-size: 13px;
   }
   .insight-copy p {
-    font-size: 11px;
+    font-size: 12px;
   }
-  .insight-banner > button {
+  .insight-actions .text-button {
     font-size: 11px;
   }
   .analytics-grid {
@@ -3273,7 +3361,7 @@ a svg {
     font-size: 15px;
   }
   .metric-card p {
-    font-size: 10px;
+    font-size: 12px;
     margin-top: 9px;
   }
   .metric-progress {
@@ -3305,13 +3393,17 @@ a svg {
     line-height: 1.6;
   }
   .insight-copy p {
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1.7;
     margin-top: 4px;
   }
-  .insight-banner > button {
+  .insight-actions {
+    width: 100%;
+    justify-content: flex-start;
     margin: 1px 0 0 42px;
-    font-size: 11px;
+  }
+  .insight-actions .text-button {
+    font-size: 12px;
   }
   .card-heading {
     padding: 17px 16px 13px;
@@ -3320,7 +3412,7 @@ a svg {
     font-size: 14px;
   }
   .card-heading p {
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1.5;
     max-width: 230px;
   }
@@ -3348,7 +3440,7 @@ a svg {
   }
   .chart-footnote {
     padding: 0 16px 10px;
-    font-size: 9px;
+    font-size: 11px;
     line-height: 1.6;
   }
   .chart-data {
@@ -3417,7 +3509,7 @@ a svg {
     gap: 10px;
   }
   .overview-bottom > div {
-    font-size: 9px;
+    font-size: 11px;
     max-width: 210px;
   }
   .overview-bottom > div > svg {
@@ -3428,7 +3520,7 @@ a svg {
     white-space: nowrap;
   }
   .app-footer {
-    font-size: 9px;
+    font-size: 11px;
     gap: 6px;
     padding-top: 24px;
   }
@@ -3627,8 +3719,8 @@ a svg {
   .explanation-box p {
     font-size: 13px;
   }
-  .import-body {
-    padding: 18px 18px 21px;
+  .import-scroll {
+    padding: 18px 18px 0;
   }
   .import-steps {
     font-size: 11px;
@@ -3643,7 +3735,7 @@ a svg {
     height: 17px;
     font-size: 11px;
   }
-  .import-body > .notice {
+  .import-scroll > .notice {
     font-size: 12px;
     padding: 11px;
   }
@@ -3697,6 +3789,14 @@ a svg {
   .modal-footer > .button {
     height: 34px;
     font-size: 12px;
+  }
+  .import-footer {
+    margin: 0;
+    padding: 14px 18px calc(16px + env(safe-area-inset-bottom));
+  }
+  .review-readiness,
+  .review-submit-actions {
+    grid-template-columns: 1fr;
   }
   .close-body {
     padding: 21px 20px 23px;

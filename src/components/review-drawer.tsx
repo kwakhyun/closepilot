@@ -1,24 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import { Check, FileText, ShieldCheck, Info } from "lucide-react";
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Circle,
+  FileText,
+  ShieldCheck,
+  Info,
+} from "lucide-react";
 import type { Command, ReviewedRow, WorkspaceView } from "@/application/workbench";
 import { CHANNEL_LABELS, ISSUE_LABELS } from "@/domain/model";
 import { describeReconciliation, REVIEW_ACTION_LABELS } from "@/domain/review-copy";
 import { Modal } from "./modal";
 import { deltaMoney, money, timestamp } from "./format";
+import { unresolvedReviewQueue } from "./review-queue";
 import "./evidence.css";
 
 export function ReviewDrawer({
   row,
   workspace,
   onClose,
+  onSelect,
   onCommand,
   busy,
 }: {
   row: ReviewedRow | null;
   workspace: WorkspaceView;
   onClose: () => void;
+  onSelect: (rowKey: string) => void;
   onCommand: (command: Command) => Promise<boolean>;
   busy: boolean;
 }) {
@@ -32,6 +43,14 @@ export function ReviewDrawer({
         ? "exclude_duplicate"
         : "accepted_variance";
   const actionLabel = REVIEW_ACTION_LABELS[disposition];
+  const queue = unresolvedReviewQueue(workspace.rows);
+  const queueIndex = row ? queue.findIndex((entry) => entry.key === row.key) : -1;
+  const previousRow = queueIndex > 0 ? queue[queueIndex - 1] : null;
+  const nextRow = queueIndex >= 0 && queueIndex < queue.length - 1 ? queue[queueIndex + 1] : null;
+  const noteReady = note.trim().length >= 10;
+  const evidenceReady = evidence.trim().length >= 5;
+  const latestRunReady = !!workspace.lastRunAt;
+  const reviewReady = noteReady && evidenceReady && confirmed && latestRunReady;
   return (
     <Modal open={!!row} onClose={onClose} title="거래 검토" drawer>
       {row && (
@@ -49,6 +68,33 @@ export function ReviewDrawer({
               {row.date}
             </p>
           </div>
+          {queueIndex >= 0 && (
+            <nav className="review-navigation" aria-label="미검토 거래 이동">
+              <span>
+                미검토 거래 <b>{queueIndex + 1}</b>/{queue.length}
+              </span>
+              <div>
+                <button
+                  type="button"
+                  className="button secondary small"
+                  disabled={!previousRow}
+                  onClick={() => previousRow && onSelect(previousRow.key)}
+                >
+                  <ChevronLeft size={15} />
+                  이전
+                </button>
+                <button
+                  type="button"
+                  className="button secondary small"
+                  disabled={!nextRow}
+                  onClick={() => nextRow && onSelect(nextRow.key)}
+                >
+                  다음
+                  <ChevronRight size={15} />
+                </button>
+              </div>
+            </nav>
+          )}
           <div className="comparison-grid">
             <div>
               <span>예상 정산액</span>
@@ -142,7 +188,10 @@ export function ReviewDrawer({
               className="review-form"
               onSubmit={async (event) => {
                 event.preventDefault();
-                await onCommand({
+                const submitter = (event.nativeEvent as SubmitEvent)
+                  .submitter as HTMLButtonElement | null;
+                const moveToNext = submitter?.value === "next";
+                const succeeded = await onCommand({
                   action: "resolve",
                   expectedVersion: workspace.version,
                   rowKey: row.key,
@@ -150,6 +199,10 @@ export function ReviewDrawer({
                   note,
                   evidence,
                 });
+                if (succeeded && moveToNext) {
+                  if (nextRow) onSelect(nextRow.key);
+                  else onClose();
+                }
               }}
             >
               <div className="section-heading">
@@ -211,23 +264,42 @@ export function ReviewDrawer({
                       : "원본 금액과 자동 일치율은 유지됩니다. 검토 사유와 증빙 참조 정보는 마감 증빙 파일에 함께 저장됩니다."}
                 </p>
               </div>
-              <button
-                className="button primary full-width"
-                disabled={
-                  busy ||
-                  !confirmed ||
-                  note.trim().length < 10 ||
-                  evidence.trim().length < 5 ||
-                  !workspace.lastRunAt
-                }
-                type="submit"
-              >
-                <Check size={17} />
-                {busy ? "기록하는 중…" : actionLabel}
-              </button>
-              {!workspace.lastRunAt && (
-                <p className="form-error">최신 자료로 대사를 다시 실행한 뒤 검토하세요.</p>
-              )}
+              <ul className="review-readiness" id="review-readiness" aria-label="기록 조건">
+                {[
+                  [noteReady, "검토 사유 10자 이상"],
+                  [evidenceReady, "증빙 참조 정보 5자 이상"],
+                  [confirmed, "원본 자료 확인"],
+                  [latestRunReady, "최신 자료로 대사 완료"],
+                ].map(([ready, label]) => (
+                  <li className={ready ? "is-ready" : ""} key={String(label)}>
+                    {ready ? <Check size={13} /> : <Circle size={10} />}
+                    {label}
+                  </li>
+                ))}
+              </ul>
+              <div className="review-submit-actions">
+                {nextRow && (
+                  <button
+                    className="button secondary"
+                    disabled={busy || !reviewReady}
+                    type="submit"
+                    value="stay"
+                    aria-describedby="review-readiness"
+                  >
+                    {actionLabel}
+                  </button>
+                )}
+                <button
+                  className="button primary"
+                  disabled={busy || !reviewReady}
+                  type="submit"
+                  value={nextRow ? "next" : "stay"}
+                  aria-describedby="review-readiness"
+                >
+                  <Check size={17} />
+                  {busy ? "기록하는 중…" : nextRow ? "기록하고 다음 거래 보기" : actionLabel}
+                </button>
+              </div>
             </form>
           ) : null}
         </div>

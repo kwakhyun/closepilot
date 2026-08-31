@@ -66,12 +66,16 @@ export function Dashboard() {
   const [closeOpen, setCloseOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [analysisLoading, setAnalysisLoading] = useState(false);
   const [busy, setBusy] = useState(false);
   const [toast, setToast] = useState<{ message: string; error: boolean } | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const searchInput = useRef<HTMLInputElement>(null);
+  const mobileMenuButton = useRef<HTMLButtonElement>(null);
+  const mobileMenuCloseButton = useRef<HTMLButtonElement>(null);
+  const sidebar = useRef<HTMLElement>(null);
   const showToast = useCallback((message: string, isError = false) => {
     if (toastTimer.current) clearTimeout(toastTimer.current);
     setToast({ message, error: isError });
@@ -109,6 +113,54 @@ export function Dashboard() {
     },
     [],
   );
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 800px)");
+    const update = () => {
+      setIsMobile(media.matches);
+      if (!media.matches) setMobileNav(false);
+    };
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+  useEffect(() => {
+    if (!isMobile || !mobileNav) return;
+    const menu = sidebar.current;
+    if (!menu) return;
+    const trigger = mobileMenuButton.current;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    mobileMenuCloseButton.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setMobileNav(false);
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = Array.from(
+        menu.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+      if (window.matchMedia("(max-width: 800px)").matches) trigger?.focus();
+    };
+  }, [isMobile, mobileNav]);
 
   async function refresh() {
     try {
@@ -192,12 +244,13 @@ export function Dashboard() {
     setSection(value);
     setMobileNav(false);
     setSearch("");
-    if (value === "transactions") setFilter("all");
+    if (value === "transactions") setFilter(workspace?.summary.unresolved ? "issues" : "all");
   }
   function reviewIssues() {
     setSection("transactions");
     setFilter("issues");
     setSearch("");
+    setMobileNav(false);
   }
   const selectedRow = workspace?.rows.find((row) => row.key === selectedKey) ?? null;
   const progress = workspace
@@ -210,21 +263,37 @@ export function Dashboard() {
 
   return (
     <div className="app-shell">
-      <a className="skip-link" href="#main-content">
+      <a
+        className="skip-link"
+        href="#main-content"
+        aria-hidden={isMobile && mobileNav}
+        tabIndex={isMobile && mobileNav ? -1 : undefined}
+      >
         본문으로 건너뛰기
       </a>
       {mobileNav && (
         <button
           className="sidebar-backdrop"
           onClick={() => setMobileNav(false)}
-          aria-label="메뉴 닫기"
+          aria-hidden="true"
+          tabIndex={-1}
         />
       )}
-      <aside className={`sidebar ${mobileNav ? "is-open" : ""}`} aria-label="주 메뉴">
+      <aside
+        ref={sidebar}
+        id="workspace-navigation"
+        className={`sidebar ${mobileNav ? "is-open" : ""}`}
+        aria-label="주 메뉴"
+        aria-hidden={isMobile && !mobileNav}
+        aria-modal={isMobile && mobileNav ? true : undefined}
+        role={isMobile && mobileNav ? "dialog" : undefined}
+        inert={isMobile && !mobileNav ? true : undefined}
+      >
         <Link href="/" className="brand-link" aria-label="ClosePilot 홈">
           <Brand />
         </Link>
         <button
+          ref={mobileMenuCloseButton}
           className="mobile-sidebar-close icon-button"
           onClick={() => setMobileNav(false)}
           aria-label="메뉴 닫기"
@@ -293,8 +362,8 @@ export function Dashboard() {
           <div className="sidebar-progress">
             <span style={{ width: `${progress}%` }} />
           </div>
-          <p title="자동 일치 거래와 검토 승인 거래를 합산한 비율입니다">
-            {workspace ? `확인 완료율 ${progress}%` : "자료를 준비하고 있습니다"}
+          <p title="자동 일치 건수와 검토 완료 건수를 합산한 비율입니다">
+            {workspace ? `대사 처리율 ${progress}%` : "자료를 준비하고 있습니다"}
             <b>
               {workspace
                 ? `${workspace.summary.total - workspace.summary.unresolved}/${workspace.summary.total}`
@@ -317,12 +386,15 @@ export function Dashboard() {
           </button>
         </div>
       </aside>
-      <div className="workspace-main">
+      <div className="workspace-main" inert={isMobile && mobileNav ? true : undefined}>
         <header className="topbar">
           <div className="breadcrumb">
             <button
+              ref={mobileMenuButton}
               className="icon-button mobile-menu"
               aria-label="메뉴 열기"
+              aria-controls="workspace-navigation"
+              aria-expanded={mobileNav}
               onClick={() => setMobileNav(true)}
             >
               <Menu size={20} />
@@ -366,12 +438,12 @@ export function Dashboard() {
                 <i />
                 <span>2026년 8월</span>
               </div>
-              <h1>
-                {section === "overview" ? "매출 마감" : SECTIONS[section]}
+              <div className="page-title-row">
+                <h1>{section === "overview" ? "매출 마감" : SECTIONS[section]}</h1>
                 <span className={`period-status ${workspace?.close ? "is-closed" : ""}`}>
                   {workspace?.close ? "마감 완료" : "마감 진행 중"}
                 </span>
-              </h1>
+              </div>
               <p>
                 {section === "overview"
                   ? workspace?.close
@@ -493,18 +565,30 @@ export function Dashboard() {
                       <p>
                         {workspace.summary.unresolved
                           ? "정산 누락, 수수료 차이, 입금 확인이 필요한 거래의 원본 자료를 살펴보세요."
-                          : "원본 금액은 그대로 유지되며, 검토 사유와 증빙 참조 정보를 감사 기록에서 확인할 수 있습니다."}
+                          : "원본 금액은 그대로 유지되며, 검토 사유와 증빙 참조 정보를 감사 기록에서 확인할 수 있습니다."}{" "}
                         <span className="insight-label">규칙 기반 가이드</span>
                       </p>
                     </div>
-                    <button onClick={() => void analyze()} disabled={analysisLoading}>
-                      {analysisLoading ? "안내를 불러오는 중…" : "검토 가이드"}
-                      <ArrowRight size={16} />
-                    </button>
-                  </div>
-                  <div className="analytics-grid">
-                    <TrendChart workspace={workspace} />
-                    <ChannelPanel workspace={workspace} onOpen={() => navigate("sources")} />
+                    <div className="insight-actions">
+                      <button
+                        className="button primary small"
+                        onClick={
+                          workspace.summary.unresolved ? reviewIssues : () => setCloseOpen(true)
+                        }
+                      >
+                        {workspace.summary.unresolved ? "확인할 거래 보기" : "마감 점검"}
+                        <ArrowRight size={15} />
+                      </button>
+                      {workspace.summary.unresolved > 0 && (
+                        <button
+                          className="text-button"
+                          onClick={() => void analyze()}
+                          disabled={analysisLoading}
+                        >
+                          {analysisLoading ? "불러오는 중…" : "검토 방법"}
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <TransactionTable
                     workspace={workspace}
@@ -514,6 +598,10 @@ export function Dashboard() {
                     search={search}
                     setSearch={setSearch}
                   />
+                  <div className="analytics-grid overview-analytics">
+                    <TrendChart workspace={workspace} />
+                    <ChannelPanel workspace={workspace} onOpen={() => navigate("sources")} />
+                  </div>
                   <div className="overview-bottom">
                     <div>
                       <ShieldCheck size={16} />
@@ -619,6 +707,7 @@ export function Dashboard() {
             row={selectedRow}
             workspace={workspace}
             onClose={() => setSelectedKey(null)}
+            onSelect={setSelectedKey}
             onCommand={onCommand}
             busy={busy}
           />
