@@ -1,0 +1,620 @@
+.guide-page {
+  background: #f7f8f3;
+  min-height: 100vh;
+}
+.guide-header {
+  height: 88px;
+  padding: 0 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #e0e6d9;
+  background: #fff;
+}
+.guide-header .brand {
+  color: #173f35;
+  font-size: 25px;
+}
+.guide-header .brand-mark,
+.guide-header .brand-dot {
+  color: #507e50;
+}
+.guide-header > div {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+.guide-header > div > span {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: #7b8971;
+}
+.guide-header > div > a:not(.button) {
+  font-size: 12px;
+  color: #617256;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.guide-header .button {
+  height: 36px;
+  font-size: 12px;
+}
+.guide-main {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 30px 36px 0;
+}
+.guide-back {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 11px;
+  color: #758568;
+}
+.guide-hero {
+  padding: 70px 0 60px;
+}
+.guide-kicker {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  letter-spacing: 0.12em;
+  font-size: 10px;
+  font-weight: 500;
+  color: #698054;
+}
+.guide-kicker > span {
+  width: 6px;
+  height: 6px;
+  background: #8dad6c;
+  border-radius: 50%;
+}
+.guide-hero h1 {
+  font-size: 64px;
+  font-weight: 680;
+  letter-spacing: -0.065em;
+  line-height: 1.22;
+  color: #244933;
+  margin-top: 24px;
+}
+.guide-hero h1 em {
+  font-style: normal;
+  color: #769550;
+  position: relative;
+}
+.guide-hero h1 em:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 4px;
+  right: 0;
+  height: 11px;
+  background: #c9daa644;
+  z-index: 0;
+}
+.guide-hero > p {
+  font-size: 16px;
+  line-height: 1.95;
+  color: #79896c;
+  margin-top: 26px;
+  letter-spacing: -0.03em;
+}
+.guide-hero-actions {
+  display: flex;
+  gap: 11px;
+  margin-top: 30px;
+}
+.guide-hero-actions .button {
+  height: 42px;
+  font-size: 12px;
+  padding: 0 17px;
+}
+.guide-disclaimer {
+  font-size: 10px;
+  color: #899878;
+  margin-top: 23px;
+}
+.guide-numbers {
+  background: #173f35;
+  color: #f4f5e7;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 33px 20px;
+  border-radius: 13px;
+  margin-bottom: 84px;
+}
+.guide-numbers > div {
+  padding: 0 25px;
+  border-right: 1px solid #ffffff16;
+}
+.guide-numbers > div:last-child {
+  border: 0;
+}
+.guide-numbers strong {
+  display: block;
+  font-size: 37px;
+  font-weight: 550;
+  line-height: 1.1;
+  color: #d4e5b8;
+  letter-spacing: -0.03em;
+}
+.guide-numbers small {
+  font-size: 14px;
+  font-weight: 400;
+  margin-left: 5px;
+}
+.guide-numbers span {
+  font-size: 11px;
+  color: #b2c9b4;
+  display: block;
+  margin-top: 14px;
+}
+.guide-section {
+  display: grid;
+  grid-template-columns: 185px 1fr;
+  gap: 30px;
+  margin-bottom: 70px;
+}
+.guide-section-index {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: #78925f;
+  padding-top: 8px;
+  display: block;
+}
+.guide-section-content h2 {
+  font-size: 30px;
+  line-height: 1.4;
+  color: #315739;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  margin-bottom: 22px;
+}
+.guide-section-content > p {
+  font-size: 14px;
+  line-height: 1.95;
+  color: #778d69;
+  margin-top: 15px;
+}
+.guide-section-content > p b {
+  font-weight: 600;
+  color: #567b46;
+}
+.guide-question {
+  margin-top: 24px;
+  border-left: 3px solid #9ab875;
+  padding: 13px 18px;
+  background: #eff4e5;
+}
+.guide-question > span {
+  font-size: 10px;
+  color: #7f9664;
+}
+.guide-question blockquote {
+  font-size: 17px;
+  line-height: 1.6;
+  color: #597944;
+  font-weight: 500;
+  margin: 7px 0 0;
+}
+.guide-flow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 27px;
+  margin-bottom: 25px;
+}
+.guide-flow > div {
+  padding: 20px 15px;
+  border: 1px solid #dde6ce;
+  background: #fff;
+  border-radius: 9px;
+  position: relative;
+}
+.guide-flow > div > span {
+  position: absolute;
+  top: 14px;
+  right: 12px;
+  font-size: 9px;
+  color: #95a781;
+}
+.guide-flow svg {
+  color: #8baa69;
+  margin-bottom: 16px;
+}
+.guide-flow h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #658450;
+  margin-bottom: 8px;
+}
+.guide-flow p {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #8d9f7b;
+  white-space: pre-line;
+}
+.guide-instructions {
+  padding-left: 19px;
+  font-size: 13px;
+  color: #789569;
+  line-height: 1.9;
+}
+.guide-instructions li {
+  padding-left: 4px;
+  margin: 12px 0;
+}
+.guide-instructions b {
+  font-weight: 550;
+  color: #547b43;
+}
+.guide-principles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 32px;
+}
+.guide-principles article {
+  border-top: 1px solid #dfe8d0;
+  padding-top: 21px;
+}
+.guide-principles svg {
+  color: #83a862;
+}
+.guide-principles h3 {
+  font-size: 15px;
+  color: #587b40;
+  font-weight: 600;
+  margin-top: 10px;
+}
+.guide-principles p {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #789166;
+  margin-top: 9px;
+}
+.guide-stack {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: #eaf2de;
+  border: 1px solid #dde9ce;
+  border-radius: 7px;
+  color: #739456;
+  font-size: 11px;
+  padding: 13px;
+  margin-top: 28px;
+}
+.scope-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 27px;
+}
+.scope-grid article {
+  border: 1px solid #dfe8d2;
+  background: #fff;
+  border-radius: 9px;
+  padding: 20px;
+}
+.scope-grid h3 {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: #749652;
+  font-size: 13px;
+  font-weight: 600;
+}
+.scope-grid article:last-child {
+  background: #f2f5eb;
+}
+.scope-grid ul {
+  padding-left: 16px;
+  color: #7f9a67;
+  font-size: 12px;
+  line-height: 1.8;
+  margin: 16px 0 0;
+}
+.scope-grid li {
+  margin-top: 9px;
+}
+.guide-section-content > .scope-footnote {
+  font-size: 11px;
+  color: #849a6d;
+  line-height: 1.9;
+  margin-top: 20px;
+}
+.guide-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  border-top: 1px solid #d9e3c8;
+  padding-top: 43px;
+  padding-bottom: 43px;
+  margin-top: 15px;
+}
+.guide-cta h2 {
+  color: #4c7337;
+  font-size: 26px;
+  font-weight: 580;
+  letter-spacing: -0.04em;
+  margin-top: 11px;
+}
+.guide-cta p {
+  color: #7d9863;
+  font-size: 12px;
+  margin-top: 10px;
+}
+.guide-cta .button {
+  height: 42px;
+  font-size: 12px;
+  padding: 0 16px;
+}
+.guide-footer {
+  border-top: 1px solid #dfe8d2;
+  padding: 26px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #82956c;
+}
+.guide-footer > div {
+  display: flex;
+  gap: 20px;
+}
+.guide-footer a {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+@media (max-width: 800px) {
+  .guide-header {
+    height: 70px;
+    padding: 0 24px;
+  }
+  .guide-header > div {
+    gap: 17px;
+  }
+  .guide-header > div > span {
+    display: none;
+  }
+  .guide-main {
+    padding: 25px 26px 0;
+  }
+  .guide-hero {
+    padding: 50px 0;
+  }
+  .guide-hero h1 {
+    font-size: 52px;
+  }
+  .guide-hero > p {
+    font-size: 14px;
+  }
+  .guide-numbers {
+    padding: 27px 8px;
+    margin-bottom: 60px;
+  }
+  .guide-numbers > div {
+    padding: 0 18px;
+  }
+  .guide-numbers strong {
+    font-size: 30px;
+  }
+  .guide-numbers span {
+    font-size: 10px;
+    line-height: 1.7;
+  }
+  .guide-section {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-bottom: 55px;
+  }
+  .guide-section-index {
+    font-size: 9px;
+  }
+  .guide-section-content h2 {
+    font-size: 28px;
+  }
+  .guide-section-content > p {
+    font-size: 13px;
+  }
+  .guide-principles {
+    gap: 23px;
+  }
+  .guide-cta h2 {
+    font-size: 23px;
+  }
+  .guide-cta {
+    gap: 20px;
+  }
+  .guide-cta .button {
+    font-size: 11px;
+  }
+  .guide-cta p {
+    font-size: 11px;
+  }
+}
+@media (max-width: 540px) {
+  .guide-header {
+    padding: 0 18px;
+    height: 66px;
+  }
+  .guide-header .brand {
+    font-size: 23px;
+  }
+  .guide-header .brand-mark {
+    width: 27px;
+    height: 27px;
+  }
+  .guide-header > div > a:not(.button) {
+    display: none;
+  }
+  .guide-header .button {
+    height: 32px;
+    font-size: 10px;
+    padding: 0 10px;
+  }
+  .guide-main {
+    padding: 23px 20px 0;
+  }
+  .guide-back {
+    font-size: 10px;
+  }
+  .guide-hero {
+    padding: 40px 0;
+  }
+  .guide-kicker {
+    font-size: 8px;
+    letter-spacing: 0.09em;
+  }
+  .guide-hero h1 {
+    font-size: 43px;
+    margin-top: 21px;
+  }
+  .guide-hero > p {
+    font-size: 12px;
+    line-height: 1.95;
+    margin-top: 24px;
+  }
+  .guide-hero > p br {
+    display: none;
+  }
+  .guide-hero-actions {
+    margin-top: 25px;
+    gap: 8px;
+  }
+  .guide-hero-actions .button {
+    font-size: 11px;
+    height: 37px;
+    padding: 0 13px;
+  }
+  .guide-disclaimer {
+    font-size: 9px;
+    margin-top: 19px;
+  }
+  .guide-numbers {
+    grid-template-columns: 1fr 1fr;
+    gap: 25px 0;
+    padding: 27px 8px;
+    margin-bottom: 47px;
+  }
+  .guide-numbers > div {
+    padding: 0 20px;
+  }
+  .guide-numbers > div:nth-child(2) {
+    border: 0;
+  }
+  .guide-numbers strong {
+    font-size: 33px;
+  }
+  .guide-numbers span {
+    margin-top: 9px;
+    font-size: 10px;
+  }
+  .guide-section {
+    gap: 12px;
+    margin-bottom: 44px;
+  }
+  .guide-section-content h2 {
+    font-size: 25px;
+    margin-bottom: 17px;
+  }
+  .guide-section-content > p {
+    font-size: 12px;
+  }
+  .guide-question {
+    padding: 12px 14px;
+  }
+  .guide-question blockquote {
+    font-size: 15px;
+    line-height: 1.8;
+  }
+  .guide-question > span {
+    font-size: 9px;
+  }
+  .guide-flow {
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    margin-top: 24px;
+  }
+  .guide-flow > div {
+    padding: 18px;
+  }
+  .guide-flow h3 {
+    font-size: 16px;
+  }
+  .guide-flow p {
+    font-size: 11px;
+  }
+  .guide-instructions {
+    font-size: 12px;
+  }
+  .guide-principles {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .guide-principles article {
+    padding-top: 18px;
+  }
+  .guide-principles h3 {
+    font-size: 15px;
+  }
+  .guide-principles p {
+    font-size: 12px;
+  }
+  .guide-stack {
+    font-size: 10px;
+    line-height: 1.9;
+    align-items: flex-start;
+  }
+  .guide-stack svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .scope-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 22px;
+  }
+  .scope-grid article {
+    padding: 19px;
+  }
+  .scope-grid ul {
+    font-size: 12px;
+  }
+  .guide-section-content > .scope-footnote {
+    font-size: 10px;
+  }
+  .guide-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    gap: 22px;
+  }
+  .guide-cta h2 {
+    font-size: 24px;
+    line-height: 1.5;
+  }
+  .guide-cta p {
+    font-size: 11px;
+    line-height: 1.8;
+  }
+  .guide-cta .eyebrow {
+    font-size: 8px;
+  }
+  .guide-cta .button {
+    height: 39px;
+  }
+  .guide-footer {
+    font-size: 9px;
+    gap: 13px;
+    flex-wrap: wrap;
+  }
+  .guide-footer > div {
+    gap: 15px;
+  }
+}

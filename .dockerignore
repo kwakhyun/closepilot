@@ -1,0 +1,14 @@
+.git
+node_modules
+.next
+.env*
+.tools
+.data
+.vercel
+.agents
+verifier
+docs
+tests
+fixtures
+coverage
+*.tsbuildinfo

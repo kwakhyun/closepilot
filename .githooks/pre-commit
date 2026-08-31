@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+npm run check:architecture
+npm run typecheck
+npm test

@@ -1,0 +1,308 @@
+openapi: 3.1.0
+info:
+  title: ClosePilot sandbox REST API
+  version: 1.0.0
+  description: |
+    Synthetic-data portfolio only. No payment, transfer, journal posting or LLM calls.
+    Changing requests require the exact site Origin. Commands require a session,
+    expectedVersion and Idempotency-Key. Amounts are integer KRW.
+servers:
+  - url: /
+security:
+  - session: []
+paths:
+  /api/health:
+    get:
+      operationId: health
+      security: []
+      summary: Verify database connectivity
+      responses:
+        "200":
+          description: Database SELECT 1 succeeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { const: ok }
+                  service: { const: closepilot }
+                  storage: { enum: [postgresql, embedded-postgresql] }
+                  mode: { const: synthetic-sandbox }
+        "503": { description: Database unavailable; credentials are never returned }
+  /api/session:
+    post:
+      operationId: createSession
+      summary: Create an isolated six-hour synthetic workspace
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/Origin"
+      responses:
+        "201":
+          description: Seeded workspace; HttpOnly, SameSite=Lax cookie (Secure in production)
+          headers:
+            Set-Cookie: { schema: { type: string } }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/WorkspaceView" }
+        "403": { $ref: "#/components/responses/Error" }
+        "429": { $ref: "#/components/responses/Error" }
+        "500": { $ref: "#/components/responses/Error" }
+  /api/workspace:
+    get:
+      operationId: getWorkspace
+      summary: Read current workspace, calculated rows and effective approvals
+      responses:
+        "200":
+          description: Private, no-store response
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/WorkspaceView" }
+        "401": { $ref: "#/components/responses/Error" }
+        "500": { $ref: "#/components/responses/Error" }
+  /api/commands:
+    post:
+      operationId: executeCommand
+      summary: Apply one versioned, idempotent workspace command
+      description: |
+        A replay with the same key and payload returns the latest workspace without
+        applying the command again. A reused key with a different payload is 409.
+        All state, events and receipt writes commit atomically.
+      parameters:
+        - $ref: "#/components/parameters/Origin"
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema: { type: string, pattern: "^[a-zA-Z0-9_-]{16,100}$" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: "#/components/schemas/ReconcileCommand"
+                - $ref: "#/components/schemas/ResolveCommand"
+                - $ref: "#/components/schemas/CloseCommand"
+                - $ref: "#/components/schemas/ImportCommand"
+              discriminator: { propertyName: action }
+      responses:
+        "200":
+          description: Updated workspace; original amounts remain unchanged on approval
+          headers:
+            Idempotency-Replayed: { schema: { type: string, enum: ["true", "false"] } }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/WorkspaceView" }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "403": { $ref: "#/components/responses/Error" }
+        "409":
+          description: Version/idempotency conflict, stale reconciliation, unresolved issues, locked close, or already imported content
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorBody" }
+        "413": { $ref: "#/components/responses/Error" }
+        "415": { $ref: "#/components/responses/Error" }
+        "422": { $ref: "#/components/responses/Error" }
+        "429": { $ref: "#/components/responses/Error" }
+        "500": { $ref: "#/components/responses/Error" }
+  /api/imports/preview:
+    post:
+      operationId: previewImport
+      summary: Preview header mapping and validate a CSV without writing workspace state
+      parameters:
+        - $ref: "#/components/parameters/Origin"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [kind, csv]
+              properties:
+                kind: { enum: [orders, settlements] }
+                csv: { type: string, maxLength: 256000 }
+                mapping: { $ref: "#/components/schemas/Mapping" }
+      responses:
+        "200":
+          description: Field validation errors are returned as valid=false; malformed CSV can return 422
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [valid, headers, mapping, count, preview, errors]
+                properties:
+                  valid: { type: boolean }
+                  headers: { type: array, items: { type: string } }
+                  mapping: { $ref: "#/components/schemas/Mapping" }
+                  count: { type: integer, minimum: 0 }
+                  preview: { type: array, items: { type: object } }
+                  errors: { type: array, items: { type: string } }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "403": { $ref: "#/components/responses/Error" }
+        "413": { $ref: "#/components/responses/Error" }
+        "415": { $ref: "#/components/responses/Error" }
+        "422": { $ref: "#/components/responses/Error" }
+  /api/analysis:
+    get:
+      operationId: deterministicGuide
+      summary: Read evidence-linked deterministic guidance; does not call an LLM
+      responses:
+        "200":
+          description: Unresolved issues only; up to four evidence-linked suggestions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mode: { const: deterministic }
+                  title: { type: string }
+                  summary: { type: string }
+                  steps: { type: array, items: { type: object } }
+                  guardrail: { type: string }
+        "401": { $ref: "#/components/responses/Error" }
+  /api/export:
+    get:
+      operationId: exportEvidence
+      summary: Download reconciliation CSV or immutable close JSON package
+      parameters:
+        - name: format
+          in: query
+          schema: { type: string, enum: [csv, json], default: csv }
+      responses:
+        "200":
+          description: Attachment. JSON requires closed state. CSV neutralizes untrusted formula-like fields.
+          content:
+            text/csv:
+              schema: { type: string }
+            application/json:
+              schema:
+                type: object
+                required: [snapshot, audit, notice]
+                properties:
+                  snapshot:
+                    {
+                      type: object,
+                      description: "Typed contract is CloseSnapshot in src/domain/model.ts; executable fixture in fixtures/closed-package.json",
+                    }
+                  audit: { type: array, items: { type: object } }
+                  notice: { type: string }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "409": { $ref: "#/components/responses/Error" }
+components:
+  securitySchemes:
+    session:
+      type: apiKey
+      in: cookie
+      name: closepilot_session
+  parameters:
+    Origin:
+      name: Origin
+      in: header
+      required: true
+      description: Exact origin of the site, including scheme and non-default port
+      schema: { type: string, format: uri }
+  responses:
+    Error:
+      description: Structured error; inspect error.code and error.message
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorBody" }
+  schemas:
+    ErrorBody:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string }
+            message: { type: string }
+            requestId: { type: string, format: uuid }
+            fields: { type: array, items: { type: object } }
+    Mapping:
+      type: object
+      description: Canonical field name to uploaded CSV header; unknown source columns are discarded
+      additionalProperties: { type: string, maxLength: 100 }
+    ReconcileCommand:
+      type: object
+      additionalProperties: false
+      required: [action, expectedVersion]
+      properties:
+        action: { const: reconcile }
+        expectedVersion: { type: integer, minimum: 1 }
+    CloseCommand:
+      type: object
+      additionalProperties: false
+      required: [action, expectedVersion]
+      properties:
+        action: { const: close }
+        expectedVersion: { type: integer, minimum: 1 }
+    ResolveCommand:
+      type: object
+      additionalProperties: false
+      required: [action, expectedVersion, rowKey, disposition, note, evidence]
+      properties:
+        action: { const: resolve }
+        expectedVersion: { type: integer, minimum: 1 }
+        rowKey: { type: string, minLength: 1, maxLength: 100 }
+        disposition: { enum: [accepted_variance, carry_forward, exclude_duplicate] }
+        note: { type: string, minLength: 10, maxLength: 600 }
+        evidence: { type: string, minLength: 5, maxLength: 200 }
+    ImportCommand:
+      type: object
+      additionalProperties: false
+      required: [action, expectedVersion, kind, filename, csv]
+      properties:
+        action: { const: import }
+        expectedVersion: { type: integer, minimum: 1 }
+        kind: { enum: [orders, settlements] }
+        filename:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 100,
+            description: ".csv; letters, digits, Korean characters, spaces, dots, underscores, parentheses and hyphens",
+          }
+        csv: { type: string, minLength: 1, maxLength: 256000 }
+        mapping: { $ref: "#/components/schemas/Mapping" }
+    WorkspaceView:
+      type: object
+      description: Full typed shape is WorkspaceView in src/application/workbench.ts. Synthetic session data only.
+      required:
+        [
+          version,
+          period,
+          asOf,
+          status,
+          orders,
+          settlements,
+          sources,
+          rows,
+          summary,
+          events,
+          auditValid,
+          ruleVersion,
+          sandbox,
+        ]
+      properties:
+        version: { type: integer, minimum: 1 }
+        period: { const: "2026-08" }
+        asOf: { type: string, format: date }
+        status: { enum: [open, review, closed] }
+        orders: { type: array, items: { type: object } }
+        settlements: { type: array, items: { type: object } }
+        sources: { type: array, items: { type: object } }
+        rows: { type: array, items: { type: object } }
+        summary:
+          {
+            type: object,
+            description: "Integer KRW totals and counts; approved variances are not subtracted from original amounts",
+          }
+        events: { type: array, items: { type: object } }
+        auditValid: { type: boolean }
+        ruleVersion: { const: krw-net-v1.0.0 }
+        sandbox: { const: true }

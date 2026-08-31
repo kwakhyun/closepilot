@@ -1,0 +1,44 @@
+.raw-evidence {
+  margin-top: 16px;
+  border: 1px solid #e0e6e1;
+  border-radius: 8px;
+  padding: 13px;
+  background: #f8faf7;
+}
+.raw-evidence summary {
+  cursor: pointer;
+  font-size: 13px;
+  color: #294b3e;
+  font-weight: 600;
+}
+.raw-evidence > p {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #647267;
+  margin: 12px 0;
+}
+.raw-evidence > div {
+  padding: 12px 0 6px;
+  border-top: 1px solid #e0e6e1;
+}
+.raw-evidence strong {
+  font-size: 12px;
+  word-break: break-all;
+}
+.raw-evidence dl {
+  margin: 8px 0 0;
+}
+.raw-evidence dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.9;
+}
+.raw-evidence dt {
+  color: #627067;
+}
+.raw-evidence dd {
+  margin: 0;
+  text-align: right;
+}

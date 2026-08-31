@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: closepilot
+      POSTGRES_PASSWORD: local-demo-only
+      POSTGRES_DB: closepilot
+    volumes:
+      - closepilot-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U closepilot -d closepilot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  web:
+    build: .
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      DATABASE_URL: postgres://closepilot:local-demo-only@postgres:5432/closepilot
+      APP_ORIGIN: http://localhost:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+volumes:
+  closepilot-db:

@@ -1,0 +1,312 @@
+"use client";
+
+import { useRef, useState } from "react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Download,
+  FileSpreadsheet,
+  Upload,
+  AlertCircle,
+  RefreshCw,
+} from "lucide-react";
+import { IMPORT_FIELDS, type ImportKind } from "@/domain/csv";
+import type { Command } from "@/application/workbench";
+import { Modal } from "./modal";
+
+interface Preview {
+  valid: boolean;
+  headers: string[];
+  mapping: Record<string, string>;
+  count: number;
+  preview: Record<string, string>[];
+  errors: string[];
+}
+export function ImportModal({
+  open,
+  onClose,
+  onCommand,
+  version,
+  busy,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onCommand: (command: Command) => Promise<boolean>;
+  version: number;
+  busy: boolean;
+}) {
+  const [kind, setKind] = useState<ImportKind>("orders");
+  const [csv, setCsv] = useState("");
+  const [filename, setFilename] = useState("");
+  const [preview, setPreview] = useState<Preview | null>(null);
+  const [validating, setValidating] = useState(false);
+  const [error, setError] = useState("");
+  const input = useRef<HTMLInputElement>(null);
+  const requestVersion = useRef(0);
+  async function validate(text: string, mapping?: Record<string, string>, importKind = kind) {
+    const version = ++requestVersion.current;
+    setValidating(true);
+    setError("");
+    try {
+      const response = await fetch("/api/imports/preview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind: importKind, csv: text, mapping }),
+      });
+      const result = await response.json();
+      if (version !== requestVersion.current) return;
+      if (!response.ok) throw new Error(result.error?.message || "파일을 검증하지 못했습니다.");
+      setPreview(result);
+    } catch (failure) {
+      if (version === requestVersion.current) setError((failure as Error).message);
+    } finally {
+      if (version === requestVersion.current) setValidating(false);
+    }
+  }
+  async function sample() {
+    try {
+      const response = await fetch(`/samples/${kind}.csv`);
+      if (!response.ok) throw new Error("샘플 파일을 불러오지 못했습니다.");
+      const text = await response.text();
+      setCsv(text);
+      setFilename(`sample_${kind}.csv`);
+      await validate(text);
+    } catch (failure) {
+      setError((failure as Error).message);
+    }
+  }
+  async function selectFile(file: File | undefined) {
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith(".csv") || file.size > 256_000) {
+      setError("250KB 이하의 CSV 파일을 선택하세요.");
+      return;
+    }
+    const text = await file.text();
+    setCsv(text);
+    setFilename(file.name);
+    setPreview(null);
+    await validate(text);
+  }
+  return (
+    <Modal open={open} onClose={onClose} title="새로운 자료 가져오기" wide>
+      <div className="import-body">
+        <div className="import-steps">
+          <span className="active">
+            <i>1</i>자료 선택
+          </span>
+          <ArrowRight size={14} />
+          <span className={csv ? "active" : ""}>
+            <i>2</i>열 매핑·검증
+          </span>
+          <ArrowRight size={14} />
+          <span className={preview?.valid ? "active" : ""}>
+            <i>3</i>가져오기
+          </span>
+        </div>
+        <div className="notice warm">
+          <AlertCircle size={18} />
+          <p>
+            <b>합성 데이터만 업로드하세요.</b> 실제 고객·결제 정보는 사용하지 마세요. 필수 열만
+            수집하며, 세션 데이터는 6시간 후 만료됩니다.
+          </p>
+        </div>
+        <fieldset className="import-kind">
+          <legend>자료 유형</legend>
+          <label className={kind === "orders" ? "selected" : ""}>
+            <input
+              type="radio"
+              name="import-kind"
+              checked={kind === "orders"}
+              onChange={() => {
+                setKind("orders");
+                setPreview(null);
+                setCsv("");
+                setFilename("");
+                requestVersion.current++;
+                setValidating(false);
+              }}
+            />
+            <FileSpreadsheet size={20} />
+            <span>
+              <b>주문 원장</b>
+              <small>주문·결제·환불 내역</small>
+            </span>
+          </label>
+          <label className={kind === "settlements" ? "selected" : ""}>
+            <input
+              type="radio"
+              name="import-kind"
+              checked={kind === "settlements"}
+              onChange={() => {
+                setKind("settlements");
+                setPreview(null);
+                setCsv("");
+                setFilename("");
+                requestVersion.current++;
+                setValidating(false);
+              }}
+            />
+            <FileSpreadsheet size={20} />
+            <span>
+              <b>채널 정산 자료</b>
+              <small>수수료·정산·입금 내역</small>
+            </span>
+          </label>
+        </fieldset>
+        <input
+          ref={input}
+          type="file"
+          accept=".csv,text/csv"
+          className="sr-only"
+          aria-label="CSV 파일 선택"
+          onChange={(event) => void selectFile(event.target.files?.[0])}
+        />
+        <button
+          className="dropzone"
+          onClick={() => input.current?.click()}
+          onDragOver={(event) => event.preventDefault()}
+          onDrop={(event) => {
+            event.preventDefault();
+            void selectFile(event.dataTransfer.files[0]);
+          }}
+        >
+          <span className="upload-icon">
+            <Upload size={23} />
+          </span>
+          <strong>{filename || "CSV 파일을 끌어놓거나 클릭해서 선택"}</strong>
+          <span>UTF-8 CSV · 최대 250KB / 500행</span>
+        </button>
+        <div className="sample-actions">
+          <button className="text-button" onClick={() => void sample()} disabled={validating}>
+            <FileSpreadsheet size={15} />
+            샘플 {kind === "orders" ? "주문" : "정산"} 불러오기
+          </button>
+          <a href={`/samples/${kind}.csv`} download>
+            <Download size={14} />
+            CSV 템플릿
+          </a>
+        </div>
+        {validating && (
+          <div className="notice">
+            <RefreshCw className="spin" size={16} />열 형식과 금액·날짜를 검증하고 있어요.
+          </div>
+        )}
+        {error && (
+          <p className="form-error" role="alert">
+            {error}
+          </p>
+        )}
+        {preview && (
+          <section className="mapping-section">
+            <div className="section-heading">
+              <h3>원본 열 연결</h3>
+              <span className="soft-tag">자동 매핑 · 직접 수정 가능</span>
+            </div>
+            <div className="mapping-grid">
+              {IMPORT_FIELDS[kind].map((field) => (
+                <label key={field}>
+                  <span>
+                    {field}
+                    {field !== "paid_date" && <small>필수</small>}
+                  </span>
+                  <select
+                    value={preview.mapping[field] || ""}
+                    onChange={(event) =>
+                      setPreview({
+                        ...preview,
+                        valid: false,
+                        mapping: { ...preview.mapping, [field]: event.target.value },
+                      })
+                    }
+                  >
+                    <option value="">열 선택</option>
+                    {preview.headers.map((header) => (
+                      <option key={header} value={header}>
+                        {header}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ))}
+            </div>
+            <button
+              className="button secondary small"
+              disabled={validating}
+              onClick={() => void validate(csv, preview.mapping)}
+            >
+              <RefreshCw size={14} />
+              매핑 다시 검증
+            </button>
+            {preview.errors.length > 0 && (
+              <div className="validation-errors" role="alert">
+                <AlertCircle size={17} />
+                <div>
+                  {preview.errors.map((message) => (
+                    <p key={message}>{message}</p>
+                  ))}
+                </div>
+              </div>
+            )}
+            {preview.valid && (
+              <>
+                <div className="validation-success">
+                  <CheckCircle2 size={17} />
+                  {preview.count}행 검증 완료 · 전체 파일을 하나의 트랜잭션으로 반영합니다.
+                </div>
+                <div className="preview-table-wrap">
+                  <table className="preview-table">
+                    <caption>미리보기 · 최대 5행</caption>
+                    <thead>
+                      <tr>
+                        {IMPORT_FIELDS[kind].map((field) => (
+                          <th key={field}>{field}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {preview.preview.map((row, index) => (
+                        <tr key={index}>
+                          {IMPORT_FIELDS[kind].map((field) => (
+                            <td key={field}>{row[field] || "—"}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+          </section>
+        )}
+        <div className="modal-footer">
+          <p>반영 후 대사를 다시 실행하면 결과에 적용됩니다.</p>
+          <button
+            className="button primary"
+            disabled={!preview?.valid || validating || busy}
+            onClick={async () => {
+              if (
+                preview &&
+                (await onCommand({
+                  action: "import",
+                  expectedVersion: version,
+                  kind,
+                  csv,
+                  filename,
+                  mapping: preview.mapping,
+                }))
+              ) {
+                onClose();
+                setCsv("");
+                setPreview(null);
+                setFilename("");
+              }
+            }}
+          >
+            {busy ? "가져오는 중…" : "자료 가져오기"}
+            <ArrowRight size={16} />
+          </button>
+        </div>
+      </div>
+    </Modal>
+  );
+}

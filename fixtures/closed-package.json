@@ -1,0 +1,5834 @@
+{
+  "snapshot": {
+    "period": "2026-08",
+    "ruleVersion": "krw-net-v1.0.0",
+    "closedAt": "2026-08-31T09:00:00.000Z",
+    "closedBy": "데모 검토자",
+    "gross": 17072000,
+    "refunds": 105000,
+    "expectedNet": 16072966,
+    "actualNet": 16110319,
+    "delta": 37353,
+    "rowCount": 128,
+    "reviewedCount": 8,
+    "sources": [
+      {
+        "id": "SRC-ORD-01",
+        "digest": "a1b2630ae6ba770ed720becd8d1073004fb12e4b429d3034a9603708e688baa0"
+      },
+      {
+        "id": "SRC-SET-D2C",
+        "digest": "bed478100b8716ee76a0737745a0bb5607d467dfd79b2d268f9f4b2b5b0f8368"
+      },
+      {
+        "id": "SRC-SET-NAVER",
+        "digest": "cc0f28f7c0111c54c8ea84359a45291296b9eeb2ad8661651fe228b6a96404ed"
+      },
+      {
+        "id": "SRC-SET-COUPANG",
+        "digest": "3e6a3efd750691d2daee08cb39c60f33a8500e0ff6c51fd8a18a533f74d4138c"
+      }
+    ],
+    "inputs": {
+      "orders": [
+        {
+          "id": "LM-2608001",
+          "channel": "d2c",
+          "date": "2026-08-01",
+          "gross": 119000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608002",
+          "channel": "naver",
+          "date": "2026-08-01",
+          "gross": 199000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608003",
+          "channel": "coupang",
+          "date": "2026-08-01",
+          "gross": 93000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608004",
+          "channel": "d2c",
+          "date": "2026-08-01",
+          "gross": 173000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608005",
+          "channel": "naver",
+          "date": "2026-08-01",
+          "gross": 57000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608006",
+          "channel": "coupang",
+          "date": "2026-08-02",
+          "gross": 137000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608007",
+          "channel": "d2c",
+          "date": "2026-08-02",
+          "gross": 217000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608008",
+          "channel": "naver",
+          "date": "2026-08-02",
+          "gross": 111000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608009",
+          "channel": "coupang",
+          "date": "2026-08-02",
+          "gross": 191000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608010",
+          "channel": "d2c",
+          "date": "2026-08-03",
+          "gross": 75000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608011",
+          "channel": "naver",
+          "date": "2026-08-03",
+          "gross": 155000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608012",
+          "channel": "coupang",
+          "date": "2026-08-03",
+          "gross": 49000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608013",
+          "channel": "d2c",
+          "date": "2026-08-03",
+          "gross": 129000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608014",
+          "channel": "naver",
+          "date": "2026-08-04",
+          "gross": 209000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608015",
+          "channel": "coupang",
+          "date": "2026-08-04",
+          "gross": 93000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608016",
+          "channel": "d2c",
+          "date": "2026-08-04",
+          "gross": 173000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608017",
+          "channel": "naver",
+          "date": "2026-08-04",
+          "gross": 67000,
+          "refund": 15000,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608018",
+          "channel": "coupang",
+          "date": "2026-08-04",
+          "gross": 147000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608019",
+          "channel": "d2c",
+          "date": "2026-08-05",
+          "gross": 227000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608020",
+          "channel": "naver",
+          "date": "2026-08-05",
+          "gross": 111000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608021",
+          "channel": "coupang",
+          "date": "2026-08-05",
+          "gross": 191000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608022",
+          "channel": "d2c",
+          "date": "2026-08-05",
+          "gross": 85000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608023",
+          "channel": "naver",
+          "date": "2026-08-06",
+          "gross": 165000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608024",
+          "channel": "coupang",
+          "date": "2026-08-06",
+          "gross": 59000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608025",
+          "channel": "d2c",
+          "date": "2026-08-06",
+          "gross": 129000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608026",
+          "channel": "naver",
+          "date": "2026-08-06",
+          "gross": 209000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608027",
+          "channel": "coupang",
+          "date": "2026-08-07",
+          "gross": 103000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608028",
+          "channel": "d2c",
+          "date": "2026-08-07",
+          "gross": 183000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608029",
+          "channel": "naver",
+          "date": "2026-08-07",
+          "gross": 77000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608030",
+          "channel": "coupang",
+          "date": "2026-08-07",
+          "gross": 147000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608031",
+          "channel": "d2c",
+          "date": "2026-08-08",
+          "gross": 41000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608032",
+          "channel": "naver",
+          "date": "2026-08-08",
+          "gross": 121000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608033",
+          "channel": "coupang",
+          "date": "2026-08-08",
+          "gross": 201000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608034",
+          "channel": "d2c",
+          "date": "2026-08-08",
+          "gross": 95000,
+          "refund": 15000,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608035",
+          "channel": "naver",
+          "date": "2026-08-08",
+          "gross": 165000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608036",
+          "channel": "coupang",
+          "date": "2026-08-09",
+          "gross": 59000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608037",
+          "channel": "d2c",
+          "date": "2026-08-09",
+          "gross": 139000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608038",
+          "channel": "naver",
+          "date": "2026-08-09",
+          "gross": 219000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608039",
+          "channel": "coupang",
+          "date": "2026-08-09",
+          "gross": 113000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608040",
+          "channel": "d2c",
+          "date": "2026-08-10",
+          "gross": 183000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608041",
+          "channel": "naver",
+          "date": "2026-08-10",
+          "gross": 77000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608042",
+          "channel": "coupang",
+          "date": "2026-08-10",
+          "gross": 157000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608043",
+          "channel": "d2c",
+          "date": "2026-08-10",
+          "gross": 51000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608044",
+          "channel": "naver",
+          "date": "2026-08-11",
+          "gross": 131000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608045",
+          "channel": "coupang",
+          "date": "2026-08-11",
+          "gross": 201000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608046",
+          "channel": "d2c",
+          "date": "2026-08-11",
+          "gross": 95000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608047",
+          "channel": "naver",
+          "date": "2026-08-11",
+          "gross": 175000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608048",
+          "channel": "coupang",
+          "date": "2026-08-12",
+          "gross": 69000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608049",
+          "channel": "d2c",
+          "date": "2026-08-12",
+          "gross": 149000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608050",
+          "channel": "naver",
+          "date": "2026-08-12",
+          "gross": 219000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608051",
+          "channel": "coupang",
+          "date": "2026-08-12",
+          "gross": 113000,
+          "refund": 15000,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608052",
+          "channel": "d2c",
+          "date": "2026-08-12",
+          "gross": 193000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608053",
+          "channel": "naver",
+          "date": "2026-08-13",
+          "gross": 87000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608054",
+          "channel": "coupang",
+          "date": "2026-08-13",
+          "gross": 167000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608055",
+          "channel": "d2c",
+          "date": "2026-08-13",
+          "gross": 51000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608056",
+          "channel": "naver",
+          "date": "2026-08-13",
+          "gross": 131000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608057",
+          "channel": "coupang",
+          "date": "2026-08-14",
+          "gross": 211000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608058",
+          "channel": "d2c",
+          "date": "2026-08-14",
+          "gross": 105000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608059",
+          "channel": "naver",
+          "date": "2026-08-14",
+          "gross": 185000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608060",
+          "channel": "coupang",
+          "date": "2026-08-14",
+          "gross": 69000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608061",
+          "channel": "d2c",
+          "date": "2026-08-15",
+          "gross": 149000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608062",
+          "channel": "naver",
+          "date": "2026-08-15",
+          "gross": 43000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608063",
+          "channel": "coupang",
+          "date": "2026-08-15",
+          "gross": 123000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608064",
+          "channel": "d2c",
+          "date": "2026-08-15",
+          "gross": 203000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608065",
+          "channel": "naver",
+          "date": "2026-08-16",
+          "gross": 87000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608066",
+          "channel": "coupang",
+          "date": "2026-08-16",
+          "gross": 167000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608067",
+          "channel": "d2c",
+          "date": "2026-08-16",
+          "gross": 61000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608068",
+          "channel": "naver",
+          "date": "2026-08-16",
+          "gross": 141000,
+          "refund": 15000,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608069",
+          "channel": "coupang",
+          "date": "2026-08-16",
+          "gross": 221000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608070",
+          "channel": "d2c",
+          "date": "2026-08-17",
+          "gross": 105000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608071",
+          "channel": "naver",
+          "date": "2026-08-17",
+          "gross": 185000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608072",
+          "channel": "coupang",
+          "date": "2026-08-17",
+          "gross": 79000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608073",
+          "channel": "d2c",
+          "date": "2026-08-17",
+          "gross": 159000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608074",
+          "channel": "naver",
+          "date": "2026-08-18",
+          "gross": 53000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608075",
+          "channel": "coupang",
+          "date": "2026-08-18",
+          "gross": 123000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608076",
+          "channel": "d2c",
+          "date": "2026-08-18",
+          "gross": 203000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608077",
+          "channel": "naver",
+          "date": "2026-08-18",
+          "gross": 97000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608078",
+          "channel": "coupang",
+          "date": "2026-08-19",
+          "gross": 177000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608079",
+          "channel": "d2c",
+          "date": "2026-08-19",
+          "gross": 71000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608080",
+          "channel": "naver",
+          "date": "2026-08-19",
+          "gross": 141000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608081",
+          "channel": "coupang",
+          "date": "2026-08-19",
+          "gross": 221000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608082",
+          "channel": "d2c",
+          "date": "2026-08-19",
+          "gross": 115000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608083",
+          "channel": "naver",
+          "date": "2026-08-20",
+          "gross": 195000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608084",
+          "channel": "coupang",
+          "date": "2026-08-20",
+          "gross": 89000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608085",
+          "channel": "d2c",
+          "date": "2026-08-20",
+          "gross": 159000,
+          "refund": 15000,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608086",
+          "channel": "naver",
+          "date": "2026-08-20",
+          "gross": 53000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608087",
+          "channel": "coupang",
+          "date": "2026-08-21",
+          "gross": 133000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608088",
+          "channel": "d2c",
+          "date": "2026-08-21",
+          "gross": 213000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608089",
+          "channel": "naver",
+          "date": "2026-08-21",
+          "gross": 107000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608090",
+          "channel": "coupang",
+          "date": "2026-08-21",
+          "gross": 177000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608091",
+          "channel": "d2c",
+          "date": "2026-08-22",
+          "gross": 71000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608092",
+          "channel": "naver",
+          "date": "2026-08-22",
+          "gross": 151000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608093",
+          "channel": "coupang",
+          "date": "2026-08-22",
+          "gross": 45000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608094",
+          "channel": "d2c",
+          "date": "2026-08-22",
+          "gross": 125000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608095",
+          "channel": "naver",
+          "date": "2026-08-23",
+          "gross": 195000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608096",
+          "channel": "coupang",
+          "date": "2026-08-23",
+          "gross": 89000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608097",
+          "channel": "d2c",
+          "date": "2026-08-23",
+          "gross": 169000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608098",
+          "channel": "naver",
+          "date": "2026-08-23",
+          "gross": 63000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608099",
+          "channel": "coupang",
+          "date": "2026-08-23",
+          "gross": 143000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608100",
+          "channel": "d2c",
+          "date": "2026-08-24",
+          "gross": 213000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608101",
+          "channel": "naver",
+          "date": "2026-08-24",
+          "gross": 107000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608102",
+          "channel": "coupang",
+          "date": "2026-08-24",
+          "gross": 187000,
+          "refund": 15000,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608103",
+          "channel": "d2c",
+          "date": "2026-08-24",
+          "gross": 81000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608104",
+          "channel": "naver",
+          "date": "2026-08-25",
+          "gross": 161000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608105",
+          "channel": "coupang",
+          "date": "2026-08-25",
+          "gross": 45000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608106",
+          "channel": "d2c",
+          "date": "2026-08-25",
+          "gross": 125000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608107",
+          "channel": "naver",
+          "date": "2026-08-25",
+          "gross": 205000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608108",
+          "channel": "coupang",
+          "date": "2026-08-26",
+          "gross": 99000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608109",
+          "channel": "d2c",
+          "date": "2026-08-26",
+          "gross": 179000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608110",
+          "channel": "naver",
+          "date": "2026-08-26",
+          "gross": 63000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608111",
+          "channel": "coupang",
+          "date": "2026-08-26",
+          "gross": 143000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608112",
+          "channel": "d2c",
+          "date": "2026-08-27",
+          "gross": 223000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608113",
+          "channel": "naver",
+          "date": "2026-08-27",
+          "gross": 117000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608114",
+          "channel": "coupang",
+          "date": "2026-08-27",
+          "gross": 197000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608115",
+          "channel": "d2c",
+          "date": "2026-08-27",
+          "gross": 81000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608116",
+          "channel": "naver",
+          "date": "2026-08-27",
+          "gross": 161000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608117",
+          "channel": "coupang",
+          "date": "2026-08-28",
+          "gross": 55000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608118",
+          "channel": "d2c",
+          "date": "2026-08-28",
+          "gross": 135000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608119",
+          "channel": "naver",
+          "date": "2026-08-28",
+          "gross": 215000,
+          "refund": 15000,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608120",
+          "channel": "coupang",
+          "date": "2026-08-28",
+          "gross": 99000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608121",
+          "channel": "d2c",
+          "date": "2026-08-29",
+          "gross": 179000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608122",
+          "channel": "naver",
+          "date": "2026-08-29",
+          "gross": 73000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608123",
+          "channel": "coupang",
+          "date": "2026-08-29",
+          "gross": 153000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608124",
+          "channel": "d2c",
+          "date": "2026-08-29",
+          "gross": 47000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608125",
+          "channel": "naver",
+          "date": "2026-08-30",
+          "gross": 117000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608126",
+          "channel": "coupang",
+          "date": "2026-08-30",
+          "gross": 197000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608127",
+          "channel": "d2c",
+          "date": "2026-08-30",
+          "gross": 91000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        },
+        {
+          "id": "LM-2608128",
+          "channel": "naver",
+          "date": "2026-08-30",
+          "gross": 171000,
+          "refund": 0,
+          "sourceId": "SRC-ORD-01"
+        }
+      ],
+      "settlements": [
+        {
+          "id": "ST-2608001",
+          "orderId": "LM-2608001",
+          "channel": "d2c",
+          "gross": 119000,
+          "refund": 0,
+          "fee": 3927,
+          "net": 115073,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608002",
+          "orderId": "LM-2608002",
+          "channel": "naver",
+          "gross": 199000,
+          "refund": 0,
+          "fee": 7662,
+          "net": 191338,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608003",
+          "orderId": "LM-2608003",
+          "channel": "coupang",
+          "gross": 93000,
+          "refund": 0,
+          "fee": 8184,
+          "net": 84816,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608004",
+          "orderId": "LM-2608004",
+          "channel": "d2c",
+          "gross": 173000,
+          "refund": 0,
+          "fee": 5709,
+          "net": 167291,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608005",
+          "orderId": "LM-2608005",
+          "channel": "naver",
+          "gross": 57000,
+          "refund": 0,
+          "fee": 2195,
+          "net": 54805,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608006",
+          "orderId": "LM-2608006",
+          "channel": "coupang",
+          "gross": 137000,
+          "refund": 0,
+          "fee": 12056,
+          "net": 124944,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608007",
+          "orderId": "LM-2608007",
+          "channel": "d2c",
+          "gross": 217000,
+          "refund": 0,
+          "fee": 7161,
+          "net": 209839,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608008",
+          "orderId": "LM-2608008",
+          "channel": "naver",
+          "gross": 111000,
+          "refund": 0,
+          "fee": 4274,
+          "net": 106726,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608009",
+          "orderId": "LM-2608009",
+          "channel": "coupang",
+          "gross": 191000,
+          "refund": 0,
+          "fee": 16808,
+          "net": 174192,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608010",
+          "orderId": "LM-2608010",
+          "channel": "d2c",
+          "gross": 75000,
+          "refund": 0,
+          "fee": 2475,
+          "net": 72525,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608011",
+          "orderId": "LM-2608011",
+          "channel": "naver",
+          "gross": 155000,
+          "refund": 0,
+          "fee": 5968,
+          "net": 149032,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608013",
+          "orderId": "LM-2608013",
+          "channel": "d2c",
+          "gross": 129000,
+          "refund": 0,
+          "fee": 4257,
+          "net": 124743,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608014",
+          "orderId": "LM-2608014",
+          "channel": "naver",
+          "gross": 209000,
+          "refund": 0,
+          "fee": 8047,
+          "net": 200953,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608015",
+          "orderId": "LM-2608015",
+          "channel": "coupang",
+          "gross": 93000,
+          "refund": 0,
+          "fee": 8184,
+          "net": 84816,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608016",
+          "orderId": "LM-2608016",
+          "channel": "d2c",
+          "gross": 173000,
+          "refund": 0,
+          "fee": 5709,
+          "net": 167291,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608017",
+          "orderId": "LM-2608017",
+          "channel": "naver",
+          "gross": 67000,
+          "refund": 15000,
+          "fee": 2002,
+          "net": 49998,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608018",
+          "orderId": "LM-2608018",
+          "channel": "coupang",
+          "gross": 147000,
+          "refund": 0,
+          "fee": 12936,
+          "net": 134064,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608019",
+          "orderId": "LM-2608019",
+          "channel": "d2c",
+          "gross": 227000,
+          "refund": 0,
+          "fee": 7491,
+          "net": 219509,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608020",
+          "orderId": "LM-2608020",
+          "channel": "naver",
+          "gross": 111000,
+          "refund": 0,
+          "fee": 4274,
+          "net": 106726,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608021",
+          "orderId": "LM-2608021",
+          "channel": "coupang",
+          "gross": 191000,
+          "refund": 0,
+          "fee": 16808,
+          "net": 174192,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608022",
+          "orderId": "LM-2608022",
+          "channel": "d2c",
+          "gross": 85000,
+          "refund": 0,
+          "fee": 5205,
+          "net": 79795,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608023",
+          "orderId": "LM-2608023",
+          "channel": "naver",
+          "gross": 165000,
+          "refund": 0,
+          "fee": 6353,
+          "net": 158647,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608024",
+          "orderId": "LM-2608024",
+          "channel": "coupang",
+          "gross": 59000,
+          "refund": 0,
+          "fee": 5192,
+          "net": 53808,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608025",
+          "orderId": "LM-2608025",
+          "channel": "d2c",
+          "gross": 129000,
+          "refund": 0,
+          "fee": 4257,
+          "net": 124743,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608026",
+          "orderId": "LM-2608026",
+          "channel": "naver",
+          "gross": 209000,
+          "refund": 0,
+          "fee": 8047,
+          "net": 200953,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608027",
+          "orderId": "LM-2608027",
+          "channel": "coupang",
+          "gross": 103000,
+          "refund": 0,
+          "fee": 9064,
+          "net": 93936,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608028",
+          "orderId": "LM-2608028",
+          "channel": "d2c",
+          "gross": 183000,
+          "refund": 0,
+          "fee": 6039,
+          "net": 176961,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608029",
+          "orderId": "LM-2608029",
+          "channel": "naver",
+          "gross": 77000,
+          "refund": 0,
+          "fee": 2965,
+          "net": 74035,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608030",
+          "orderId": "LM-2608030",
+          "channel": "coupang",
+          "gross": 147000,
+          "refund": 0,
+          "fee": 12936,
+          "net": 134064,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608031",
+          "orderId": "LM-2608031",
+          "channel": "d2c",
+          "gross": 41000,
+          "refund": 0,
+          "fee": 1353,
+          "net": 39647,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608032",
+          "orderId": "LM-2608032",
+          "channel": "naver",
+          "gross": 121000,
+          "refund": 0,
+          "fee": 4659,
+          "net": 116341,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608033",
+          "orderId": "LM-2608033",
+          "channel": "coupang",
+          "gross": 201000,
+          "refund": 0,
+          "fee": 17688,
+          "net": 183312,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608034",
+          "orderId": "LM-2608034",
+          "channel": "d2c",
+          "gross": 95000,
+          "refund": 0,
+          "fee": 3135,
+          "net": 91865,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608035",
+          "orderId": "LM-2608035",
+          "channel": "naver",
+          "gross": 165000,
+          "refund": 0,
+          "fee": 6353,
+          "net": 158647,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608036",
+          "orderId": "LM-2608036",
+          "channel": "coupang",
+          "gross": 59000,
+          "refund": 0,
+          "fee": 5192,
+          "net": 53808,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608037",
+          "orderId": "LM-2608037",
+          "channel": "d2c",
+          "gross": 139000,
+          "refund": 0,
+          "fee": 4587,
+          "net": 134413,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608038",
+          "orderId": "LM-2608038",
+          "channel": "naver",
+          "gross": 219000,
+          "refund": 0,
+          "fee": 8432,
+          "net": 210568,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608039",
+          "orderId": "LM-2608039",
+          "channel": "coupang",
+          "gross": 113000,
+          "refund": 0,
+          "fee": 9944,
+          "net": 103056,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608040",
+          "orderId": "LM-2608040",
+          "channel": "d2c",
+          "gross": 183000,
+          "refund": 0,
+          "fee": 6039,
+          "net": 176961,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608041",
+          "orderId": "LM-2608041",
+          "channel": "naver",
+          "gross": 77000,
+          "refund": 0,
+          "fee": 2965,
+          "net": 74035,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608042",
+          "orderId": "LM-2608042",
+          "channel": "coupang",
+          "gross": 157000,
+          "refund": 0,
+          "fee": 13816,
+          "net": 143184,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608043",
+          "orderId": "LM-2608043",
+          "channel": "d2c",
+          "gross": 51000,
+          "refund": 0,
+          "fee": 1683,
+          "net": 49317,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608044",
+          "orderId": "LM-2608044",
+          "channel": "naver",
+          "gross": 131000,
+          "refund": 0,
+          "fee": 5044,
+          "net": 125956,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608045",
+          "orderId": "LM-2608045",
+          "channel": "coupang",
+          "gross": 201000,
+          "refund": 0,
+          "fee": 17688,
+          "net": 183312,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608045",
+          "orderId": "LM-2608045",
+          "channel": "coupang",
+          "gross": 201000,
+          "refund": 0,
+          "fee": 17688,
+          "net": 183312,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608046",
+          "orderId": "LM-2608046",
+          "channel": "d2c",
+          "gross": 95000,
+          "refund": 0,
+          "fee": 3135,
+          "net": 91865,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608047",
+          "orderId": "LM-2608047",
+          "channel": "naver",
+          "gross": 175000,
+          "refund": 0,
+          "fee": 6738,
+          "net": 168262,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608048",
+          "orderId": "LM-2608048",
+          "channel": "coupang",
+          "gross": 69000,
+          "refund": 0,
+          "fee": 6072,
+          "net": 62928,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608049",
+          "orderId": "LM-2608049",
+          "channel": "d2c",
+          "gross": 149000,
+          "refund": 0,
+          "fee": 4917,
+          "net": 144083,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608050",
+          "orderId": "LM-2608050",
+          "channel": "naver",
+          "gross": 219000,
+          "refund": 0,
+          "fee": 8432,
+          "net": 210568,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608051",
+          "orderId": "LM-2608051",
+          "channel": "coupang",
+          "gross": 113000,
+          "refund": 15000,
+          "fee": 8624,
+          "net": 89376,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608052",
+          "orderId": "LM-2608052",
+          "channel": "d2c",
+          "gross": 193000,
+          "refund": 0,
+          "fee": 6369,
+          "net": 186631,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608053",
+          "orderId": "LM-2608053",
+          "channel": "naver",
+          "gross": 87000,
+          "refund": 0,
+          "fee": 3350,
+          "net": 83650,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608054",
+          "orderId": "LM-2608054",
+          "channel": "coupang",
+          "gross": 167000,
+          "refund": 0,
+          "fee": 14696,
+          "net": 152304,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608055",
+          "orderId": "LM-2608055",
+          "channel": "d2c",
+          "gross": 51000,
+          "refund": 0,
+          "fee": 1683,
+          "net": 49317,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608056",
+          "orderId": "LM-2608056",
+          "channel": "naver",
+          "gross": 131000,
+          "refund": 0,
+          "fee": 5044,
+          "net": 125956,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608057",
+          "orderId": "LM-2608057",
+          "channel": "coupang",
+          "gross": 211000,
+          "refund": 0,
+          "fee": 18568,
+          "net": 192432,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608058",
+          "orderId": "LM-2608058",
+          "channel": "d2c",
+          "gross": 105000,
+          "refund": 0,
+          "fee": 3465,
+          "net": 101535,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608059",
+          "orderId": "LM-2608059",
+          "channel": "naver",
+          "gross": 185000,
+          "refund": 0,
+          "fee": 7123,
+          "net": 177877,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608060",
+          "orderId": "LM-2608060",
+          "channel": "coupang",
+          "gross": 69000,
+          "refund": 0,
+          "fee": 6072,
+          "net": 62928,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608061",
+          "orderId": "LM-2608061",
+          "channel": "d2c",
+          "gross": 149000,
+          "refund": 0,
+          "fee": 4917,
+          "net": 144083,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608062",
+          "orderId": "LM-2608062",
+          "channel": "naver",
+          "gross": 43000,
+          "refund": 0,
+          "fee": 1656,
+          "net": 41344,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608064",
+          "orderId": "LM-2608064",
+          "channel": "d2c",
+          "gross": 203000,
+          "refund": 0,
+          "fee": 6699,
+          "net": 196301,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608065",
+          "orderId": "LM-2608065",
+          "channel": "naver",
+          "gross": 87000,
+          "refund": 0,
+          "fee": 3350,
+          "net": 83650,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608066",
+          "orderId": "LM-2608066",
+          "channel": "coupang",
+          "gross": 167000,
+          "refund": 0,
+          "fee": 14696,
+          "net": 152304,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608067",
+          "orderId": "LM-2608067",
+          "channel": "d2c",
+          "gross": 61000,
+          "refund": 0,
+          "fee": 2013,
+          "net": 58987,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608068",
+          "orderId": "LM-2608068",
+          "channel": "naver",
+          "gross": 141000,
+          "refund": 15000,
+          "fee": 4851,
+          "net": 121149,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608069",
+          "orderId": "LM-2608069",
+          "channel": "coupang",
+          "gross": 221000,
+          "refund": 0,
+          "fee": 19448,
+          "net": 201552,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608070",
+          "orderId": "LM-2608070",
+          "channel": "d2c",
+          "gross": 105000,
+          "refund": 0,
+          "fee": 3465,
+          "net": 101535,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608071",
+          "orderId": "LM-2608071",
+          "channel": "naver",
+          "gross": 185000,
+          "refund": 0,
+          "fee": 7123,
+          "net": 177877,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608072",
+          "orderId": "LM-2608072",
+          "channel": "coupang",
+          "gross": 79000,
+          "refund": 0,
+          "fee": 6952,
+          "net": 72048,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608073",
+          "orderId": "LM-2608073",
+          "channel": "d2c",
+          "gross": 159000,
+          "refund": 0,
+          "fee": 5247,
+          "net": 153753,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608074",
+          "orderId": "LM-2608074",
+          "channel": "naver",
+          "gross": 53000,
+          "refund": 0,
+          "fee": 2041,
+          "net": 50959,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608075",
+          "orderId": "LM-2608075",
+          "channel": "coupang",
+          "gross": 123000,
+          "refund": 0,
+          "fee": 10824,
+          "net": 112176,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608076",
+          "orderId": "LM-2608076",
+          "channel": "d2c",
+          "gross": 203000,
+          "refund": 0,
+          "fee": 6699,
+          "net": 196301,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608077",
+          "orderId": "LM-2608077",
+          "channel": "naver",
+          "gross": 97000,
+          "refund": 0,
+          "fee": 3735,
+          "net": 93265,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608078",
+          "orderId": "LM-2608078",
+          "channel": "coupang",
+          "gross": 177000,
+          "refund": 0,
+          "fee": 15576,
+          "net": 161424,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608079",
+          "orderId": "LM-2608079",
+          "channel": "d2c",
+          "gross": 71000,
+          "refund": 0,
+          "fee": 2343,
+          "net": 68657,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608080",
+          "orderId": "LM-2608080",
+          "channel": "naver",
+          "gross": 141000,
+          "refund": 0,
+          "fee": 6629,
+          "net": 134371,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608081",
+          "orderId": "LM-2608081",
+          "channel": "coupang",
+          "gross": 221000,
+          "refund": 0,
+          "fee": 19448,
+          "net": 201552,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608082",
+          "orderId": "LM-2608082",
+          "channel": "d2c",
+          "gross": 115000,
+          "refund": 0,
+          "fee": 3795,
+          "net": 111205,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608083",
+          "orderId": "LM-2608083",
+          "channel": "naver",
+          "gross": 195000,
+          "refund": 0,
+          "fee": 7508,
+          "net": 187492,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608084",
+          "orderId": "LM-2608084",
+          "channel": "coupang",
+          "gross": 89000,
+          "refund": 0,
+          "fee": 7832,
+          "net": 81168,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608085",
+          "orderId": "LM-2608085",
+          "channel": "d2c",
+          "gross": 159000,
+          "refund": 15000,
+          "fee": 4752,
+          "net": 139248,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608086",
+          "orderId": "LM-2608086",
+          "channel": "naver",
+          "gross": 53000,
+          "refund": 0,
+          "fee": 2041,
+          "net": 50959,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608087",
+          "orderId": "LM-2608087",
+          "channel": "coupang",
+          "gross": 133000,
+          "refund": 0,
+          "fee": 11704,
+          "net": 121296,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608088",
+          "orderId": "LM-2608088",
+          "channel": "d2c",
+          "gross": 213000,
+          "refund": 0,
+          "fee": 7029,
+          "net": 205971,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608089",
+          "orderId": "LM-2608089",
+          "channel": "naver",
+          "gross": 107000,
+          "refund": 0,
+          "fee": 4120,
+          "net": 102880,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608090",
+          "orderId": "LM-2608090",
+          "channel": "coupang",
+          "gross": 177000,
+          "refund": 0,
+          "fee": 15576,
+          "net": 161424,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608091",
+          "orderId": "LM-2608091",
+          "channel": "d2c",
+          "gross": 71000,
+          "refund": 0,
+          "fee": 2343,
+          "net": 68657,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608092",
+          "orderId": "LM-2608092",
+          "channel": "naver",
+          "gross": 151000,
+          "refund": 0,
+          "fee": 5814,
+          "net": 145186,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608093",
+          "orderId": "LM-2608093",
+          "channel": "coupang",
+          "gross": 45000,
+          "refund": 0,
+          "fee": 3960,
+          "net": 41040,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608094",
+          "orderId": "LM-2608094",
+          "channel": "d2c",
+          "gross": 125000,
+          "refund": 0,
+          "fee": 4125,
+          "net": 120875,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608095",
+          "orderId": "LM-2608095",
+          "channel": "naver",
+          "gross": 195000,
+          "refund": 0,
+          "fee": 7508,
+          "net": 187492,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608096",
+          "orderId": "LM-2608096",
+          "channel": "coupang",
+          "gross": 89000,
+          "refund": 0,
+          "fee": 7832,
+          "net": 81168,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608097",
+          "orderId": "LM-2608097",
+          "channel": "d2c",
+          "gross": 169000,
+          "refund": 0,
+          "fee": 5577,
+          "net": 163423,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608098",
+          "orderId": "LM-2608098",
+          "channel": "naver",
+          "gross": 63000,
+          "refund": 0,
+          "fee": 2426,
+          "net": 60574,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608099",
+          "orderId": "LM-2608099",
+          "channel": "coupang",
+          "gross": 143000,
+          "refund": 0,
+          "fee": 12584,
+          "net": 130416,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608100",
+          "orderId": "LM-2608100",
+          "channel": "d2c",
+          "gross": 213000,
+          "refund": 0,
+          "fee": 7029,
+          "net": 205971,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608101",
+          "orderId": "LM-2608101",
+          "channel": "naver",
+          "gross": 107000,
+          "refund": 0,
+          "fee": 4120,
+          "net": 102880,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608102",
+          "orderId": "LM-2608102",
+          "channel": "coupang",
+          "gross": 187000,
+          "refund": 15000,
+          "fee": 15136,
+          "net": 156864,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608103",
+          "orderId": "LM-2608103",
+          "channel": "d2c",
+          "gross": 81000,
+          "refund": 0,
+          "fee": 2673,
+          "net": 78327,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608104",
+          "orderId": "LM-2608104",
+          "channel": "naver",
+          "gross": 161000,
+          "refund": 0,
+          "fee": 6199,
+          "net": 154801,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608105",
+          "orderId": "LM-2608105",
+          "channel": "coupang",
+          "gross": 45000,
+          "refund": 0,
+          "fee": 3960,
+          "net": 41040,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608106",
+          "orderId": "LM-2608106",
+          "channel": "d2c",
+          "gross": 125000,
+          "refund": 0,
+          "fee": 4125,
+          "net": 120875,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608107",
+          "orderId": "LM-2608107",
+          "channel": "naver",
+          "gross": 205000,
+          "refund": 0,
+          "fee": 7893,
+          "net": 197107,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608108",
+          "orderId": "LM-2608108",
+          "channel": "coupang",
+          "gross": 99000,
+          "refund": 0,
+          "fee": 8712,
+          "net": 90288,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608109",
+          "orderId": "LM-2608109",
+          "channel": "d2c",
+          "gross": 179000,
+          "refund": 0,
+          "fee": 5907,
+          "net": 173093,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608110",
+          "orderId": "LM-2608110",
+          "channel": "naver",
+          "gross": 63000,
+          "refund": 0,
+          "fee": 2426,
+          "net": 60574,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608111",
+          "orderId": "LM-2608111",
+          "channel": "coupang",
+          "gross": 143000,
+          "refund": 0,
+          "fee": 12584,
+          "net": 130416,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608112",
+          "orderId": "LM-2608112",
+          "channel": "d2c",
+          "gross": 223000,
+          "refund": 0,
+          "fee": 7359,
+          "net": 215641,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608113",
+          "orderId": "LM-2608113",
+          "channel": "naver",
+          "gross": 117000,
+          "refund": 0,
+          "fee": 4505,
+          "net": 112495,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608114",
+          "orderId": "LM-2608114",
+          "channel": "coupang",
+          "gross": 197000,
+          "refund": 0,
+          "fee": 17336,
+          "net": 179664,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608115",
+          "orderId": "LM-2608115",
+          "channel": "d2c",
+          "gross": 81000,
+          "refund": 0,
+          "fee": 2673,
+          "net": 78327,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608116",
+          "orderId": "LM-2608116",
+          "channel": "naver",
+          "gross": 161000,
+          "refund": 0,
+          "fee": 6199,
+          "net": 154801,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608117",
+          "orderId": "LM-2608117",
+          "channel": "coupang",
+          "gross": 55000,
+          "refund": 0,
+          "fee": 4840,
+          "net": 50160,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608118",
+          "orderId": "LM-2608118",
+          "channel": "d2c",
+          "gross": 135000,
+          "refund": 0,
+          "fee": 4455,
+          "net": 130545,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608119",
+          "orderId": "LM-2608119",
+          "channel": "naver",
+          "gross": 215000,
+          "refund": 15000,
+          "fee": 7700,
+          "net": 192300,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608120",
+          "orderId": "LM-2608120",
+          "channel": "coupang",
+          "gross": 99000,
+          "refund": 0,
+          "fee": 8712,
+          "net": 90288,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608121",
+          "orderId": "LM-2608121",
+          "channel": "d2c",
+          "gross": 179000,
+          "refund": 0,
+          "fee": 5907,
+          "net": 173093,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608122",
+          "orderId": "LM-2608122",
+          "channel": "naver",
+          "gross": 73000,
+          "refund": 0,
+          "fee": 2811,
+          "net": 70189,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608123",
+          "orderId": "LM-2608123",
+          "channel": "coupang",
+          "gross": 153000,
+          "refund": 0,
+          "fee": 13464,
+          "net": 139536,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608124",
+          "orderId": "LM-2608124",
+          "channel": "d2c",
+          "gross": 47000,
+          "refund": 0,
+          "fee": 1551,
+          "net": 45449,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608125",
+          "orderId": "LM-2608125",
+          "channel": "naver",
+          "gross": 117000,
+          "refund": 0,
+          "fee": 4505,
+          "net": 112495,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-NAVER"
+        },
+        {
+          "id": "ST-2608126",
+          "orderId": "LM-2608126",
+          "channel": "coupang",
+          "gross": 197000,
+          "refund": 0,
+          "fee": 17336,
+          "net": 179664,
+          "dueDate": "2026-08-31",
+          "paidDate": "2026-08-31",
+          "sourceId": "SRC-SET-COUPANG"
+        },
+        {
+          "id": "ST-2608127",
+          "orderId": "LM-2608127",
+          "channel": "d2c",
+          "gross": 91000,
+          "refund": 0,
+          "fee": 3003,
+          "net": 87997,
+          "dueDate": "2026-09-02",
+          "paidDate": null,
+          "sourceId": "SRC-SET-D2C"
+        },
+        {
+          "id": "ST-2608128",
+          "orderId": "LM-2608128",
+          "channel": "naver",
+          "gross": 171000,
+          "refund": 0,
+          "fee": 6584,
+          "net": 164416,
+          "dueDate": "2026-09-02",
+          "paidDate": null,
+          "sourceId": "SRC-SET-NAVER"
+        }
+      ],
+      "asOf": "2026-08-31"
+    },
+    "rows": [
+      {
+        "key": "coupang:LM-2608045",
+        "orderId": "LM-2608045",
+        "channel": "coupang",
+        "date": "2026-08-11",
+        "gross": 201000,
+        "refund": 0,
+        "expectedFee": 17688,
+        "actualFee": 35376,
+        "expectedNet": 183312,
+        "actualNet": 366624,
+        "delta": 183312,
+        "kind": "duplicate",
+        "explanation": "같은 채널의 동일 정산 ID가 반복되었습니다. 중복 여부를 확인하기 전에는 합계에서 자동 제거하지 않습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608045",
+          "ST-2608045"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608063",
+        "orderId": "LM-2608063",
+        "channel": "coupang",
+        "date": "2026-08-15",
+        "gross": 123000,
+        "refund": 0,
+        "expectedFee": 10824,
+        "actualFee": 0,
+        "expectedNet": 112176,
+        "actualNet": 0,
+        "delta": -112176,
+        "kind": "missing",
+        "explanation": "주문은 수집되었지만 연결할 정산 행이 없습니다. 채널 정산 파일의 누락 여부를 확인하세요.",
+        "sources": [
+          "SRC-ORD-01"
+        ],
+        "settlementIds": [],
+        "dueDate": null,
+        "paidDate": null
+      },
+      {
+        "key": "coupang:LM-2608012",
+        "orderId": "LM-2608012",
+        "channel": "coupang",
+        "date": "2026-08-03",
+        "gross": 49000,
+        "refund": 0,
+        "expectedFee": 4312,
+        "actualFee": 0,
+        "expectedNet": 44688,
+        "actualNet": 0,
+        "delta": -44688,
+        "kind": "missing",
+        "explanation": "주문은 수집되었지만 연결할 정산 행이 없습니다. 채널 정산 파일의 누락 여부를 확인하세요.",
+        "sources": [
+          "SRC-ORD-01"
+        ],
+        "settlementIds": [],
+        "dueDate": null,
+        "paidDate": null
+      },
+      {
+        "key": "d2c:LM-2608034",
+        "orderId": "LM-2608034",
+        "channel": "d2c",
+        "date": "2026-08-08",
+        "gross": 95000,
+        "refund": 15000,
+        "expectedFee": 2640,
+        "actualFee": 3135,
+        "expectedNet": 77360,
+        "actualNet": 91865,
+        "delta": 14505,
+        "kind": "refund",
+        "explanation": "주문 환불액 15,000원과 정산 환불액 0원이 다릅니다. 환불 반영일과 부분 취소를 확인하세요.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608034"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608022",
+        "orderId": "LM-2608022",
+        "channel": "d2c",
+        "date": "2026-08-05",
+        "gross": 85000,
+        "refund": 0,
+        "expectedFee": 2805,
+        "actualFee": 5205,
+        "expectedNet": 82195,
+        "actualNet": 79795,
+        "delta": -2400,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 3.3%를 순매출에 적용한 예상 수수료와 2,400원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608022"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608080",
+        "orderId": "LM-2608080",
+        "channel": "naver",
+        "date": "2026-08-19",
+        "gross": 141000,
+        "refund": 0,
+        "expectedFee": 5429,
+        "actualFee": 6629,
+        "expectedNet": 135571,
+        "actualNet": 134371,
+        "delta": -1200,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 3.85%를 순매출에 적용한 예상 수수료와 1,200원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608080"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608127",
+        "orderId": "LM-2608127",
+        "channel": "d2c",
+        "date": "2026-08-30",
+        "gross": 91000,
+        "refund": 0,
+        "expectedFee": 3003,
+        "actualFee": 3003,
+        "expectedNet": 87997,
+        "actualNet": 87997,
+        "delta": 0,
+        "kind": "timing",
+        "explanation": "정산 금액은 일치하지만 기준일 현재 입금이 확인되지 않았습니다. 입금 예정일 확인 후 이월 승인할 수 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608127"
+        ],
+        "dueDate": "2026-09-02",
+        "paidDate": null
+      },
+      {
+        "key": "naver:LM-2608128",
+        "orderId": "LM-2608128",
+        "channel": "naver",
+        "date": "2026-08-30",
+        "gross": 171000,
+        "refund": 0,
+        "expectedFee": 6584,
+        "actualFee": 6584,
+        "expectedNet": 164416,
+        "actualNet": 164416,
+        "delta": 0,
+        "kind": "timing",
+        "explanation": "정산 금액은 일치하지만 기준일 현재 입금이 확인되지 않았습니다. 입금 예정일 확인 후 이월 승인할 수 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608128"
+        ],
+        "dueDate": "2026-09-02",
+        "paidDate": null
+      },
+      {
+        "key": "coupang:LM-2608003",
+        "orderId": "LM-2608003",
+        "channel": "coupang",
+        "date": "2026-08-01",
+        "gross": 93000,
+        "refund": 0,
+        "expectedFee": 8184,
+        "actualFee": 8184,
+        "expectedNet": 84816,
+        "actualNet": 84816,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608003"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608006",
+        "orderId": "LM-2608006",
+        "channel": "coupang",
+        "date": "2026-08-02",
+        "gross": 137000,
+        "refund": 0,
+        "expectedFee": 12056,
+        "actualFee": 12056,
+        "expectedNet": 124944,
+        "actualNet": 124944,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608006"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608009",
+        "orderId": "LM-2608009",
+        "channel": "coupang",
+        "date": "2026-08-02",
+        "gross": 191000,
+        "refund": 0,
+        "expectedFee": 16808,
+        "actualFee": 16808,
+        "expectedNet": 174192,
+        "actualNet": 174192,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608009"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608015",
+        "orderId": "LM-2608015",
+        "channel": "coupang",
+        "date": "2026-08-04",
+        "gross": 93000,
+        "refund": 0,
+        "expectedFee": 8184,
+        "actualFee": 8184,
+        "expectedNet": 84816,
+        "actualNet": 84816,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608015"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608018",
+        "orderId": "LM-2608018",
+        "channel": "coupang",
+        "date": "2026-08-04",
+        "gross": 147000,
+        "refund": 0,
+        "expectedFee": 12936,
+        "actualFee": 12936,
+        "expectedNet": 134064,
+        "actualNet": 134064,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608018"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608021",
+        "orderId": "LM-2608021",
+        "channel": "coupang",
+        "date": "2026-08-05",
+        "gross": 191000,
+        "refund": 0,
+        "expectedFee": 16808,
+        "actualFee": 16808,
+        "expectedNet": 174192,
+        "actualNet": 174192,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608021"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608024",
+        "orderId": "LM-2608024",
+        "channel": "coupang",
+        "date": "2026-08-06",
+        "gross": 59000,
+        "refund": 0,
+        "expectedFee": 5192,
+        "actualFee": 5192,
+        "expectedNet": 53808,
+        "actualNet": 53808,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608024"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608027",
+        "orderId": "LM-2608027",
+        "channel": "coupang",
+        "date": "2026-08-07",
+        "gross": 103000,
+        "refund": 0,
+        "expectedFee": 9064,
+        "actualFee": 9064,
+        "expectedNet": 93936,
+        "actualNet": 93936,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608027"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608030",
+        "orderId": "LM-2608030",
+        "channel": "coupang",
+        "date": "2026-08-07",
+        "gross": 147000,
+        "refund": 0,
+        "expectedFee": 12936,
+        "actualFee": 12936,
+        "expectedNet": 134064,
+        "actualNet": 134064,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608030"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608033",
+        "orderId": "LM-2608033",
+        "channel": "coupang",
+        "date": "2026-08-08",
+        "gross": 201000,
+        "refund": 0,
+        "expectedFee": 17688,
+        "actualFee": 17688,
+        "expectedNet": 183312,
+        "actualNet": 183312,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608033"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608036",
+        "orderId": "LM-2608036",
+        "channel": "coupang",
+        "date": "2026-08-09",
+        "gross": 59000,
+        "refund": 0,
+        "expectedFee": 5192,
+        "actualFee": 5192,
+        "expectedNet": 53808,
+        "actualNet": 53808,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608036"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608039",
+        "orderId": "LM-2608039",
+        "channel": "coupang",
+        "date": "2026-08-09",
+        "gross": 113000,
+        "refund": 0,
+        "expectedFee": 9944,
+        "actualFee": 9944,
+        "expectedNet": 103056,
+        "actualNet": 103056,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608039"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608042",
+        "orderId": "LM-2608042",
+        "channel": "coupang",
+        "date": "2026-08-10",
+        "gross": 157000,
+        "refund": 0,
+        "expectedFee": 13816,
+        "actualFee": 13816,
+        "expectedNet": 143184,
+        "actualNet": 143184,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608042"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608048",
+        "orderId": "LM-2608048",
+        "channel": "coupang",
+        "date": "2026-08-12",
+        "gross": 69000,
+        "refund": 0,
+        "expectedFee": 6072,
+        "actualFee": 6072,
+        "expectedNet": 62928,
+        "actualNet": 62928,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608048"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608051",
+        "orderId": "LM-2608051",
+        "channel": "coupang",
+        "date": "2026-08-12",
+        "gross": 113000,
+        "refund": 15000,
+        "expectedFee": 8624,
+        "actualFee": 8624,
+        "expectedNet": 89376,
+        "actualNet": 89376,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608051"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608054",
+        "orderId": "LM-2608054",
+        "channel": "coupang",
+        "date": "2026-08-13",
+        "gross": 167000,
+        "refund": 0,
+        "expectedFee": 14696,
+        "actualFee": 14696,
+        "expectedNet": 152304,
+        "actualNet": 152304,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608054"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608057",
+        "orderId": "LM-2608057",
+        "channel": "coupang",
+        "date": "2026-08-14",
+        "gross": 211000,
+        "refund": 0,
+        "expectedFee": 18568,
+        "actualFee": 18568,
+        "expectedNet": 192432,
+        "actualNet": 192432,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608057"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608060",
+        "orderId": "LM-2608060",
+        "channel": "coupang",
+        "date": "2026-08-14",
+        "gross": 69000,
+        "refund": 0,
+        "expectedFee": 6072,
+        "actualFee": 6072,
+        "expectedNet": 62928,
+        "actualNet": 62928,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608060"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608066",
+        "orderId": "LM-2608066",
+        "channel": "coupang",
+        "date": "2026-08-16",
+        "gross": 167000,
+        "refund": 0,
+        "expectedFee": 14696,
+        "actualFee": 14696,
+        "expectedNet": 152304,
+        "actualNet": 152304,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608066"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608069",
+        "orderId": "LM-2608069",
+        "channel": "coupang",
+        "date": "2026-08-16",
+        "gross": 221000,
+        "refund": 0,
+        "expectedFee": 19448,
+        "actualFee": 19448,
+        "expectedNet": 201552,
+        "actualNet": 201552,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608069"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608072",
+        "orderId": "LM-2608072",
+        "channel": "coupang",
+        "date": "2026-08-17",
+        "gross": 79000,
+        "refund": 0,
+        "expectedFee": 6952,
+        "actualFee": 6952,
+        "expectedNet": 72048,
+        "actualNet": 72048,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608072"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608075",
+        "orderId": "LM-2608075",
+        "channel": "coupang",
+        "date": "2026-08-18",
+        "gross": 123000,
+        "refund": 0,
+        "expectedFee": 10824,
+        "actualFee": 10824,
+        "expectedNet": 112176,
+        "actualNet": 112176,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608075"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608078",
+        "orderId": "LM-2608078",
+        "channel": "coupang",
+        "date": "2026-08-19",
+        "gross": 177000,
+        "refund": 0,
+        "expectedFee": 15576,
+        "actualFee": 15576,
+        "expectedNet": 161424,
+        "actualNet": 161424,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608078"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608081",
+        "orderId": "LM-2608081",
+        "channel": "coupang",
+        "date": "2026-08-19",
+        "gross": 221000,
+        "refund": 0,
+        "expectedFee": 19448,
+        "actualFee": 19448,
+        "expectedNet": 201552,
+        "actualNet": 201552,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608081"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608084",
+        "orderId": "LM-2608084",
+        "channel": "coupang",
+        "date": "2026-08-20",
+        "gross": 89000,
+        "refund": 0,
+        "expectedFee": 7832,
+        "actualFee": 7832,
+        "expectedNet": 81168,
+        "actualNet": 81168,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608084"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608087",
+        "orderId": "LM-2608087",
+        "channel": "coupang",
+        "date": "2026-08-21",
+        "gross": 133000,
+        "refund": 0,
+        "expectedFee": 11704,
+        "actualFee": 11704,
+        "expectedNet": 121296,
+        "actualNet": 121296,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608087"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608090",
+        "orderId": "LM-2608090",
+        "channel": "coupang",
+        "date": "2026-08-21",
+        "gross": 177000,
+        "refund": 0,
+        "expectedFee": 15576,
+        "actualFee": 15576,
+        "expectedNet": 161424,
+        "actualNet": 161424,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608090"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608093",
+        "orderId": "LM-2608093",
+        "channel": "coupang",
+        "date": "2026-08-22",
+        "gross": 45000,
+        "refund": 0,
+        "expectedFee": 3960,
+        "actualFee": 3960,
+        "expectedNet": 41040,
+        "actualNet": 41040,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608093"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608096",
+        "orderId": "LM-2608096",
+        "channel": "coupang",
+        "date": "2026-08-23",
+        "gross": 89000,
+        "refund": 0,
+        "expectedFee": 7832,
+        "actualFee": 7832,
+        "expectedNet": 81168,
+        "actualNet": 81168,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608096"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608099",
+        "orderId": "LM-2608099",
+        "channel": "coupang",
+        "date": "2026-08-23",
+        "gross": 143000,
+        "refund": 0,
+        "expectedFee": 12584,
+        "actualFee": 12584,
+        "expectedNet": 130416,
+        "actualNet": 130416,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608099"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608102",
+        "orderId": "LM-2608102",
+        "channel": "coupang",
+        "date": "2026-08-24",
+        "gross": 187000,
+        "refund": 15000,
+        "expectedFee": 15136,
+        "actualFee": 15136,
+        "expectedNet": 156864,
+        "actualNet": 156864,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608102"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608105",
+        "orderId": "LM-2608105",
+        "channel": "coupang",
+        "date": "2026-08-25",
+        "gross": 45000,
+        "refund": 0,
+        "expectedFee": 3960,
+        "actualFee": 3960,
+        "expectedNet": 41040,
+        "actualNet": 41040,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608105"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608108",
+        "orderId": "LM-2608108",
+        "channel": "coupang",
+        "date": "2026-08-26",
+        "gross": 99000,
+        "refund": 0,
+        "expectedFee": 8712,
+        "actualFee": 8712,
+        "expectedNet": 90288,
+        "actualNet": 90288,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608108"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608111",
+        "orderId": "LM-2608111",
+        "channel": "coupang",
+        "date": "2026-08-26",
+        "gross": 143000,
+        "refund": 0,
+        "expectedFee": 12584,
+        "actualFee": 12584,
+        "expectedNet": 130416,
+        "actualNet": 130416,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608111"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608114",
+        "orderId": "LM-2608114",
+        "channel": "coupang",
+        "date": "2026-08-27",
+        "gross": 197000,
+        "refund": 0,
+        "expectedFee": 17336,
+        "actualFee": 17336,
+        "expectedNet": 179664,
+        "actualNet": 179664,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608114"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608117",
+        "orderId": "LM-2608117",
+        "channel": "coupang",
+        "date": "2026-08-28",
+        "gross": 55000,
+        "refund": 0,
+        "expectedFee": 4840,
+        "actualFee": 4840,
+        "expectedNet": 50160,
+        "actualNet": 50160,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608117"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608120",
+        "orderId": "LM-2608120",
+        "channel": "coupang",
+        "date": "2026-08-28",
+        "gross": 99000,
+        "refund": 0,
+        "expectedFee": 8712,
+        "actualFee": 8712,
+        "expectedNet": 90288,
+        "actualNet": 90288,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608120"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608123",
+        "orderId": "LM-2608123",
+        "channel": "coupang",
+        "date": "2026-08-29",
+        "gross": 153000,
+        "refund": 0,
+        "expectedFee": 13464,
+        "actualFee": 13464,
+        "expectedNet": 139536,
+        "actualNet": 139536,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608123"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608126",
+        "orderId": "LM-2608126",
+        "channel": "coupang",
+        "date": "2026-08-30",
+        "gross": 197000,
+        "refund": 0,
+        "expectedFee": 17336,
+        "actualFee": 17336,
+        "expectedNet": 179664,
+        "actualNet": 179664,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608126"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608001",
+        "orderId": "LM-2608001",
+        "channel": "d2c",
+        "date": "2026-08-01",
+        "gross": 119000,
+        "refund": 0,
+        "expectedFee": 3927,
+        "actualFee": 3927,
+        "expectedNet": 115073,
+        "actualNet": 115073,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608001"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608004",
+        "orderId": "LM-2608004",
+        "channel": "d2c",
+        "date": "2026-08-01",
+        "gross": 173000,
+        "refund": 0,
+        "expectedFee": 5709,
+        "actualFee": 5709,
+        "expectedNet": 167291,
+        "actualNet": 167291,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608004"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608007",
+        "orderId": "LM-2608007",
+        "channel": "d2c",
+        "date": "2026-08-02",
+        "gross": 217000,
+        "refund": 0,
+        "expectedFee": 7161,
+        "actualFee": 7161,
+        "expectedNet": 209839,
+        "actualNet": 209839,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608007"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608010",
+        "orderId": "LM-2608010",
+        "channel": "d2c",
+        "date": "2026-08-03",
+        "gross": 75000,
+        "refund": 0,
+        "expectedFee": 2475,
+        "actualFee": 2475,
+        "expectedNet": 72525,
+        "actualNet": 72525,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608010"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608013",
+        "orderId": "LM-2608013",
+        "channel": "d2c",
+        "date": "2026-08-03",
+        "gross": 129000,
+        "refund": 0,
+        "expectedFee": 4257,
+        "actualFee": 4257,
+        "expectedNet": 124743,
+        "actualNet": 124743,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608013"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608016",
+        "orderId": "LM-2608016",
+        "channel": "d2c",
+        "date": "2026-08-04",
+        "gross": 173000,
+        "refund": 0,
+        "expectedFee": 5709,
+        "actualFee": 5709,
+        "expectedNet": 167291,
+        "actualNet": 167291,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608016"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608019",
+        "orderId": "LM-2608019",
+        "channel": "d2c",
+        "date": "2026-08-05",
+        "gross": 227000,
+        "refund": 0,
+        "expectedFee": 7491,
+        "actualFee": 7491,
+        "expectedNet": 219509,
+        "actualNet": 219509,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608019"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608025",
+        "orderId": "LM-2608025",
+        "channel": "d2c",
+        "date": "2026-08-06",
+        "gross": 129000,
+        "refund": 0,
+        "expectedFee": 4257,
+        "actualFee": 4257,
+        "expectedNet": 124743,
+        "actualNet": 124743,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608025"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608028",
+        "orderId": "LM-2608028",
+        "channel": "d2c",
+        "date": "2026-08-07",
+        "gross": 183000,
+        "refund": 0,
+        "expectedFee": 6039,
+        "actualFee": 6039,
+        "expectedNet": 176961,
+        "actualNet": 176961,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608028"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608031",
+        "orderId": "LM-2608031",
+        "channel": "d2c",
+        "date": "2026-08-08",
+        "gross": 41000,
+        "refund": 0,
+        "expectedFee": 1353,
+        "actualFee": 1353,
+        "expectedNet": 39647,
+        "actualNet": 39647,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608031"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608037",
+        "orderId": "LM-2608037",
+        "channel": "d2c",
+        "date": "2026-08-09",
+        "gross": 139000,
+        "refund": 0,
+        "expectedFee": 4587,
+        "actualFee": 4587,
+        "expectedNet": 134413,
+        "actualNet": 134413,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608037"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608040",
+        "orderId": "LM-2608040",
+        "channel": "d2c",
+        "date": "2026-08-10",
+        "gross": 183000,
+        "refund": 0,
+        "expectedFee": 6039,
+        "actualFee": 6039,
+        "expectedNet": 176961,
+        "actualNet": 176961,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608040"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608043",
+        "orderId": "LM-2608043",
+        "channel": "d2c",
+        "date": "2026-08-10",
+        "gross": 51000,
+        "refund": 0,
+        "expectedFee": 1683,
+        "actualFee": 1683,
+        "expectedNet": 49317,
+        "actualNet": 49317,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608043"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608046",
+        "orderId": "LM-2608046",
+        "channel": "d2c",
+        "date": "2026-08-11",
+        "gross": 95000,
+        "refund": 0,
+        "expectedFee": 3135,
+        "actualFee": 3135,
+        "expectedNet": 91865,
+        "actualNet": 91865,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608046"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608049",
+        "orderId": "LM-2608049",
+        "channel": "d2c",
+        "date": "2026-08-12",
+        "gross": 149000,
+        "refund": 0,
+        "expectedFee": 4917,
+        "actualFee": 4917,
+        "expectedNet": 144083,
+        "actualNet": 144083,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608049"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608052",
+        "orderId": "LM-2608052",
+        "channel": "d2c",
+        "date": "2026-08-12",
+        "gross": 193000,
+        "refund": 0,
+        "expectedFee": 6369,
+        "actualFee": 6369,
+        "expectedNet": 186631,
+        "actualNet": 186631,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608052"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608055",
+        "orderId": "LM-2608055",
+        "channel": "d2c",
+        "date": "2026-08-13",
+        "gross": 51000,
+        "refund": 0,
+        "expectedFee": 1683,
+        "actualFee": 1683,
+        "expectedNet": 49317,
+        "actualNet": 49317,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608055"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608058",
+        "orderId": "LM-2608058",
+        "channel": "d2c",
+        "date": "2026-08-14",
+        "gross": 105000,
+        "refund": 0,
+        "expectedFee": 3465,
+        "actualFee": 3465,
+        "expectedNet": 101535,
+        "actualNet": 101535,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608058"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608061",
+        "orderId": "LM-2608061",
+        "channel": "d2c",
+        "date": "2026-08-15",
+        "gross": 149000,
+        "refund": 0,
+        "expectedFee": 4917,
+        "actualFee": 4917,
+        "expectedNet": 144083,
+        "actualNet": 144083,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608061"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608064",
+        "orderId": "LM-2608064",
+        "channel": "d2c",
+        "date": "2026-08-15",
+        "gross": 203000,
+        "refund": 0,
+        "expectedFee": 6699,
+        "actualFee": 6699,
+        "expectedNet": 196301,
+        "actualNet": 196301,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608064"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608067",
+        "orderId": "LM-2608067",
+        "channel": "d2c",
+        "date": "2026-08-16",
+        "gross": 61000,
+        "refund": 0,
+        "expectedFee": 2013,
+        "actualFee": 2013,
+        "expectedNet": 58987,
+        "actualNet": 58987,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608067"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608070",
+        "orderId": "LM-2608070",
+        "channel": "d2c",
+        "date": "2026-08-17",
+        "gross": 105000,
+        "refund": 0,
+        "expectedFee": 3465,
+        "actualFee": 3465,
+        "expectedNet": 101535,
+        "actualNet": 101535,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608070"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608073",
+        "orderId": "LM-2608073",
+        "channel": "d2c",
+        "date": "2026-08-17",
+        "gross": 159000,
+        "refund": 0,
+        "expectedFee": 5247,
+        "actualFee": 5247,
+        "expectedNet": 153753,
+        "actualNet": 153753,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608073"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608076",
+        "orderId": "LM-2608076",
+        "channel": "d2c",
+        "date": "2026-08-18",
+        "gross": 203000,
+        "refund": 0,
+        "expectedFee": 6699,
+        "actualFee": 6699,
+        "expectedNet": 196301,
+        "actualNet": 196301,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608076"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608079",
+        "orderId": "LM-2608079",
+        "channel": "d2c",
+        "date": "2026-08-19",
+        "gross": 71000,
+        "refund": 0,
+        "expectedFee": 2343,
+        "actualFee": 2343,
+        "expectedNet": 68657,
+        "actualNet": 68657,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608079"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608082",
+        "orderId": "LM-2608082",
+        "channel": "d2c",
+        "date": "2026-08-19",
+        "gross": 115000,
+        "refund": 0,
+        "expectedFee": 3795,
+        "actualFee": 3795,
+        "expectedNet": 111205,
+        "actualNet": 111205,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608082"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608085",
+        "orderId": "LM-2608085",
+        "channel": "d2c",
+        "date": "2026-08-20",
+        "gross": 159000,
+        "refund": 15000,
+        "expectedFee": 4752,
+        "actualFee": 4752,
+        "expectedNet": 139248,
+        "actualNet": 139248,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608085"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608088",
+        "orderId": "LM-2608088",
+        "channel": "d2c",
+        "date": "2026-08-21",
+        "gross": 213000,
+        "refund": 0,
+        "expectedFee": 7029,
+        "actualFee": 7029,
+        "expectedNet": 205971,
+        "actualNet": 205971,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608088"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608091",
+        "orderId": "LM-2608091",
+        "channel": "d2c",
+        "date": "2026-08-22",
+        "gross": 71000,
+        "refund": 0,
+        "expectedFee": 2343,
+        "actualFee": 2343,
+        "expectedNet": 68657,
+        "actualNet": 68657,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608091"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608094",
+        "orderId": "LM-2608094",
+        "channel": "d2c",
+        "date": "2026-08-22",
+        "gross": 125000,
+        "refund": 0,
+        "expectedFee": 4125,
+        "actualFee": 4125,
+        "expectedNet": 120875,
+        "actualNet": 120875,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608094"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608097",
+        "orderId": "LM-2608097",
+        "channel": "d2c",
+        "date": "2026-08-23",
+        "gross": 169000,
+        "refund": 0,
+        "expectedFee": 5577,
+        "actualFee": 5577,
+        "expectedNet": 163423,
+        "actualNet": 163423,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608097"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608100",
+        "orderId": "LM-2608100",
+        "channel": "d2c",
+        "date": "2026-08-24",
+        "gross": 213000,
+        "refund": 0,
+        "expectedFee": 7029,
+        "actualFee": 7029,
+        "expectedNet": 205971,
+        "actualNet": 205971,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608100"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608103",
+        "orderId": "LM-2608103",
+        "channel": "d2c",
+        "date": "2026-08-24",
+        "gross": 81000,
+        "refund": 0,
+        "expectedFee": 2673,
+        "actualFee": 2673,
+        "expectedNet": 78327,
+        "actualNet": 78327,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608103"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608106",
+        "orderId": "LM-2608106",
+        "channel": "d2c",
+        "date": "2026-08-25",
+        "gross": 125000,
+        "refund": 0,
+        "expectedFee": 4125,
+        "actualFee": 4125,
+        "expectedNet": 120875,
+        "actualNet": 120875,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608106"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608109",
+        "orderId": "LM-2608109",
+        "channel": "d2c",
+        "date": "2026-08-26",
+        "gross": 179000,
+        "refund": 0,
+        "expectedFee": 5907,
+        "actualFee": 5907,
+        "expectedNet": 173093,
+        "actualNet": 173093,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608109"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608112",
+        "orderId": "LM-2608112",
+        "channel": "d2c",
+        "date": "2026-08-27",
+        "gross": 223000,
+        "refund": 0,
+        "expectedFee": 7359,
+        "actualFee": 7359,
+        "expectedNet": 215641,
+        "actualNet": 215641,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608112"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608115",
+        "orderId": "LM-2608115",
+        "channel": "d2c",
+        "date": "2026-08-27",
+        "gross": 81000,
+        "refund": 0,
+        "expectedFee": 2673,
+        "actualFee": 2673,
+        "expectedNet": 78327,
+        "actualNet": 78327,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608115"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608118",
+        "orderId": "LM-2608118",
+        "channel": "d2c",
+        "date": "2026-08-28",
+        "gross": 135000,
+        "refund": 0,
+        "expectedFee": 4455,
+        "actualFee": 4455,
+        "expectedNet": 130545,
+        "actualNet": 130545,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608118"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608121",
+        "orderId": "LM-2608121",
+        "channel": "d2c",
+        "date": "2026-08-29",
+        "gross": 179000,
+        "refund": 0,
+        "expectedFee": 5907,
+        "actualFee": 5907,
+        "expectedNet": 173093,
+        "actualNet": 173093,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608121"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608124",
+        "orderId": "LM-2608124",
+        "channel": "d2c",
+        "date": "2026-08-29",
+        "gross": 47000,
+        "refund": 0,
+        "expectedFee": 1551,
+        "actualFee": 1551,
+        "expectedNet": 45449,
+        "actualNet": 45449,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608124"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608002",
+        "orderId": "LM-2608002",
+        "channel": "naver",
+        "date": "2026-08-01",
+        "gross": 199000,
+        "refund": 0,
+        "expectedFee": 7662,
+        "actualFee": 7662,
+        "expectedNet": 191338,
+        "actualNet": 191338,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608002"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608005",
+        "orderId": "LM-2608005",
+        "channel": "naver",
+        "date": "2026-08-01",
+        "gross": 57000,
+        "refund": 0,
+        "expectedFee": 2195,
+        "actualFee": 2195,
+        "expectedNet": 54805,
+        "actualNet": 54805,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608005"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608008",
+        "orderId": "LM-2608008",
+        "channel": "naver",
+        "date": "2026-08-02",
+        "gross": 111000,
+        "refund": 0,
+        "expectedFee": 4274,
+        "actualFee": 4274,
+        "expectedNet": 106726,
+        "actualNet": 106726,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608008"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608011",
+        "orderId": "LM-2608011",
+        "channel": "naver",
+        "date": "2026-08-03",
+        "gross": 155000,
+        "refund": 0,
+        "expectedFee": 5968,
+        "actualFee": 5968,
+        "expectedNet": 149032,
+        "actualNet": 149032,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608011"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608014",
+        "orderId": "LM-2608014",
+        "channel": "naver",
+        "date": "2026-08-04",
+        "gross": 209000,
+        "refund": 0,
+        "expectedFee": 8047,
+        "actualFee": 8047,
+        "expectedNet": 200953,
+        "actualNet": 200953,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608014"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608017",
+        "orderId": "LM-2608017",
+        "channel": "naver",
+        "date": "2026-08-04",
+        "gross": 67000,
+        "refund": 15000,
+        "expectedFee": 2002,
+        "actualFee": 2002,
+        "expectedNet": 49998,
+        "actualNet": 49998,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608017"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608020",
+        "orderId": "LM-2608020",
+        "channel": "naver",
+        "date": "2026-08-05",
+        "gross": 111000,
+        "refund": 0,
+        "expectedFee": 4274,
+        "actualFee": 4274,
+        "expectedNet": 106726,
+        "actualNet": 106726,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608020"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608023",
+        "orderId": "LM-2608023",
+        "channel": "naver",
+        "date": "2026-08-06",
+        "gross": 165000,
+        "refund": 0,
+        "expectedFee": 6353,
+        "actualFee": 6353,
+        "expectedNet": 158647,
+        "actualNet": 158647,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608023"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608026",
+        "orderId": "LM-2608026",
+        "channel": "naver",
+        "date": "2026-08-06",
+        "gross": 209000,
+        "refund": 0,
+        "expectedFee": 8047,
+        "actualFee": 8047,
+        "expectedNet": 200953,
+        "actualNet": 200953,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608026"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608029",
+        "orderId": "LM-2608029",
+        "channel": "naver",
+        "date": "2026-08-07",
+        "gross": 77000,
+        "refund": 0,
+        "expectedFee": 2965,
+        "actualFee": 2965,
+        "expectedNet": 74035,
+        "actualNet": 74035,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608029"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608032",
+        "orderId": "LM-2608032",
+        "channel": "naver",
+        "date": "2026-08-08",
+        "gross": 121000,
+        "refund": 0,
+        "expectedFee": 4659,
+        "actualFee": 4659,
+        "expectedNet": 116341,
+        "actualNet": 116341,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608032"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608035",
+        "orderId": "LM-2608035",
+        "channel": "naver",
+        "date": "2026-08-08",
+        "gross": 165000,
+        "refund": 0,
+        "expectedFee": 6353,
+        "actualFee": 6353,
+        "expectedNet": 158647,
+        "actualNet": 158647,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608035"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608038",
+        "orderId": "LM-2608038",
+        "channel": "naver",
+        "date": "2026-08-09",
+        "gross": 219000,
+        "refund": 0,
+        "expectedFee": 8432,
+        "actualFee": 8432,
+        "expectedNet": 210568,
+        "actualNet": 210568,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608038"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608041",
+        "orderId": "LM-2608041",
+        "channel": "naver",
+        "date": "2026-08-10",
+        "gross": 77000,
+        "refund": 0,
+        "expectedFee": 2965,
+        "actualFee": 2965,
+        "expectedNet": 74035,
+        "actualNet": 74035,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608041"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608044",
+        "orderId": "LM-2608044",
+        "channel": "naver",
+        "date": "2026-08-11",
+        "gross": 131000,
+        "refund": 0,
+        "expectedFee": 5044,
+        "actualFee": 5044,
+        "expectedNet": 125956,
+        "actualNet": 125956,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608044"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608047",
+        "orderId": "LM-2608047",
+        "channel": "naver",
+        "date": "2026-08-11",
+        "gross": 175000,
+        "refund": 0,
+        "expectedFee": 6738,
+        "actualFee": 6738,
+        "expectedNet": 168262,
+        "actualNet": 168262,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608047"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608050",
+        "orderId": "LM-2608050",
+        "channel": "naver",
+        "date": "2026-08-12",
+        "gross": 219000,
+        "refund": 0,
+        "expectedFee": 8432,
+        "actualFee": 8432,
+        "expectedNet": 210568,
+        "actualNet": 210568,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608050"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608053",
+        "orderId": "LM-2608053",
+        "channel": "naver",
+        "date": "2026-08-13",
+        "gross": 87000,
+        "refund": 0,
+        "expectedFee": 3350,
+        "actualFee": 3350,
+        "expectedNet": 83650,
+        "actualNet": 83650,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608053"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608056",
+        "orderId": "LM-2608056",
+        "channel": "naver",
+        "date": "2026-08-13",
+        "gross": 131000,
+        "refund": 0,
+        "expectedFee": 5044,
+        "actualFee": 5044,
+        "expectedNet": 125956,
+        "actualNet": 125956,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608056"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608059",
+        "orderId": "LM-2608059",
+        "channel": "naver",
+        "date": "2026-08-14",
+        "gross": 185000,
+        "refund": 0,
+        "expectedFee": 7123,
+        "actualFee": 7123,
+        "expectedNet": 177877,
+        "actualNet": 177877,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608059"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608062",
+        "orderId": "LM-2608062",
+        "channel": "naver",
+        "date": "2026-08-15",
+        "gross": 43000,
+        "refund": 0,
+        "expectedFee": 1656,
+        "actualFee": 1656,
+        "expectedNet": 41344,
+        "actualNet": 41344,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608062"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608065",
+        "orderId": "LM-2608065",
+        "channel": "naver",
+        "date": "2026-08-16",
+        "gross": 87000,
+        "refund": 0,
+        "expectedFee": 3350,
+        "actualFee": 3350,
+        "expectedNet": 83650,
+        "actualNet": 83650,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608065"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608068",
+        "orderId": "LM-2608068",
+        "channel": "naver",
+        "date": "2026-08-16",
+        "gross": 141000,
+        "refund": 15000,
+        "expectedFee": 4851,
+        "actualFee": 4851,
+        "expectedNet": 121149,
+        "actualNet": 121149,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608068"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608071",
+        "orderId": "LM-2608071",
+        "channel": "naver",
+        "date": "2026-08-17",
+        "gross": 185000,
+        "refund": 0,
+        "expectedFee": 7123,
+        "actualFee": 7123,
+        "expectedNet": 177877,
+        "actualNet": 177877,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608071"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608074",
+        "orderId": "LM-2608074",
+        "channel": "naver",
+        "date": "2026-08-18",
+        "gross": 53000,
+        "refund": 0,
+        "expectedFee": 2041,
+        "actualFee": 2041,
+        "expectedNet": 50959,
+        "actualNet": 50959,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608074"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608077",
+        "orderId": "LM-2608077",
+        "channel": "naver",
+        "date": "2026-08-18",
+        "gross": 97000,
+        "refund": 0,
+        "expectedFee": 3735,
+        "actualFee": 3735,
+        "expectedNet": 93265,
+        "actualNet": 93265,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608077"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608083",
+        "orderId": "LM-2608083",
+        "channel": "naver",
+        "date": "2026-08-20",
+        "gross": 195000,
+        "refund": 0,
+        "expectedFee": 7508,
+        "actualFee": 7508,
+        "expectedNet": 187492,
+        "actualNet": 187492,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608083"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608086",
+        "orderId": "LM-2608086",
+        "channel": "naver",
+        "date": "2026-08-20",
+        "gross": 53000,
+        "refund": 0,
+        "expectedFee": 2041,
+        "actualFee": 2041,
+        "expectedNet": 50959,
+        "actualNet": 50959,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608086"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608089",
+        "orderId": "LM-2608089",
+        "channel": "naver",
+        "date": "2026-08-21",
+        "gross": 107000,
+        "refund": 0,
+        "expectedFee": 4120,
+        "actualFee": 4120,
+        "expectedNet": 102880,
+        "actualNet": 102880,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608089"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608092",
+        "orderId": "LM-2608092",
+        "channel": "naver",
+        "date": "2026-08-22",
+        "gross": 151000,
+        "refund": 0,
+        "expectedFee": 5814,
+        "actualFee": 5814,
+        "expectedNet": 145186,
+        "actualNet": 145186,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608092"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608095",
+        "orderId": "LM-2608095",
+        "channel": "naver",
+        "date": "2026-08-23",
+        "gross": 195000,
+        "refund": 0,
+        "expectedFee": 7508,
+        "actualFee": 7508,
+        "expectedNet": 187492,
+        "actualNet": 187492,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608095"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608098",
+        "orderId": "LM-2608098",
+        "channel": "naver",
+        "date": "2026-08-23",
+        "gross": 63000,
+        "refund": 0,
+        "expectedFee": 2426,
+        "actualFee": 2426,
+        "expectedNet": 60574,
+        "actualNet": 60574,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608098"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608101",
+        "orderId": "LM-2608101",
+        "channel": "naver",
+        "date": "2026-08-24",
+        "gross": 107000,
+        "refund": 0,
+        "expectedFee": 4120,
+        "actualFee": 4120,
+        "expectedNet": 102880,
+        "actualNet": 102880,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608101"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608104",
+        "orderId": "LM-2608104",
+        "channel": "naver",
+        "date": "2026-08-25",
+        "gross": 161000,
+        "refund": 0,
+        "expectedFee": 6199,
+        "actualFee": 6199,
+        "expectedNet": 154801,
+        "actualNet": 154801,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608104"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608107",
+        "orderId": "LM-2608107",
+        "channel": "naver",
+        "date": "2026-08-25",
+        "gross": 205000,
+        "refund": 0,
+        "expectedFee": 7893,
+        "actualFee": 7893,
+        "expectedNet": 197107,
+        "actualNet": 197107,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608107"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608110",
+        "orderId": "LM-2608110",
+        "channel": "naver",
+        "date": "2026-08-26",
+        "gross": 63000,
+        "refund": 0,
+        "expectedFee": 2426,
+        "actualFee": 2426,
+        "expectedNet": 60574,
+        "actualNet": 60574,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608110"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608113",
+        "orderId": "LM-2608113",
+        "channel": "naver",
+        "date": "2026-08-27",
+        "gross": 117000,
+        "refund": 0,
+        "expectedFee": 4505,
+        "actualFee": 4505,
+        "expectedNet": 112495,
+        "actualNet": 112495,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608113"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608116",
+        "orderId": "LM-2608116",
+        "channel": "naver",
+        "date": "2026-08-27",
+        "gross": 161000,
+        "refund": 0,
+        "expectedFee": 6199,
+        "actualFee": 6199,
+        "expectedNet": 154801,
+        "actualNet": 154801,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608116"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608119",
+        "orderId": "LM-2608119",
+        "channel": "naver",
+        "date": "2026-08-28",
+        "gross": 215000,
+        "refund": 15000,
+        "expectedFee": 7700,
+        "actualFee": 7700,
+        "expectedNet": 192300,
+        "actualNet": 192300,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608119"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608122",
+        "orderId": "LM-2608122",
+        "channel": "naver",
+        "date": "2026-08-29",
+        "gross": 73000,
+        "refund": 0,
+        "expectedFee": 2811,
+        "actualFee": 2811,
+        "expectedNet": 70189,
+        "actualNet": 70189,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608122"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "naver:LM-2608125",
+        "orderId": "LM-2608125",
+        "channel": "naver",
+        "date": "2026-08-30",
+        "gross": 117000,
+        "refund": 0,
+        "expectedFee": 4505,
+        "actualFee": 4505,
+        "expectedNet": 112495,
+        "actualNet": 112495,
+        "delta": 0,
+        "kind": "matched",
+        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-NAVER"
+        ],
+        "settlementIds": [
+          "ST-2608125"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      }
+    ],
+    "resolutions": [
+      {
+        "rowKey": "coupang:LM-2608045",
+        "disposition": "exclude_duplicate",
+        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
+        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "a005d9a30e2a17dd6cd5b51776c4136f6d935342b692512c36f5de273c4100f2"
+      },
+      {
+        "rowKey": "coupang:LM-2608063",
+        "disposition": "accepted_variance",
+        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
+        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "46e986652300c094bd9283b7bdfa906d326acd6e005f2f2b52a89ee50ec4e90f"
+      },
+      {
+        "rowKey": "coupang:LM-2608012",
+        "disposition": "accepted_variance",
+        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
+        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "5995b64c8eaecce2074dd655a8686d6ab35c62f143394f0d45ef5ef354de58d1"
+      },
+      {
+        "rowKey": "d2c:LM-2608034",
+        "disposition": "accepted_variance",
+        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
+        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "847b66d7c6398e0ca6322cf299f8527b4aaae750de0f1017bc722225f919005f"
+      },
+      {
+        "rowKey": "d2c:LM-2608022",
+        "disposition": "accepted_variance",
+        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
+        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "7f1faca0c38acae71c7819d88bc7c9b1b1be3352f610e26439d17629fe608620"
+      },
+      {
+        "rowKey": "naver:LM-2608080",
+        "disposition": "accepted_variance",
+        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
+        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "8e601f37202da1524bf816f83766f70c659a9ccb23e79fc530a75c0d29cda7c4"
+      },
+      {
+        "rowKey": "d2c:LM-2608127",
+        "disposition": "carry_forward",
+        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
+        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "dadc58ad823e2c4c8770742b64d65f78e89336ae837a9477f203bed0f7d97531"
+      },
+      {
+        "rowKey": "naver:LM-2608128",
+        "disposition": "carry_forward",
+        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
+        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "f1ea3a6b2429ada5c950a7f2f6bbdc1b48ba0aac14669960a3e6524349b05b92"
+      }
+    ],
+    "hash": "16713c14726c4498278c01fef4f1623c330b24dedc4756dfeb98d7d60fd5b3ab"
+  },
+  "audit": [
+    {
+      "type": "seeded",
+      "actor": "시스템",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "가상 브랜드 LUMIÈRE의 주문 128건과 3개 채널 정산 자료를 수집했습니다.",
+      "id": "EVT-0001",
+      "previousHash": "GENESIS",
+      "hash": "647ef8e433864aaad96d9ebc26194f37296f5fd50d93120c6b39481fdb78a091"
+    },
+    {
+      "type": "reconciled",
+      "actor": "규칙 엔진",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "krw-net-v1.0.0 규칙으로 최초 대사를 실행했습니다. 금액은 원 단위 정수로 검증합니다.",
+      "id": "EVT-0002",
+      "previousHash": "647ef8e433864aaad96d9ebc26194f37296f5fd50d93120c6b39481fdb78a091",
+      "hash": "cafdec9d56c9358fac532fe7e36380af8f10ed3b7712fb697e72d56f14ab11f7"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608045 · exclude_duplicate · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "id": "EVT-0003",
+      "previousHash": "cafdec9d56c9358fac532fe7e36380af8f10ed3b7712fb697e72d56f14ab11f7",
+      "hash": "0f55071489252aa58a11e203dcf9708829a755e7072f67d6bbc01597536f87e6"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608063 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "id": "EVT-0004",
+      "previousHash": "0f55071489252aa58a11e203dcf9708829a755e7072f67d6bbc01597536f87e6",
+      "hash": "ecc628af2a886996b831c842b0302b03b0808186a1c9389f1cbd3018c1186561"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608012 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "id": "EVT-0005",
+      "previousHash": "ecc628af2a886996b831c842b0302b03b0808186a1c9389f1cbd3018c1186561",
+      "hash": "bf7b2a9def96856edefe215670dc65ae870e4c09926af4bfe321d348aada7db1"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608034 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "id": "EVT-0006",
+      "previousHash": "bf7b2a9def96856edefe215670dc65ae870e4c09926af4bfe321d348aada7db1",
+      "hash": "c7a22a6e43fb7cfd82d7bca35bb182eac0270f8dca9d7167e1ffd7714947c5d8"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608022 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "id": "EVT-0007",
+      "previousHash": "c7a22a6e43fb7cfd82d7bca35bb182eac0270f8dca9d7167e1ffd7714947c5d8",
+      "hash": "32dd2d5871f7e4abc4c557353ca29935686edb4e46c0b01cb0419c1f52e24674"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608080 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "id": "EVT-0008",
+      "previousHash": "32dd2d5871f7e4abc4c557353ca29935686edb4e46c0b01cb0419c1f52e24674",
+      "hash": "89ed1f47c8bd5f612403c8f75a5c9479dad424a3ba281d160d3ac35392b7edc0"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608127 · carry_forward · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "id": "EVT-0009",
+      "previousHash": "89ed1f47c8bd5f612403c8f75a5c9479dad424a3ba281d160d3ac35392b7edc0",
+      "hash": "4d827718acf47fd9c14e3e50be698602417c0ee5909c85fb2ff7e791e8856a05"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608128 · carry_forward · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "id": "EVT-0010",
+      "previousHash": "4d827718acf47fd9c14e3e50be698602417c0ee5909c85fb2ff7e791e8856a05",
+      "hash": "c02c482fb12ebd8d60f877c278b1d5d41d04d5b0b03ab7c8365223e946f3455c"
+    },
+    {
+      "type": "closed",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "2026-08 마감 확정 · 8건의 승인 근거 포함 · 스냅샷 16713c14726c4498…",
+      "id": "EVT-0011",
+      "previousHash": "c02c482fb12ebd8d60f877c278b1d5d41d04d5b0b03ab7c8365223e946f3455c",
+      "hash": "b49a649454c732db33f7ba068075f04c7ef89aed4af628fe6004c35395eb9966"
+    }
+  ],
+  "notice": "Deterministic synthetic fixture. Not a real financial close."
+}

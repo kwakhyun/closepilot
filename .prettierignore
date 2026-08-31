@@ -1,0 +1,17 @@
+node_modules
+.next
+.vercel
+.tools
+.data
+.agents/skills/neon
+.agents/skills/neon-postgres
+verifier/.gradle
+verifier/build
+fixtures/closed-package.json
+fixtures/baseline.json
+migrations/001_initial.sql
+migrations/002_jsonb_guards.sql
+public/fonts
+package-lock.json
+docs/evidence/*.json
+*.tsbuildinfo

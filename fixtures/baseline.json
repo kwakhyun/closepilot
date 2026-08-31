@@ -1,0 +1,18 @@
+{
+  "ruleVersion": "krw-net-v1.0.0",
+  "dataset": "lumiere-2026-08-synthetic",
+  "summary": {
+    "gross": 17072000,
+    "refunds": 105000,
+    "expectedNet": 16072966,
+    "actualNet": 16110319,
+    "delta": 37353,
+    "exposure": 358281,
+    "total": 128,
+    "matched": 120,
+    "issues": 8,
+    "unresolved": 8,
+    "reviewed": 0,
+    "timing": 2
+  }
+}
