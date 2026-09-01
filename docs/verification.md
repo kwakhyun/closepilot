@@ -104,3 +104,14 @@ P1·P2 개선과 AI 검토 초안, Kotlin HTTP 경계, 관측성 보강을 마�
 승인된 OpenAI 프로젝트 키로 `gpt-5.6-luna` 기반 검토 초안을 실제 평가했다. 중복 정산, 입금 시점 차이, 수수료 차이 세 사례가 모두 `ai` 모드로 생성됐고, 허용된 원본 자료·정산 ID만 인용했다. 생성 시간은 각각 5,203ms, 4,453ms, 4,248ms였다. 에이전트는 읽기 전용 근거 조회 도구만 사용할 수 있고, 초안을 적용해도 확인 체크박스와 승인·마감 상태는 바뀌지 않는다. API 키, 요청 본문, 프롬프트는 로그에 기록하지 않는다.
 
 1280×720 브라우저에서 URL 기반 화면 이동, 뒤로 가기 복원, 제목 포커스와 상단 스크롤, CSV 가져오기 단계 표시와 고정 푸터, 마감 모달의 독립 스크롤과 고정 행동 영역, AI 초안 생성·적용 범위를 확인했다. 브라우저 콘솔에는 애플리케이션 오류가 없었다. 개선 전후 화면을 같은 크기로 나란히 비교해 잘린 요소, 불필요한 포커스 테두리, 간격과 정렬을 재검토했고 발견한 제목 테두리를 제거했다.
+
+## 2026-09-01 프로덕션 재검증
+
+커밋 `0767765` 기준 결과를 Vercel 프로덕션에 배포했다. 배포 ID는 `dpl_364G3SRozWe8PG8VrKTuxCrzAw7j`, 상태는 `READY`이며, 공개 별칭은 [closepilot-delta.vercel.app](https://closepilot-delta.vercel.app)이다. `OPENAI_API_KEY`는 Vercel의 Production, Preview, Development 환경에 Secret 유형으로 등록했으며 값은 로그와 저장소에 노출하지 않았다.
+
+- 원격 smoke 검증 20단계가 모두 통과했다. 실행 시간은 6,958ms이며 합성 세션의 전체 업무 흐름을 확인한 값이다.
+- 중복 정산, 입금 시점 차이, 수수료 차이 AI 평가 3건이 모두 `ai` 모드로 통과했다. 생성 시간은 각각 9,387ms, 4,273ms, 4,998ms였고 허용된 원본 자료·정산 ID만 인용했다.
+- 브라우저에서 별도의 정산 누락 거래가 15초 제한을 넘겼을 때 `TimeoutError`를 기록하고 HTTP 200의 규칙 기반 초안으로 전환되는 것을 확인했다. 원본 금액, 검토 상태, 마감 상태는 바뀌지 않았고 사용자는 전환 사실을 화면에서 확인할 수 있었다.
+- 배포 후 Vercel 오류 수준 로그와 5xx 요청은 없었다. AI 로그에는 요청 ID, 모델, 토큰 수, 지연 시간, 전환 유형만 남고 키·프롬프트·요청 본문은 남지 않았다.
+- 프로덕션 브라우저 콘솔 오류는 없었다. 홈, `robots.txt`, `sitemap.xml`, Open Graph 이미지가 모두 HTTP 200으로 응답했고 canonical 및 Open Graph 메타데이터가 포함됐다.
+- [GitHub Actions #33465250321](https://github.com/kwakhyun/closepilot/actions/runs/33465250321)에서 Web과 Kotlin 작업이 모두 성공했다. `actions/checkout@v7`, `actions/setup-node@v7`, `actions/setup-java@v6`, `actions/upload-artifact@v7`로 갱신해 이전 런타임 지원 종료 경고도 제거했다.
