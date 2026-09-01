@@ -1,6 +1,7 @@
 import {
   DomainError,
   CHANNELS,
+  CHANNEL_LABELS,
   MAX_AMOUNT,
   type Channel,
   type Order,
@@ -121,6 +122,7 @@ export function importCsv(
   mapping: Record<string, string> | undefined,
   sourceId: string,
   period: string,
+  allowedChannels: readonly Channel[] = CHANNELS,
 ) {
   const [headers, ...rows] = parseCsv(text);
   const selected = mapping ?? suggestMapping(headers, kind);
@@ -176,6 +178,10 @@ export function importCsv(
         throw new Error(
           "판매 채널: d2c(자사몰), naver(스마트스토어), coupang(쿠팡) 중 하나를 입력하세요.",
         );
+      if (!allowedChannels.includes(channel))
+        throw new Error(
+          `판매 채널: 현재 온보딩 프로필에서 사용하지 않는 ${CHANNEL_LABELS[channel]} 채널입니다.`,
+        );
       const gross = amount("gross"),
         refund = amount("refund");
       if (refund > gross)
@@ -225,6 +231,63 @@ export function importCsv(
         ),
       ),
   };
+}
+
+export function buildProfileSampleCsv(
+  kind: ImportKind,
+  mapping: Record<string, string>,
+  enabledChannels: readonly Channel[],
+  feeBps: Record<Channel, number>,
+) {
+  const channels = enabledChannels.length ? enabledChannels : ["d2c" as const];
+  const orders = [
+    {
+      order_id: "DEMO-NEW-001",
+      channel: channels[0],
+      date: "2026-08-30",
+      gross: 100000,
+      refund: 0,
+    },
+    {
+      order_id: "DEMO-NEW-002",
+      channel: channels[1 % channels.length],
+      date: "2026-08-30",
+      gross: 80000,
+      refund: 10000,
+    },
+    {
+      order_id: "DEMO-NEW-003",
+      channel: channels[2 % channels.length],
+      date: "2026-08-31",
+      gross: 125000,
+      refund: 0,
+    },
+  ];
+  const fields = IMPORT_FIELDS[kind];
+  const header = fields.map((field) => mapping[field] || IMPORT_FIELD_LABELS[field]);
+  const records =
+    kind === "orders"
+      ? orders
+      : orders.map((order, index) => {
+          const fee = Math.round(((order.gross - order.refund) * feeBps[order.channel]) / 10_000);
+          return {
+            settlement_id: `DEMO-ST-00${index + 1}`,
+            order_id: order.order_id,
+            channel: order.channel,
+            gross: order.gross,
+            refund: order.refund,
+            fee,
+            net: order.gross - order.refund - fee,
+            due_date: "2026-08-31",
+            paid_date: "2026-08-31",
+          };
+        });
+  return [
+    header.map(csvCell).join(","),
+    ...records.map((record) =>
+      fields.map((field) => csvCell(record[field as keyof typeof record])).join(","),
+    ),
+  ].join("\n");
 }
 
 export function csvCell(value: unknown): string {

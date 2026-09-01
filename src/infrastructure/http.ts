@@ -28,7 +28,10 @@ export function assertSameOrigin(request: Request) {
   if (!origin || origin !== expected || request.headers.get("sec-fetch-site") === "cross-site")
     throw new DomainError("ORIGIN_DENIED", "동일한 사이트에서만 변경을 요청할 수 있습니다.", 403);
 }
-export async function readJson(request: Request): Promise<unknown> {
+export async function readJson(
+  request: Request,
+  { allowEmpty = false }: { allowEmpty?: boolean } = {},
+): Promise<unknown> {
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json"))
     throw new DomainError(
       "JSON_REQUIRED",
@@ -41,8 +44,10 @@ export async function readJson(request: Request): Promise<unknown> {
       "요청에 포함된 데이터가 너무 큽니다. 크기를 줄인 뒤 다시 시도하세요.",
       413,
     );
-  if (!request.body)
+  if (!request.body) {
+    if (allowEmpty) return {};
     throw new DomainError("INVALID_JSON", "요청 본문에 JSON 데이터를 입력하세요.", 400);
+  }
   const reader = request.body.getReader();
   const decoder = new TextDecoder();
   let text = "",
@@ -63,6 +68,7 @@ export async function readJson(request: Request): Promise<unknown> {
       text += decoder.decode(value, { stream: true });
     }
     text += decoder.decode();
+    if (allowEmpty && !text.trim()) return {};
     return JSON.parse(text);
   } catch (error) {
     if (error instanceof DomainError) throw error;

@@ -9,9 +9,15 @@ import {
   Upload,
   AlertCircle,
   RefreshCw,
+  Save,
 } from "lucide-react";
-import { IMPORT_FIELDS, IMPORT_FIELD_LABELS, type ImportKind } from "@/domain/csv";
-import type { Command } from "@/application/workbench";
+import {
+  buildProfileSampleCsv,
+  IMPORT_FIELDS,
+  IMPORT_FIELD_LABELS,
+  type ImportKind,
+} from "@/domain/csv";
+import type { Command, WorkspaceView } from "@/application/workbench";
 import { Modal } from "./modal";
 
 interface Preview {
@@ -28,12 +34,20 @@ export function ImportModal({
   onCommand,
   version,
   busy,
+  profileName,
+  policy,
+  savedMappings,
+  onSessionExpired,
 }: {
   open: boolean;
   onClose: () => void;
   onCommand: (command: Command) => Promise<boolean>;
   version: number;
   busy: boolean;
+  profileName: string;
+  policy: WorkspaceView["profile"]["policy"];
+  savedMappings: WorkspaceView["profile"]["mappings"];
+  onSessionExpired: () => Promise<boolean>;
 }) {
   const [kind, setKind] = useState<ImportKind>("orders");
   const [csv, setCsv] = useState("");
@@ -41,10 +55,24 @@ export function ImportModal({
   const [preview, setPreview] = useState<Preview | null>(null);
   const [validating, setValidating] = useState(false);
   const [error, setError] = useState("");
+  const [saveMapping, setSaveMapping] = useState(true);
   const input = useRef<HTMLInputElement>(null);
   const mappingSection = useRef<HTMLElement>(null);
   const requestVersion = useRef(0);
   const currentStep = preview?.valid ? 3 : csv ? 2 : 1;
+  const savedMapping = savedMappings[kind];
+  const savedMappingCompatible =
+    !!preview &&
+    Object.values(savedMapping).every((header) => !header || preview.headers.includes(header));
+  const savedMappingApplied =
+    !!preview &&
+    IMPORT_FIELDS[kind].every((field) => preview.mapping[field] === savedMapping[field]);
+  const profileSample = buildProfileSampleCsv(
+    kind,
+    savedMapping,
+    policy.enabledChannels,
+    policy.feeBps,
+  );
   useEffect(() => {
     if (!open || !preview?.valid) return;
     requestAnimationFrame(() =>
@@ -63,6 +91,10 @@ export function ImportModal({
       });
       const result = await response.json();
       if (version !== requestVersion.current) return;
+      if (response.status === 401) {
+        await onSessionExpired();
+        return;
+      }
       if (!response.ok) throw new Error(result.error?.message || "파일을 검증하지 못했습니다.");
       setPreview(result);
     } catch (failure) {
@@ -73,12 +105,12 @@ export function ImportModal({
   }
   async function sample() {
     try {
-      const response = await fetch(`/samples/${kind}.csv`);
-      if (!response.ok) throw new Error("샘플 파일을 불러오지 못했습니다.");
-      const text = await response.text();
+      const text = profileSample;
       setCsv(text);
-      setFilename(`sample_${kind}.csv`);
-      await validate(text);
+      setFilename(
+        `${profileName.replace(/[^a-zA-Z0-9가-힣._-]+/g, "-")}_${kind}_sample.csv`.toLowerCase(),
+      );
+      await validate(text, savedMapping);
     } catch (failure) {
       setError((failure as Error).message);
     }
@@ -224,7 +256,10 @@ export function ImportModal({
               <FileSpreadsheet size={15} />
               샘플 {kind === "orders" ? "주문" : "정산"} 불러오기
             </button>
-            <a href={`/samples/${kind}.csv`} download>
+            <a
+              href={`data:text/csv;charset=utf-8,${encodeURIComponent(profileSample)}`}
+              download={`${profileName.replace(/[^a-zA-Z0-9가-힣._-]+/g, "-")}_${kind}_sample.csv`.toLowerCase()}
+            >
               <Download size={14} />
               CSV 샘플 다운로드
             </a>
@@ -244,6 +279,25 @@ export function ImportModal({
               <div className="section-heading">
                 <h3>원본 열 연결 확인</h3>
                 <span className="soft-tag">자동 연결 · 직접 수정 가능</span>
+              </div>
+              <div className="saved-mapping-bar">
+                <div>
+                  <Save size={15} />
+                  <span>
+                    {profileName} 프로필 · 저장된 열 연결 {Object.keys(savedMapping).length}개
+                  </span>
+                </div>
+                <button
+                  className="text-button"
+                  type="button"
+                  disabled={!savedMappingCompatible || savedMappingApplied || validating}
+                  onClick={() => void validate(csv, savedMapping)}
+                  title={
+                    savedMappingCompatible ? undefined : "현재 CSV에 저장된 열 이름이 없습니다."
+                  }
+                >
+                  {savedMappingApplied ? "저장 설정 적용됨" : "저장 설정 불러오기"}
+                </button>
               </div>
               <div className="mapping-grid">
                 {IMPORT_FIELDS[kind].map((field) => (
@@ -316,6 +370,14 @@ export function ImportModal({
                       </tbody>
                     </table>
                   </div>
+                  <label className="checkbox-label save-mapping-option">
+                    <input
+                      type="checkbox"
+                      checked={saveMapping}
+                      onChange={(event) => setSaveMapping(event.target.checked)}
+                    />
+                    <span>이번 열 연결을 {profileName} 온보딩 프로필에 저장</span>
+                  </label>
                 </>
               )}
             </section>
@@ -344,6 +406,7 @@ export function ImportModal({
                   csv,
                   filename,
                   mapping: preview.mapping,
+                  saveMapping,
                 }))
               ) {
                 onClose();

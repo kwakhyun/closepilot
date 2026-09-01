@@ -12,7 +12,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import type { ReviewedRow, WorkspaceView } from "@/application/workbench";
-import { CHANNELS, CHANNEL_LABELS, ISSUE_LABELS, type Channel } from "@/domain/model";
+import { CHANNEL_LABELS, ISSUE_LABELS, type Channel } from "@/domain/model";
 import { deltaMoney, money } from "./format";
 import { compareReviewRows } from "./review-queue";
 
@@ -47,6 +47,8 @@ export function TransactionTable({
   const [channel, setChannel] = useState<string>("all");
   const [page, setPage] = useState(0);
   const [ascending, setAscending] = useState(false);
+  const enabledChannels = workspace.profile.policy.enabledChannels;
+  const effectiveChannel = enabledChannels.includes(channel as Channel) ? channel : "all";
   const tabSetId = useId();
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const pageSize = expanded ? 12 : 6;
@@ -80,7 +82,7 @@ export function TransactionTable({
         (filter === "issues" ? row.kind !== "matched" && !row.resolution : !!row.resolution);
       return (
         matchFilter &&
-        (channel === "all" || row.channel === channel) &&
+        (effectiveChannel === "all" || row.channel === effectiveChannel) &&
         (!search || row.orderId.toLowerCase().includes(search.trim().toLowerCase()))
       );
     })
@@ -132,14 +134,14 @@ export function TransactionTable({
             <ListFilter size={14} />
             <select
               aria-label="채널 필터"
-              value={channel}
+              value={effectiveChannel}
               onChange={(event) => {
                 setChannel(event.target.value);
                 setPage(0);
               }}
             >
               <option value="all">전체 채널</option>
-              {CHANNELS.map((value) => (
+              {enabledChannels.map((value) => (
                 <option key={value} value={value}>
                   {CHANNEL_LABELS[value]}
                 </option>
@@ -246,20 +248,20 @@ export function TransactionTable({
           <div className="empty-state">
             <CheckCircle2 size={30} />
             <h3>
-              {filter === "issues" && !search && channel === "all"
+              {filter === "issues" && !search && effectiveChannel === "all"
                 ? "모든 예외 거래를 검토했습니다"
                 : "조건에 맞는 거래가 없습니다"}
             </h3>
             <p>
-              {filter === "issues" && !search && channel === "all"
+              {filter === "issues" && !search && effectiveChannel === "all"
                 ? workspace.close
                   ? "마감 증빙 보기에서 확정한 결과를 내려받을 수 있습니다."
                   : "마감 점검에서 남은 조건을 확인하고 마감을 확정하세요."
-                : filter === "reviewed" && !search && channel === "all"
+                : filter === "reviewed" && !search && effectiveChannel === "all"
                   ? "거래 상세에서 검토를 승인하면 이 목록에 표시됩니다."
                   : "검색어나 판매 채널, 검토 상태를 바꿔 다시 확인하세요."}
             </p>
-            {(search || channel !== "all") && (
+            {(search || effectiveChannel !== "all") && (
               <button
                 className="text-button"
                 onClick={() => {

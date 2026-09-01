@@ -1,7 +1,7 @@
 {
   "snapshot": {
     "period": "2026-08",
-    "ruleVersion": "krw-net-v1.0.0",
+    "ruleVersion": "krw-net-v1.1.0",
     "closedAt": "2026-08-31T09:00:00.000Z",
     "closedBy": "데모 검토자",
     "gross": 17072000,
@@ -29,6 +29,92 @@
         "digest": "3e6a3efd750691d2daee08cb39c60f33a8500e0ff6c51fd8a18a533f74d4138c"
       }
     ],
+    "profile": {
+      "templateId": "lumiere-beauty-v1",
+      "version": 1,
+      "brandName": "LUMIÈRE",
+      "monogram": "L",
+      "industry": "K-Beauty",
+      "period": "2026-08",
+      "asOf": "2026-08-31",
+      "policy": {
+        "currency": "KRW",
+        "feeBps": {
+          "d2c": 330,
+          "naver": 385,
+          "coupang": 880
+        },
+        "enabledChannels": [
+          "d2c",
+          "naver",
+          "coupang"
+        ],
+        "feeBasis": "환불 차감 후 순매출 · 주문별 반올림",
+        "reviewRules": [
+          "예외별 근거 필수",
+          "최신 대사 후 승인",
+          "미검토 0건일 때 마감"
+        ]
+      },
+      "mappings": {
+        "orders": {
+          "order_id": "주문번호",
+          "channel": "판매채널",
+          "date": "주문일자",
+          "gross": "결제금액",
+          "refund": "환불금액"
+        },
+        "settlements": {
+          "settlement_id": "정산번호",
+          "order_id": "주문번호",
+          "channel": "판매채널",
+          "gross": "주문금액",
+          "refund": "환불금액",
+          "fee": "수수료",
+          "net": "정산금액",
+          "due_date": "입금예정일",
+          "paid_date": "입금일"
+        },
+        "updatedAt": null
+      },
+      "diagnosis": [
+        {
+          "hypothesis": "채널마다 정산서 열 이름과 수수료 기준이 달라 월말 확인이 반복된다.",
+          "discoveryQuestion": "채널별 수수료는 어떤 금액을 기준으로 계산하고 어느 시점에 반올림하나요?",
+          "finding": "환불 차감 후 순매출에 채널별 요율을 적용하고 주문별로 반올림한다는 가상 운영 조건을 설정했습니다."
+        },
+        {
+          "hypothesis": "입금 시점 차이와 누락을 같은 차이로 보면 후속 조치가 불명확해진다.",
+          "discoveryQuestion": "마감일 이후 입금 예정 건은 이번 달 예외와 어떻게 구분하나요?",
+          "finding": "입금 확인 필요 건은 금액 오류와 분리하고 다음 달 이월 검토로만 처리합니다."
+        }
+      ],
+      "reusableCapabilities": [
+        "열 연결 프로필 저장",
+        "채널별 수수료 정책 버전 관리",
+        "예외 유형별 검토 규칙",
+        "마감 근거 패키지"
+      ],
+      "roadmap": [
+        {
+          "horizon": "Now",
+          "capability": "온보딩 프로필",
+          "metric": "첫 업로드 열 연결 완료율"
+        },
+        {
+          "horizon": "Next",
+          "capability": "정산 정책 변경 비교",
+          "metric": "정책 변경 후 재검토 누락 건수"
+        },
+        {
+          "horizon": "Later",
+          "capability": "채널 커넥터 자산화",
+          "metric": "브랜드별 반복 설정 시간"
+        }
+      ],
+      "id": "lumiere-beauty-v1",
+      "clonedFrom": null
+    },
     "inputs": {
       "orders": [
         {
@@ -2582,7 +2668,12 @@
           "sourceId": "SRC-SET-NAVER"
         }
       ],
-      "asOf": "2026-08-31"
+      "asOf": "2026-08-31",
+      "feeBps": {
+        "d2c": 330,
+        "naver": 385,
+        "coupang": 880
+      }
     },
     "rows": [
       {
@@ -5727,26 +5818,26 @@
         "fingerprint": "f1ea3a6b2429ada5c950a7f2f6bbdc1b48ba0aac14669960a3e6524349b05b92"
       }
     ],
-    "hash": "16713c14726c4498278c01fef4f1623c330b24dedc4756dfeb98d7d60fd5b3ab"
+    "hash": "2402866290bef63d3b448df4864a5e749baafb31fe5394e0c0bbdb5adbe6c874"
   },
   "audit": [
     {
       "type": "seeded",
       "actor": "시스템",
       "at": "2026-08-31T09:00:00.000Z",
-      "detail": "가상 브랜드 LUMIÈRE의 주문 128건과 3개 채널 정산 자료를 수집했습니다.",
+      "detail": "가상 K-Beauty 브랜드 LUMIÈRE의 주문 128건과 3개 채널 정산 자료를 준비했습니다.",
       "id": "EVT-0001",
       "previousHash": "GENESIS",
-      "hash": "647ef8e433864aaad96d9ebc26194f37296f5fd50d93120c6b39481fdb78a091"
+      "hash": "d8bef54af9d1aa712d3ff2daba9c222cf51b7628d9492d8997725b685e333805"
     },
     {
       "type": "reconciled",
       "actor": "규칙 엔진",
       "at": "2026-08-31T09:00:00.000Z",
-      "detail": "krw-net-v1.0.0 규칙으로 최초 대사를 실행했습니다. 금액은 원 단위 정수로 검증합니다.",
+      "detail": "krw-net-v1.1.0 규칙으로 최초 대사를 실행했습니다. 금액은 원 단위 정수로 계산합니다.",
       "id": "EVT-0002",
-      "previousHash": "647ef8e433864aaad96d9ebc26194f37296f5fd50d93120c6b39481fdb78a091",
-      "hash": "cafdec9d56c9358fac532fe7e36380af8f10ed3b7712fb697e72d56f14ab11f7"
+      "previousHash": "d8bef54af9d1aa712d3ff2daba9c222cf51b7628d9492d8997725b685e333805",
+      "hash": "67724bd2aee70ea33c57cce22b19b183af5e863a23fc3f7711b3b2ae534bc27a"
     },
     {
       "type": "resolved",
@@ -5754,8 +5845,8 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608045 · exclude_duplicate · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0003",
-      "previousHash": "cafdec9d56c9358fac532fe7e36380af8f10ed3b7712fb697e72d56f14ab11f7",
-      "hash": "0f55071489252aa58a11e203dcf9708829a755e7072f67d6bbc01597536f87e6"
+      "previousHash": "67724bd2aee70ea33c57cce22b19b183af5e863a23fc3f7711b3b2ae534bc27a",
+      "hash": "6a90d065afbc322732eb66dbd19db833bc3783a3d0a0809f6d622637d980a107"
     },
     {
       "type": "resolved",
@@ -5763,8 +5854,8 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608063 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0004",
-      "previousHash": "0f55071489252aa58a11e203dcf9708829a755e7072f67d6bbc01597536f87e6",
-      "hash": "ecc628af2a886996b831c842b0302b03b0808186a1c9389f1cbd3018c1186561"
+      "previousHash": "6a90d065afbc322732eb66dbd19db833bc3783a3d0a0809f6d622637d980a107",
+      "hash": "074f4d30c38ccac2cc962e74644dce4741e37184fee10d6df4a9a698640813c4"
     },
     {
       "type": "resolved",
@@ -5772,8 +5863,8 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608012 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0005",
-      "previousHash": "ecc628af2a886996b831c842b0302b03b0808186a1c9389f1cbd3018c1186561",
-      "hash": "bf7b2a9def96856edefe215670dc65ae870e4c09926af4bfe321d348aada7db1"
+      "previousHash": "074f4d30c38ccac2cc962e74644dce4741e37184fee10d6df4a9a698640813c4",
+      "hash": "6a40f580033d4fffde2f5caf19b079239c068d1dd661ca79392732285e03379d"
     },
     {
       "type": "resolved",
@@ -5781,8 +5872,8 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608034 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0006",
-      "previousHash": "bf7b2a9def96856edefe215670dc65ae870e4c09926af4bfe321d348aada7db1",
-      "hash": "c7a22a6e43fb7cfd82d7bca35bb182eac0270f8dca9d7167e1ffd7714947c5d8"
+      "previousHash": "6a40f580033d4fffde2f5caf19b079239c068d1dd661ca79392732285e03379d",
+      "hash": "9bdebc036a0f6a5e08ff0dcd05d57d85fc0f69bc4007c344c22a6078f3a0d58c"
     },
     {
       "type": "resolved",
@@ -5790,8 +5881,8 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608022 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0007",
-      "previousHash": "c7a22a6e43fb7cfd82d7bca35bb182eac0270f8dca9d7167e1ffd7714947c5d8",
-      "hash": "32dd2d5871f7e4abc4c557353ca29935686edb4e46c0b01cb0419c1f52e24674"
+      "previousHash": "9bdebc036a0f6a5e08ff0dcd05d57d85fc0f69bc4007c344c22a6078f3a0d58c",
+      "hash": "eca93393292a4af0ed412027f6100716207db828dc1a4156ccded3277ff0c040"
     },
     {
       "type": "resolved",
@@ -5799,8 +5890,8 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608080 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0008",
-      "previousHash": "32dd2d5871f7e4abc4c557353ca29935686edb4e46c0b01cb0419c1f52e24674",
-      "hash": "89ed1f47c8bd5f612403c8f75a5c9479dad424a3ba281d160d3ac35392b7edc0"
+      "previousHash": "eca93393292a4af0ed412027f6100716207db828dc1a4156ccded3277ff0c040",
+      "hash": "8122094e9d8c84616d0fd91b3805a30d99dc66d25dd073ca0a4e973703624304"
     },
     {
       "type": "resolved",
@@ -5808,8 +5899,8 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608127 · carry_forward · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0009",
-      "previousHash": "89ed1f47c8bd5f612403c8f75a5c9479dad424a3ba281d160d3ac35392b7edc0",
-      "hash": "4d827718acf47fd9c14e3e50be698602417c0ee5909c85fb2ff7e791e8856a05"
+      "previousHash": "8122094e9d8c84616d0fd91b3805a30d99dc66d25dd073ca0a4e973703624304",
+      "hash": "d39c930a20586a32e1f516499adda314be302a83eb03b07b4af9653b688025bf"
     },
     {
       "type": "resolved",
@@ -5817,17 +5908,17 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608128 · carry_forward · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0010",
-      "previousHash": "4d827718acf47fd9c14e3e50be698602417c0ee5909c85fb2ff7e791e8856a05",
-      "hash": "c02c482fb12ebd8d60f877c278b1d5d41d04d5b0b03ab7c8365223e946f3455c"
+      "previousHash": "d39c930a20586a32e1f516499adda314be302a83eb03b07b4af9653b688025bf",
+      "hash": "1cefefec57542769f415ceffe647fa2c2406db3a64296b1149dfd2da638bda20"
     },
     {
       "type": "closed",
       "actor": "데모 검토자",
       "at": "2026-08-31T09:00:00.000Z",
-      "detail": "2026-08 마감 확정 · 8건의 승인 근거 포함 · 스냅샷 16713c14726c4498…",
+      "detail": "2026-08 마감 확정 · 8건의 승인 근거 포함 · 스냅샷 2402866290bef63d…",
       "id": "EVT-0011",
-      "previousHash": "c02c482fb12ebd8d60f877c278b1d5d41d04d5b0b03ab7c8365223e946f3455c",
-      "hash": "b49a649454c732db33f7ba068075f04c7ef89aed4af628fe6004c35395eb9966"
+      "previousHash": "1cefefec57542769f415ceffe647fa2c2406db3a64296b1149dfd2da638bda20",
+      "hash": "622ff7c28bd9343fadf5bff9a39d1efb2b6d67c48683b2721347b4f50eceba20"
     }
   ],
   "notice": "Deterministic synthetic fixture. Not a real financial close."

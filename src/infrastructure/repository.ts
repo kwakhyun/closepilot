@@ -1,5 +1,5 @@
 import { DomainError, type Workspace } from "@/domain/model";
-import { seedWorkspace } from "@/domain/seed";
+import { seedWorkspace, type SeedOptions } from "@/domain/seed";
 import { digest } from "@/domain/canonical";
 import { applyCommand, type Command } from "@/application/workbench";
 import type { Database, DbSession } from "./database";
@@ -38,8 +38,13 @@ async function consumeLimit(
 
 export class WorkspaceRepository {
   constructor(private database: Database) {}
-  async create(session: string, clientBucket: string, now = new Date()): Promise<Workspace> {
-    const workspace = seedWorkspace(now.toISOString());
+  async create(
+    session: string,
+    clientBucket: string,
+    now = new Date(),
+    seedOptions: SeedOptions = {},
+  ): Promise<Workspace> {
+    const workspace = seedWorkspace(now.toISOString(), seedOptions);
     return this.database.transaction(async (transaction) => {
       await transaction.query("DELETE FROM closepilot_workspaces WHERE expires_at < $1", [
         now.toISOString(),

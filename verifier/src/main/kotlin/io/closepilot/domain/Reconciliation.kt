@@ -2,16 +2,22 @@ package io.closepilot.domain
 
 import java.time.LocalDate
 
-enum class Channel(val wireName: String, val rate: BasisPoints) {
-    D2C("d2c", BasisPoints.of(330)),
-    NAVER("naver", BasisPoints.of(385)),
-    COUPANG("coupang", BasisPoints.of(880));
+enum class Channel(val wireName: String) {
+    D2C("d2c"),
+    NAVER("naver"),
+    COUPANG("coupang");
 
     companion object {
         fun parse(value: String): Channel = entries.firstOrNull { it.wireName == value }
             ?: error("Unsupported channel: $value")
     }
 }
+
+val DEFAULT_FEE_POLICY: Map<Channel, BasisPoints> = mapOf(
+    Channel.D2C to BasisPoints.of(330),
+    Channel.NAVER to BasisPoints.of(385),
+    Channel.COUPANG to BasisPoints.of(880),
+)
 
 data class OrderKey(val channel: Channel, val id: String) {
     val wireName: String get() = "${channel.wireName}:$id"
@@ -77,7 +83,12 @@ sealed interface Reconciliation {
     }
 }
 
-fun reconcile(orders: List<Order>, settlements: List<Settlement>, asOf: LocalDate): List<Reconciliation> {
+fun reconcile(
+    orders: List<Order>,
+    settlements: List<Settlement>,
+    asOf: LocalDate,
+    feePolicy: Map<Channel, BasisPoints> = DEFAULT_FEE_POLICY,
+): List<Reconciliation> {
     val orderMap = orders.associateBy { it.key }
     require(orderMap.size == orders.size) { "Duplicate order key" }
     val groups = settlements.groupBy { it.orderKey }
@@ -87,7 +98,10 @@ fun reconcile(orders: List<Order>, settlements: List<Settlement>, asOf: LocalDat
         val entries = groups[key].orEmpty()
         val gross = order?.gross ?: Won.ZERO
         val refund = order?.refund ?: Won.ZERO
-        val expectedFee = feeFor(gross - refund, key.channel.rate)
+        val expectedFee = feeFor(
+            gross - refund,
+            feePolicy[key.channel] ?: error("Missing fee policy: ${key.channel.wireName}"),
+        )
         val expectedNet = gross - refund - expectedFee
         val actualGross = entries.map { it.gross }.sumWon()
         val actualRefund = entries.map { it.refund }.sumWon()

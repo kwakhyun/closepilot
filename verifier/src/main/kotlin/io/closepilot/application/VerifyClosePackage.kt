@@ -1,6 +1,7 @@
 package io.closepilot.application
 
 import io.closepilot.domain.Channel
+import io.closepilot.domain.BasisPoints
 import io.closepilot.domain.Order
 import io.closepilot.domain.OrderKey
 import io.closepilot.domain.Settlement
@@ -59,7 +60,7 @@ fun verifyClosePackage(text: String): VerificationReport {
     require(text.toByteArray(Charsets.UTF_8).size <= 5_000_000) { "Package exceeds 5 MB" }
     val root = Json.parseToJsonElement(text).jsonObject
     val snapshot = root.getValue("snapshot").jsonObject
-    require(snapshot.string("ruleVersion") == "krw-net-v1.0.0") { "Unsupported rule version" }
+    require(snapshot.string("ruleVersion") == RULE_VERSION) { "Unsupported rule version" }
     val snapshotHash = snapshot.string("hash")
     require(sha256(JsonObject(snapshot.filterKeys { it != "hash" })) == snapshotHash) { "Snapshot checksum mismatch" }
     val inputs = snapshot.getValue("inputs").jsonObject
@@ -76,7 +77,13 @@ fun verifyClosePackage(text: String): VerificationReport {
     val sources = snapshot.array("sources").map { it.jsonObject.string("id") }
     require(sources.toSet().size == sources.size) { "Duplicate source metadata" }
     require(orders.all { it.sourceId in sources } && settlements.all { it.sourceId in sources }) { "Unreferenced input source" }
-    val replay = reconcile(orders, settlements, inputs.date("asOf"))
+    val policy = inputs.getValue("feeBps").jsonObject
+    val feePolicy = Channel.entries.associateWith { channel ->
+        val value = policy.long(channel.wireName)
+        require(value in 0..10_000) { "Invalid fee policy: ${channel.wireName}" }
+        BasisPoints.of(value.toInt())
+    }
+    val replay = reconcile(orders, settlements, inputs.date("asOf"), feePolicy)
     val reported = snapshot.array("rows").map { it.jsonObject }.associateBy { it.string("key") }
     require(reported.size == snapshot.array("rows").size && reported.size == replay.size) { "Missing or duplicate output rows" }
     require(snapshot.long("rowCount") == replay.size.toLong()) { "Row count mismatch" }

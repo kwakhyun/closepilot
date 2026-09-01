@@ -3,6 +3,7 @@ package io.closepilot
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpServer
 import io.closepilot.application.verifyClosePackage
+import io.closepilot.application.reconcileRequest
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import java.net.InetSocketAddress
@@ -17,8 +18,9 @@ class VerifierHttpServer(port: Int = 8081) {
     init {
         server.createContext("/health") { exchange ->
             if (exchange.requestMethod != "GET") exchange.sendJson(405, buildJsonObject { put("error", "METHOD_NOT_ALLOWED") }.toString())
-            else exchange.sendJson(200, buildJsonObject { put("status", "ok"); put("service", "closepilot-verifier") }.toString())
+            else exchange.sendJson(200, buildJsonObject { put("status", "ok"); put("service", "closepilot-reconciliation-service") }.toString())
         }
+        server.createContext("/reconcile") { exchange -> reconcile(exchange) }
         server.createContext("/verify") { exchange -> verify(exchange) }
     }
 
@@ -28,6 +30,30 @@ class VerifierHttpServer(port: Int = 8081) {
     }
 
     fun stop() = server.stop(0)
+
+    private fun reconcile(exchange: HttpExchange) {
+        if (exchange.requestMethod != "POST") {
+            exchange.sendJson(405, buildJsonObject { put("error", "METHOD_NOT_ALLOWED") }.toString())
+            return
+        }
+        if (!exchange.requestHeaders.getFirst("Content-Type").orEmpty().lowercase().startsWith("application/json")) {
+            exchange.sendJson(415, buildJsonObject { put("error", "JSON_REQUIRED") }.toString())
+            return
+        }
+        val bytes = exchange.requestBody.use { it.readNBytes(MAX_BODY_BYTES + 1) }
+        if (bytes.size > MAX_BODY_BYTES) {
+            exchange.sendJson(413, buildJsonObject { put("error", "BODY_TOO_LARGE") }.toString())
+            return
+        }
+        try {
+            exchange.sendJson(200, reconcileRequest(String(bytes, StandardCharsets.UTF_8)).toString())
+        } catch (error: Exception) {
+            exchange.sendJson(422, buildJsonObject {
+                put("error", "RECONCILIATION_FAILED")
+                put("message", error.message?.take(250) ?: "Invalid reconciliation request")
+            }.toString())
+        }
+    }
 
     private fun verify(exchange: HttpExchange) {
         if (exchange.requestMethod != "POST") {

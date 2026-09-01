@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
-import { csvCell, importCsv, parseCsv } from "@/domain/csv";
+import { buildProfileSampleCsv, csvCell, importCsv, parseCsv } from "@/domain/csv";
+import { createProfileSnapshot } from "@/domain/onboarding";
 
 const sample = readFileSync(new URL("../public/samples/orders.csv", import.meta.url), "utf8");
 const parse = (csv: string) => importCsv(csv, "orders", undefined, "SOURCE-1", "2026-08");
@@ -38,6 +39,44 @@ describe("onboarding boundary", () => {
   });
   it("rejects refunds larger than the original payment", () => {
     expect(() => parse(sample.replace("100000,0", "100000,100001"))).toThrow("초과");
+  });
+  it("rejects channels disabled by the active onboarding profile", () => {
+    expect(() =>
+      importCsv(sample, "orders", undefined, "SOURCE-1", "2026-08", ["d2c", "coupang"]),
+    ).toThrow("현재 온보딩 프로필에서 사용하지 않는 스마트스토어");
+  });
+  it("builds samples from the active profile's headers, channels and fee policy", () => {
+    const profile = createProfileSnapshot("morrow-food-v1");
+    const orderCsv = buildProfileSampleCsv(
+      "orders",
+      profile.mappings.orders,
+      profile.policy.enabledChannels,
+      profile.policy.feeBps,
+    );
+    const settlementCsv = buildProfileSampleCsv(
+      "settlements",
+      profile.mappings.settlements,
+      profile.policy.enabledChannels,
+      profile.policy.feeBps,
+    );
+    const orders = importCsv(
+      orderCsv,
+      "orders",
+      profile.mappings.orders,
+      "SOURCE-1",
+      profile.period,
+      profile.policy.enabledChannels,
+    ).orders;
+    const settlements = importCsv(
+      settlementCsv,
+      "settlements",
+      profile.mappings.settlements,
+      "SOURCE-2",
+      profile.period,
+      profile.policy.enabledChannels,
+    ).settlements;
+    expect(new Set(orders.map((order) => order.channel))).toEqual(new Set(["d2c", "coupang"]));
+    expect(settlements[0]).toMatchObject({ fee: 2900, net: 97100 });
   });
   it("does not permit two semantic fields to share an input column", () => {
     expect(() =>

@@ -5,7 +5,7 @@ export const CHANNEL_LABELS: Record<Channel, string> = {
   naver: "스마트스토어",
   coupang: "쿠팡",
 };
-export const RULE_VERSION = "krw-net-v1.0.0";
+export const RULE_VERSION = "krw-net-v1.1.0";
 export const PERIOD = "2026-08";
 export const AS_OF = "2026-08-31";
 export const MAX_AMOUNT = 1_000_000_000_000;
@@ -33,6 +33,45 @@ export function feeFor(netSales: number, basisPoints: number): Won {
   return won(Number((BigInt(netSales) * BigInt(basisPoints) + 5_000n) / 10_000n));
 }
 export const FEE_BPS: Record<Channel, number> = { d2c: 330, naver: 385, coupang: 880 };
+
+export interface ReconciliationPolicy {
+  currency: "KRW";
+  feeBps: Record<Channel, number>;
+  enabledChannels: Channel[];
+  feeBasis: string;
+  reviewRules: string[];
+}
+export interface SavedColumnMappings {
+  orders: Record<string, string>;
+  settlements: Record<string, string>;
+  updatedAt: string | null;
+}
+export interface DiscoveryFinding {
+  hypothesis: string;
+  discoveryQuestion: string;
+  finding: string;
+}
+export interface RoadmapItem {
+  horizon: "Now" | "Next" | "Later";
+  capability: string;
+  metric: string;
+}
+export interface OnboardingProfileSnapshot {
+  id: string;
+  templateId: string;
+  version: number;
+  brandName: string;
+  monogram: string;
+  industry: string;
+  period: string;
+  asOf: string;
+  policy: ReconciliationPolicy;
+  mappings: SavedColumnMappings;
+  diagnosis: DiscoveryFinding[];
+  reusableCapabilities: string[];
+  roadmap: RoadmapItem[];
+  clonedFrom: string | null;
+}
 
 export interface Order {
   id: string;
@@ -124,7 +163,13 @@ export interface CloseSnapshot {
   rowCount: number;
   reviewedCount: number;
   sources: Array<{ id: string; digest: string }>;
-  inputs: { orders: Order[]; settlements: Settlement[]; asOf: string };
+  profile: OnboardingProfileSnapshot;
+  inputs: {
+    orders: Order[];
+    settlements: Settlement[];
+    asOf: string;
+    feeBps: Record<Channel, number>;
+  };
   rows: ReconciliationRow[];
   resolutions: Resolution[];
   hash: string;
@@ -142,6 +187,8 @@ export interface Workspace {
   lastRunAt: string | null;
   close: CloseSnapshot | null;
   createdAt: string;
+  /** Optional only for six-hour workspaces created before profile versioning shipped. */
+  profile?: OnboardingProfileSnapshot;
 }
 export class DomainError extends Error {
   constructor(

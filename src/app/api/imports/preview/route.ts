@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { importCsv, parseCsv, suggestMapping } from "@/domain/csv";
+import { workspaceProfile } from "@/application/workbench";
 import {
   assertSameOrigin,
   json,
@@ -25,7 +26,14 @@ export async function POST(request: Request) {
     const [headers] = parseCsv(body.csv);
     const mapping = body.mapping ?? suggestMapping(headers, body.kind);
     try {
-      const parsed = importCsv(body.csv, body.kind, mapping, "PREVIEW", workspace.period);
+      const parsed = importCsv(
+        body.csv,
+        body.kind,
+        mapping,
+        "PREVIEW",
+        workspace.period,
+        workspaceProfile(workspace).policy.enabledChannels,
+      );
       return json({
         valid: true,
         headers,

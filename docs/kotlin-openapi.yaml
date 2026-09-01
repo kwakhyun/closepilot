@@ -1,0 +1,193 @@
+openapi: 3.1.0
+info:
+  title: ClosePilot Kotlin Reconciliation Service
+  version: 1.1.0
+  description: |
+    로컬과 CI에서 실행하는 Kotlin/JVM 대사·검증 계약입니다. 합성 데이터와 내보낸 마감 패키지를 대상으로 합니다.
+    서버는 127.0.0.1에만 바인딩되며 인증, TLS, 외부 공개 운영을 제공하지 않습니다.
+servers:
+  - url: http://127.0.0.1:8081
+paths:
+  /health:
+    get:
+      operationId: health
+      summary: 서비스 상태 확인
+      responses:
+        "200":
+          description: Kotlin 서비스가 요청을 받을 수 있습니다.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, service]
+                properties:
+                  status: { const: ok }
+                  service: { const: closepilot-reconciliation-service }
+  /reconcile:
+    post:
+      operationId: reconcileOrders
+      summary: 버전형 요율 정책으로 주문과 정산 대사
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ReconciliationRequest" }
+      responses:
+        "200":
+          description: Kotlin 도메인 유스케이스가 계산한 행별 결과와 합계입니다.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ReconciliationResponse" }
+        "405": { $ref: "#/components/responses/Error" }
+        "413": { $ref: "#/components/responses/Error" }
+        "415": { $ref: "#/components/responses/Error" }
+        "422": { $ref: "#/components/responses/Error" }
+  /verify:
+    post:
+      operationId: verifyClosePackage
+      summary: TypeScript에서 내보낸 마감 패키지 독립 재검증
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: fixtures/closed-package.json과 같은 snapshot·audit 패키지입니다.
+      responses:
+        "200":
+          description: 계산, 검토 지문과 감사 해시 체인이 모두 일치합니다.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [valid, rows, matched, reviewed, auditEvents, snapshotHash, notice]
+                properties:
+                  valid: { const: true }
+                  rows: { type: integer }
+                  matched: { type: integer }
+                  reviewed: { type: integer }
+                  auditEvents: { type: integer }
+                  snapshotHash: { type: string, pattern: "^[a-f0-9]{64}$" }
+                  notice: { type: string }
+        "405": { $ref: "#/components/responses/Error" }
+        "413": { $ref: "#/components/responses/Error" }
+        "415": { $ref: "#/components/responses/Error" }
+        "422": { $ref: "#/components/responses/Error" }
+components:
+  responses:
+    Error:
+      description: 요청 형식이나 계산 계약이 유효하지 않습니다.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: { type: string }
+              message: { type: string }
+  schemas:
+    FeePolicy:
+      type: object
+      additionalProperties: false
+      required: [d2c, naver, coupang]
+      properties:
+        d2c: { type: integer, minimum: 0, maximum: 10000 }
+        naver: { type: integer, minimum: 0, maximum: 10000 }
+        coupang: { type: integer, minimum: 0, maximum: 10000 }
+    Order:
+      type: object
+      additionalProperties: false
+      required: [id, channel, date, gross, refund, sourceId]
+      properties:
+        id: { type: string }
+        channel: { enum: [d2c, naver, coupang] }
+        date: { type: string, format: date }
+        gross: { type: integer, minimum: 0, maximum: 1000000000000 }
+        refund: { type: integer, minimum: 0, maximum: 1000000000000 }
+        sourceId: { type: string }
+    Settlement:
+      type: object
+      additionalProperties: false
+      required: [id, orderId, channel, gross, refund, fee, net, dueDate, paidDate, sourceId]
+      properties:
+        id: { type: string }
+        orderId: { type: string }
+        channel: { enum: [d2c, naver, coupang] }
+        gross: { type: integer, minimum: 0, maximum: 1000000000000 }
+        refund: { type: integer, minimum: 0, maximum: 1000000000000 }
+        fee: { type: integer, minimum: 0, maximum: 1000000000000 }
+        net: { type: integer, minimum: -1000000000000, maximum: 1000000000000 }
+        dueDate: { type: string, format: date }
+        paidDate: { type: [string, "null"], format: date }
+        sourceId: { type: string }
+    ReconciliationRequest:
+      type: object
+      additionalProperties: false
+      required: [ruleVersion, asOf, feeBps, orders, settlements]
+      properties:
+        ruleVersion: { const: krw-net-v1.1.0 }
+        asOf: { type: string, format: date }
+        feeBps: { $ref: "#/components/schemas/FeePolicy" }
+        orders:
+          type: array
+          maxItems: 500
+          items: { $ref: "#/components/schemas/Order" }
+        settlements:
+          type: array
+          maxItems: 1000
+          items: { $ref: "#/components/schemas/Settlement" }
+    ReconciliationRow:
+      type: object
+      required:
+        [
+          key,
+          orderId,
+          channel,
+          date,
+          gross,
+          refund,
+          expectedFee,
+          actualFee,
+          expectedNet,
+          actualNet,
+          delta,
+          kind,
+          sources,
+          settlementIds,
+          dueDate,
+          paidDate,
+        ]
+      properties:
+        key: { type: string }
+        orderId: { type: string }
+        channel: { enum: [d2c, naver, coupang] }
+        date: { type: string, format: date }
+        gross: { type: integer }
+        refund: { type: integer }
+        expectedFee: { type: integer }
+        actualFee: { type: integer }
+        expectedNet: { type: integer }
+        actualNet: { type: integer }
+        delta: { type: integer }
+        kind: { enum: [matched, missing, orphan, duplicate, refund, fee, amount, timing] }
+        sources: { type: array, items: { type: string } }
+        settlementIds: { type: array, items: { type: string } }
+        dueDate: { type: [string, "null"], format: date }
+        paidDate: { type: [string, "null"], format: date }
+    ReconciliationResponse:
+      type: object
+      required: [ruleVersion, engine, rows, summary]
+      properties:
+        ruleVersion: { const: krw-net-v1.1.0 }
+        engine: { const: kotlin-jvm }
+        rows: { type: array, items: { $ref: "#/components/schemas/ReconciliationRow" } }
+        summary:
+          type: object
+          required: [total, matched, issues, expectedNet, actualNet, delta]
+          properties:
+            total: { type: integer }
+            matched: { type: integer }
+            issues: { type: integer }
+            expectedNet: { type: integer }
+            actualNet: { type: integer }
+            delta: { type: integer }

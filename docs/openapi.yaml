@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: ClosePilot 데모 REST API
-  version: 1.0.0
+  version: 1.1.0
   description: |
     가상 데이터를 사용하는 포트폴리오 데모입니다. 실제 결제, 송금, 회계 전표 생성은 수행하지 않습니다.
     선택형 AI 검토 메모 초안은 현재 거래에 저장된 합성 근거만 읽으며 금액·승인·마감 권한이 없습니다.
@@ -40,6 +40,16 @@ paths:
       security: []
       parameters:
         - $ref: "#/components/parameters/Origin"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                templateId: { enum: [lumiere-beauty-v1, morrow-food-v1] }
+                brandName: { type: string, minLength: 2, maxLength: 40 }
       responses:
         "201":
           description: 가상 자료를 포함한 작업 공간과 HttpOnly·SameSite=Lax 쿠키를 생성합니다. 공개 배포에서는 Secure도 적용합니다.
@@ -307,6 +317,11 @@ components:
           }
         csv: { type: string, minLength: 1, maxLength: 256000 }
         mapping: { $ref: "#/components/schemas/Mapping" }
+        saveMapping:
+          {
+            type: boolean,
+            description: "true이면 검증한 열 연결을 현재 온보딩 프로필 스냅샷에 함께 저장합니다.",
+          }
     ReviewDraftResponse:
       type: object
       required: [mode, model, generatedAt, latencyMs, draft, notice]
@@ -344,6 +359,8 @@ components:
           auditValid,
           ruleVersion,
           sandbox,
+          profile,
+          availableProfiles,
         ]
       properties:
         version: { type: integer, minimum: 1 }
@@ -361,5 +378,16 @@ components:
           }
         events: { type: array, items: { type: object } }
         auditValid: { type: boolean }
-        ruleVersion: { const: krw-net-v1.0.0 }
+        ruleVersion: { const: krw-net-v1.1.0 }
         sandbox: { const: true }
+        profile:
+          {
+            type: object,
+            description: "현재 작업공간에 고정된 브랜드·채널·요율·열 연결·검토 규칙 버전입니다.",
+          }
+        availableProfiles:
+          {
+            type: array,
+            description: "새 데모를 만들 때 선택할 수 있는 합성 온보딩 템플릿입니다.",
+            items: { type: object },
+          }

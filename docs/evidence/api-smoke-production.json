@@ -1,7 +1,7 @@
 {
   "target": "https://closepilot-delta.vercel.app",
-  "testedAt": "2026-08-31T01:30:22.459Z",
-  "durationMs": 7977,
+  "testedAt": "2026-09-01T07:27:39.455Z",
+  "durationMs": 7346,
   "checks": 20,
   "results": [
     {
@@ -86,5 +86,5 @@
     }
   ],
   "finalRows": 131,
-  "snapshotHash": "d8ba21a305cbd18f0bd4f3a461da8f68d248d03bfe527ff4236f6f35340491f0"
+  "snapshotHash": "a6ba00af8706ca07c6dbf6353468a530ee846477eecdc81a6edf514efbb0035e"
 }

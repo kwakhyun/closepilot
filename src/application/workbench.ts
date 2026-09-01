@@ -13,6 +13,7 @@ import { appendEvent, verifyAudit } from "@/domain/audit";
 import { digest } from "@/domain/canonical";
 import { importCsv } from "@/domain/csv";
 import { describeReconciliation } from "@/domain/review-copy";
+import { createProfileSnapshot, profileCatalog } from "@/domain/onboarding";
 
 const revision = { expectedVersion: z.number().int().positive() };
 export const commandSchema = z.discriminatedUnion("action", [
@@ -40,23 +41,36 @@ export const commandSchema = z.discriminatedUnion("action", [
         .regex(/^[a-zA-Z0-9가-힣._ ()-]+\.csv$/i),
       csv: z.string().min(1).max(256_000),
       mapping: z.record(z.string().max(50), z.string().max(100)).optional(),
+      saveMapping: z.boolean().optional(),
     })
     .strict(),
 ]);
 export type Command = z.infer<typeof commandSchema>;
 export type ReviewedRow = ReconciliationRow & { resolution: Resolution | null };
 
+export function workspaceProfile(workspace: Workspace) {
+  return workspace.profile ?? createProfileSnapshot();
+}
+
+function reconcileWorkspace(workspace: Workspace) {
+  const profile = workspaceProfile(workspace);
+  return reconcile(workspace.orders, workspace.settlements, workspace.asOf, profile.policy.feeBps);
+}
+
 export function reviewedRows(workspace: Workspace): ReviewedRow[] {
-  return reconcile(workspace.orders, workspace.settlements, workspace.asOf).map((row) => {
+  return reconcileWorkspace(workspace).map((row) => {
     const resolution = workspace.resolutions[row.key];
     return { ...row, resolution: resolution?.fingerprint === digest(row) ? resolution : null };
   });
 }
 export function workspaceView(workspace: Workspace) {
+  const profile = workspaceProfile(workspace);
   const rows = reviewedRows(workspace);
   const issues = rows.filter((row) => row.kind !== "matched");
   return {
     ...workspace,
+    profile,
+    availableProfiles: profileCatalog(),
     rows,
     summary: {
       gross: sumWon(workspace.orders.map((order) => order.gross)),
@@ -99,6 +113,7 @@ export function applyCommand(
   if (!verifyAudit(current.events))
     throw new DomainError("AUDIT_CORRUPTED", "감사 기록 검증에 실패하여 변경을 중단했습니다.", 409);
   const workspace = structuredClone(current);
+  workspace.profile ??= workspaceProfile(current);
   const actor = "데모 검토자";
   if (command.action === "import") {
     const fileDigest = digest(command.csv.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n"));
@@ -117,6 +132,7 @@ export function applyCommand(
       command.mapping,
       sourceId,
       workspace.period,
+      workspace.profile.policy.enabledChannels,
     );
     if (
       workspace.orders.length + parsed.orders.length > 500 ||
@@ -128,7 +144,7 @@ export function applyCommand(
       );
     workspace.orders.push(...parsed.orders);
     workspace.settlements.push(...parsed.settlements);
-    reconcile(workspace.orders, workspace.settlements, workspace.asOf);
+    reconcileWorkspace(workspace);
     workspace.sources.push({
       id: sourceId,
       name: command.filename,
@@ -139,6 +155,10 @@ export function applyCommand(
     });
     workspace.status = "open";
     workspace.lastRunAt = null;
+    if (command.saveMapping && command.mapping) {
+      workspace.profile.mappings[command.kind] = structuredClone(command.mapping);
+      workspace.profile.mappings.updatedAt = now;
+    }
     appendEvent(workspace, {
       type: "imported",
       actor,
@@ -146,7 +166,7 @@ export function applyCommand(
       detail: `${command.filename} · ${parsed.count}행 반영. SHA-256 ${fileDigest.slice(0, 12)}…`,
     });
   } else if (command.action === "reconcile") {
-    const rows = reconcile(workspace.orders, workspace.settlements, workspace.asOf);
+    const rows = reconcileWorkspace(workspace);
     workspace.status = "review";
     workspace.lastRunAt = now;
     appendEvent(workspace, {
@@ -162,9 +182,7 @@ export function applyCommand(
         "자료 변경 후 대사를 다시 실행해야 검토할 수 있습니다.",
         409,
       );
-    const row = reconcile(workspace.orders, workspace.settlements, workspace.asOf).find(
-      (entry) => entry.key === command.rowKey,
-    );
+    const row = reconcileWorkspace(workspace).find((entry) => entry.key === command.rowKey);
     if (!row || row.kind === "matched")
       throw new DomainError("INVALID_ISSUE", "검토 가능한 예외 거래를 찾을 수 없습니다.");
     if (row.kind === "timing" && command.disposition !== "carry_forward")
@@ -229,12 +247,14 @@ export function applyCommand(
       rowCount: view.rows.length,
       reviewedCount: view.summary.reviewed,
       sources: workspace.sources.map(({ id, digest }) => ({ id, digest })),
+      profile: structuredClone(workspace.profile),
       inputs: {
         orders: workspace.orders,
         settlements: workspace.settlements,
         asOf: workspace.asOf,
+        feeBps: structuredClone(workspace.profile.policy.feeBps),
       },
-      rows: reconcile(workspace.orders, workspace.settlements, workspace.asOf),
+      rows: reconcileWorkspace(workspace),
       resolutions: view.rows.flatMap((row) => (row.resolution ? [row.resolution] : [])),
     };
     workspace.close = { ...body, hash: digest(body) };

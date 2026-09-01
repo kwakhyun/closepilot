@@ -6,6 +6,7 @@ import {
   sumWon,
   won,
   type Order,
+  type Channel,
   type Settlement,
   type ReconciliationRow,
   type IssueKind,
@@ -15,6 +16,7 @@ export function reconcile(
   orders: Order[],
   settlements: Settlement[],
   asOf = AS_OF,
+  feeBps: Record<Channel, number> = FEE_BPS,
 ): ReconciliationRow[] {
   const orderMap = new Map<string, Order>();
   for (const order of orders) {
@@ -39,7 +41,7 @@ export function reconcile(
       const channel = order?.channel ?? entries[0].channel;
       const gross = order?.gross ?? 0;
       const refund = order?.refund ?? 0;
-      const expectedFee = feeFor(won(gross - refund), FEE_BPS[channel]);
+      const expectedFee = feeFor(won(gross - refund), feeBps[channel]);
       const expectedNet = won(gross - refund - expectedFee);
       const actualGross = sumWon(entries.map((entry) => entry.gross));
       const actualRefund = sumWon(entries.map((entry) => entry.refund));
@@ -73,7 +75,7 @@ export function reconcile(
           "주문 총액 또는 정산 행의 금액 항등식(총액 − 환불 − 수수료 = 정산액)이 일치하지 않습니다.";
       } else if (actualFee !== expectedFee) {
         kind = "fee";
-        explanation = `가상 계약 수수료 ${FEE_BPS[channel] / 100}%를 순매출에 적용한 예상 수수료와 ${Math.abs(actualFee - expectedFee).toLocaleString("ko-KR")}원 차이가 있습니다.`;
+        explanation = `가상 계약 수수료 ${feeBps[channel] / 100}%를 순매출에 적용한 예상 수수료와 ${Math.abs(actualFee - expectedFee).toLocaleString("ko-KR")}원 차이가 있습니다.`;
       } else if (actualNet !== expectedNet) {
         kind = "amount";
         explanation = "수수료 반영 후 예상 정산액과 실제 정산액이 일치하지 않습니다.";

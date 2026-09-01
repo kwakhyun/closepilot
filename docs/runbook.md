@@ -28,18 +28,18 @@ npm run eval:review-drafts -- https://YOUR-DOMAIN --allow-remote
 
 ## 오류별 확인 사항
 
-| 증상                             | 확인과 조치                                                                                              |
-| -------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| 401 NO_SESSION / SESSION_EXPIRED | 쿠키와 세션 만료 여부를 확인한다. 만료됐다면 새 데모를 시작한다. 필요한 파일은 만료 전에 저장해야 한다.  |
-| 403 ORIGIN_DENIED                | 브라우저 주소, APP_ORIGIN, 프록시의 Host 값이 일치하는지 확인한다. Origin 검사는 유지한다.               |
-| 409 VERSION_CONFLICT             | 최신 상태와 다른 요청의 처리 결과를 확인한다. 수정한 내용은 새 요청 키로 보낸다.                         |
-| 409 IDEMPOTENCY_CONFLICT         | 같은 키에 다른 본문을 보내지 않았는지 확인한다. 최초 요청의 재시도라면 원래 키와 본문을 그대로 사용한다. |
-| 409 RECONCILE_REQUIRED           | 새 CSV를 반영한 뒤 대사를 다시 실행한다.                                                                 |
-| 409 CLOSE_LOCKED                 | 확정한 자료는 수정할 수 없다. 다른 작업을 체험하려면 새 데모를 시작한다.                                 |
-| 429 RATE_LIMITED / COMMAND_LIMIT | 세션 생성 한도와 변경 기록 수를 확인한다. 오류를 피하려고 보호 장치를 제거하지 않는다.                   |
-| 500 INTERNAL_ERROR               | 응답 본문·헤더의 requestId로 Vercel 로그를 찾는다. errorType과 DB 연결·권한을 확인한다.                  |
-| AI 초안이 규칙 기반으로 전환됨   | `review_draft_fallback` 로그의 requestId·errorType을 확인한다. 원본 검토 흐름과 안전장치는 유지한다.     |
-| 상태 확인 실패                   | DB 서비스, 연결 문자열, TLS, 초기 마이그레이션 권한을 확인한다.                                          |
+| 증상                             | 확인과 조치                                                                                                                                   |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| 401 NO_SESSION / SESSION_EXPIRED | 클라이언트는 같은 온보딩 프로필로 새 데모를 자동 시작하고 직전 변경 요청은 재실행하지 않는다. 복구가 실패하면 화면의 새 데모 버튼을 사용한다. |
+| 403 ORIGIN_DENIED                | 브라우저 주소, APP_ORIGIN, 프록시의 Host 값이 일치하는지 확인한다. Origin 검사는 유지한다.                                                    |
+| 409 VERSION_CONFLICT             | 최신 상태와 다른 요청의 처리 결과를 확인한다. 수정한 내용은 새 요청 키로 보낸다.                                                              |
+| 409 IDEMPOTENCY_CONFLICT         | 같은 키에 다른 본문을 보내지 않았는지 확인한다. 최초 요청의 재시도라면 원래 키와 본문을 그대로 사용한다.                                      |
+| 409 RECONCILE_REQUIRED           | 새 CSV를 반영한 뒤 대사를 다시 실행한다.                                                                                                      |
+| 409 CLOSE_LOCKED                 | 확정한 자료는 수정할 수 없다. 다른 작업을 체험하려면 새 데모를 시작한다.                                                                      |
+| 429 RATE_LIMITED / COMMAND_LIMIT | 세션 생성 한도와 변경 기록 수를 확인한다. 오류를 피하려고 보호 장치를 제거하지 않는다.                                                        |
+| 500 INTERNAL_ERROR               | 응답 본문·헤더의 requestId로 Vercel 로그를 찾는다. errorType과 DB 연결·권한을 확인한다.                                                       |
+| AI 초안이 규칙 기반으로 전환됨   | `review_draft_fallback` 로그의 requestId·errorType을 확인한다. 원본 검토 흐름과 안전장치는 유지한다.                                          |
+| 상태 확인 실패                   | DB 서비스, 연결 문자열, TLS, 초기 마이그레이션 권한을 확인한다.                                                                               |
 
 네트워크 연결 실패나 일부 5xx 오류가 발생하면 **같은 요청 키와 본문**으로 재시도한다. 응답을 받지 못했어도 서버에서는 처리가 끝났을 수 있으므로, 새 키로 같은 명령을 곧바로 다시 보내지 않는다.
 
@@ -61,4 +61,6 @@ npm run eval:review-drafts -- https://YOUR-DOMAIN --allow-remote
 
 JDK 21과 Gradle Wrapper를 사용한다. Wrapper와 배포 ZIP의 공식 체크섬을 확인했고, 배포 ZIP의 체크섬은 `verifier/gradle/wrapper/gradle-wrapper.properties`에 고정했다. Windows의 한글 경로에서 발생하는 classpath 문제는 `scripts/verify-kotlin.ps1`에서 영문·숫자만 포함된 임시 빌드 경로를 사용해 피한다. 실행 후 임시 파일이 남을 수 있으므로 필요하면 별도로 정리한다.
 
-`bash gradlew run --args='--server 8081'`은 `127.0.0.1`에만 바인딩되는 로컬 검증 REST 경계를 연다. `POST /verify`는 최대 5MB의 JSON 마감 패키지만 받고, CLI와 같은 독립 재계산 함수를 호출한다. 인증·TLS·외부 공개 운영은 이 경계의 범위가 아니다.
+`bash gradlew run --args='--server 8081'`은 `127.0.0.1`에만 바인딩되는 Kotlin 대사·검증 REST 경계를 연다. `POST /reconcile`은 `krw-net-v1.1.0` 규칙 버전, 채널별 `feeBps`, 주문·정산 입력을 받아 행별 분류와 합계를 반환한다. `POST /verify`는 최대 5MB의 JSON 마감 패키지를 받고 CLI와 같은 독립 재계산 함수를 호출한다. 요청·응답 형식은 [Kotlin OpenAPI 계약](kotlin-openapi.yaml)에 고정했다.
+
+이 서버는 로컬·CI 계약 검증용이며 인증·TLS·외부 공개 운영을 제공하지 않는다. 공개 Vercel 데모는 Kotlin 서비스를 호출하지 않고 TypeScript 인프로세스 엔진을 사용한다. Kotlin 런타임을 별도 컨테이너로 배포하려면 인증, TLS, 타임아웃, 재시도, 관측, 네트워크 정책을 먼저 추가해야 한다.

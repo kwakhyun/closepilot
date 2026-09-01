@@ -26,6 +26,7 @@ import {
   RotateCcw,
   Search,
   ShieldCheck,
+  Settings2,
   Sparkles,
   Upload,
   X,
@@ -40,14 +41,16 @@ import { ImportModal } from "./import-modal";
 import { CloseModal } from "./close-modal";
 import { Modal } from "./modal";
 import { deltaMoney, money } from "./format";
+import { OnboardingPanel, type SessionSelection } from "./onboarding-panel";
 
-type Section = "overview" | "transactions" | "sources" | "audit";
+type Section = "overview" | "transactions" | "sources" | "onboarding" | "audit";
 type Analysis = ReturnType<typeof explainIssues>;
-const SECTION_VALUES: Section[] = ["overview", "transactions", "sources", "audit"];
+const SECTION_VALUES: Section[] = ["overview", "transactions", "sources", "onboarding", "audit"];
 const SECTIONS = {
   overview: "마감 대시보드",
   transactions: "거래 대사",
   sources: "자료 관리",
+  onboarding: "온보딩 설계",
   audit: "감사 기록",
 };
 
@@ -59,8 +62,23 @@ function sectionFromUrl(): Section {
 
 async function responseData(response: Response) {
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error?.message || "요청을 처리하지 못했습니다.");
+  if (!response.ok)
+    throw new ApiRequestError(
+      data.error?.message || "요청을 처리하지 못했습니다.",
+      response.status,
+      data.error?.code,
+    );
   return data;
+}
+class ApiRequestError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+    public code?: string,
+  ) {
+    super(message);
+    this.name = "ApiRequestError";
+  }
 }
 export function Dashboard() {
   const [workspace, setWorkspace] = useState<WorkspaceView | null>(null);
@@ -72,6 +90,7 @@ export function Dashboard() {
   const [importOpen, setImportOpen] = useState(false);
   const [closeOpen, setCloseOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
+  const [pendingSession, setPendingSession] = useState<SessionSelection | null>(null);
   const [mobileNav, setMobileNav] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
@@ -191,6 +210,10 @@ export function Dashboard() {
       setWorkspace(view);
       return view as WorkspaceView;
     } catch (failure) {
+      if (failure instanceof ApiRequestError && failure.status === 401) {
+        await recoverExpiredSession();
+        return null;
+      }
       showToast((failure as Error).message, true);
       return null;
     }
@@ -224,6 +247,10 @@ export function Dashboard() {
       );
       return true;
     } catch (failure) {
+      if (failure instanceof ApiRequestError && failure.status === 401) {
+        await recoverExpiredSession();
+        return false;
+      }
       showToast((failure as Error).message, true);
       try {
         setWorkspace(await responseData(await fetch("/api/workspace")));
@@ -235,20 +262,72 @@ export function Dashboard() {
       setBusy(false);
     }
   }
-  async function reset() {
+  async function reset(selection?: SessionSelection) {
     setBusy(true);
     try {
-      const view = await responseData(await fetch("/api/session", { method: "POST" }));
+      const nextSelection =
+        selection ??
+        pendingSession ??
+        (workspace
+          ? { templateId: workspace.profile.templateId as SessionSelection["templateId"] }
+          : undefined);
+      const view = await responseData(
+        await fetch("/api/session", {
+          method: "POST",
+          ...(nextSelection
+            ? {
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(nextSelection),
+              }
+            : {}),
+        }),
+      );
       setWorkspace(view);
       setResetOpen(false);
+      setPendingSession(null);
       setSelectedKey(null);
       navigate("overview");
       setSearch("");
       setFilter("issues");
       setError("");
-      showToast("새 데모를 시작했습니다.");
+      showToast(`${view.profile.brandName} 프로필로 새 데모를 시작했습니다.`);
     } catch (failure) {
       showToast((failure as Error).message, true);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function recoverExpiredSession(): Promise<boolean> {
+    setBusy(true);
+    try {
+      const selection = workspace
+        ? { templateId: workspace.profile.templateId as SessionSelection["templateId"] }
+        : undefined;
+      const view = await responseData(
+        await fetch("/api/session", {
+          method: "POST",
+          ...(selection
+            ? {
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(selection),
+              }
+            : {}),
+        }),
+      );
+      setWorkspace(view);
+      setSelectedKey(null);
+      setImportOpen(false);
+      setCloseOpen(false);
+      setAnalysis(null);
+      setError("");
+      navigate("overview");
+      showToast(
+        "데모 세션이 만료되어 같은 온보딩 프로필로 새 데모를 시작했습니다. 직전 요청은 다시 실행하지 않았습니다.",
+      );
+      return true;
+    } catch (failure) {
+      showToast((failure as Error).message, true);
+      return false;
     } finally {
       setBusy(false);
     }
@@ -258,6 +337,10 @@ export function Dashboard() {
     try {
       setAnalysis(await responseData(await fetch("/api/analysis")));
     } catch (failure) {
+      if (failure instanceof ApiRequestError && failure.status === 401) {
+        await recoverExpiredSession();
+        return;
+      }
       showToast((failure as Error).message, true);
     } finally {
       setAnalysisLoading(false);
@@ -281,6 +364,10 @@ export function Dashboard() {
     navigate("transactions");
     setFilter("issues");
   }
+  function prepareSession(selection: SessionSelection) {
+    setPendingSession(selection);
+    setResetOpen(true);
+  }
   const selectedRow = workspace?.rows.find((row) => row.key === selectedKey) ?? null;
   const progress = workspace
     ? Math.round(
@@ -289,6 +376,9 @@ export function Dashboard() {
           100,
       )
     : 0;
+  const pendingTemplate = workspace?.availableProfiles.find(
+    (profile) => profile.templateId === pendingSession?.templateId,
+  );
 
   return (
     <div className="app-shell">
@@ -330,10 +420,12 @@ export function Dashboard() {
           <PanelLeftClose size={20} />
         </button>
         <div className="workspace-switcher">
-          <span className="workspace-monogram">L</span>
+          <span className="workspace-monogram">{workspace?.profile.monogram ?? "L"}</span>
           <div>
-            <strong>LUMIÈRE</strong>
-            <span>가상 브랜드 · 체험용</span>
+            <strong>{workspace?.profile.brandName ?? "LUMIÈRE"}</strong>
+            <span>
+              {workspace ? `${workspace.profile.industry} 가상 브랜드` : "가상 브랜드 · 체험용"}
+            </span>
           </div>
         </div>
         <span className="nav-caption">WORKSPACE</span>
@@ -364,6 +456,14 @@ export function Dashboard() {
           >
             <Database size={18} />
             자료 관리
+          </button>
+          <button
+            className={section === "onboarding" ? "active" : ""}
+            aria-current={section === "onboarding" ? "page" : undefined}
+            onClick={() => navigate("onboarding")}
+          >
+            <Settings2 size={18} />
+            온보딩 설계
           </button>
           <button
             className={section === "audit" ? "active" : ""}
@@ -500,7 +600,9 @@ export function Dashboard() {
                       ? workspace?.close
                         ? "마감에 사용한 CSV 자료와 원본 정보를 확인하세요."
                         : "채널별 CSV를 같은 형식으로 정리하고 원본 자료를 관리하세요."
-                      : "자료 반영부터 검토 승인과 마감까지 변경 이력을 확인하세요."}
+                      : section === "onboarding"
+                        ? "고객 문제를 버전형 설정과 재사용 가능한 제품 기능으로 전환한 과정을 확인하세요."
+                        : "자료 반영부터 검토 승인과 마감까지 변경 이력을 확인하세요."}
               </p>
             </div>
             <div className="page-actions">
@@ -713,6 +815,13 @@ export function Dashboard() {
                   toast={showToast}
                 />
               )}
+              {section === "onboarding" && (
+                <OnboardingPanel
+                  workspace={workspace}
+                  busy={busy}
+                  onPrepareSession={prepareSession}
+                />
+              )}
               {section === "audit" && (
                 <AuditPanel
                   workspace={workspace}
@@ -754,6 +863,7 @@ export function Dashboard() {
             onClose={() => setSelectedKey(null)}
             onSelect={setSelectedKey}
             onCommand={onCommand}
+            onSessionExpired={recoverExpiredSession}
             busy={busy}
           />
           <ImportModal
@@ -762,6 +872,10 @@ export function Dashboard() {
             onCommand={onCommand}
             version={workspace.version}
             busy={busy}
+            profileName={workspace.profile.brandName}
+            policy={workspace.profile.policy}
+            savedMappings={workspace.profile.mappings}
+            onSessionExpired={recoverExpiredSession}
           />
           <CloseModal
             open={closeOpen}
@@ -811,11 +925,21 @@ export function Dashboard() {
           </div>
         )}
       </Modal>
-      <Modal open={resetOpen} onClose={() => setResetOpen(false)} title="새 데모를 시작할까요?">
+      <Modal
+        open={resetOpen}
+        onClose={() => {
+          setResetOpen(false);
+          setPendingSession(null);
+        }}
+        title={pendingSession?.brandName ? "현재 설정을 복제할까요?" : "새 데모를 시작할까요?"}
+      >
         <div className="reset-body">
           <p>
-            새 데모를 시작하면 현재 자료와 검토 기록에 다시 접근할 수 없습니다. 필요한 결과를 먼저
-            CSV로 내려받으세요. 마감을 확정했다면 마감 증빙 파일도 저장해 주세요.
+            {pendingSession?.brandName
+              ? `${workspace?.profile.brandName ?? "현재 브랜드"} 설정을 ${pendingSession.brandName} 작업공간으로 복제합니다. 거래 자료와 검토 기록은 새 가상 데이터로 시작합니다.`
+              : pendingTemplate && pendingTemplate.templateId !== workspace?.profile.templateId
+                ? `${pendingTemplate.brandName} 온보딩 설정으로 새 작업공간을 만듭니다. 현재 자료와 검토 기록에는 다시 접근할 수 없습니다.`
+                : "새 데모를 시작하면 현재 자료와 검토 기록에 다시 접근할 수 없습니다. 필요한 결과를 먼저 CSV로 내려받으세요. 마감을 확정했다면 마감 증빙 파일도 저장해 주세요."}
           </p>
           {workspace && (
             <a href="/api/export?format=csv" download className="text-button">
@@ -824,12 +948,18 @@ export function Dashboard() {
             </a>
           )}
           <div className="modal-footer">
-            <button className="button secondary" onClick={() => setResetOpen(false)}>
+            <button
+              className="button secondary"
+              onClick={() => {
+                setResetOpen(false);
+                setPendingSession(null);
+              }}
+            >
               계속 작업하기
             </button>
             <button className="button primary" disabled={busy} onClick={() => void reset()}>
               <RotateCcw size={16} />
-              {busy ? "준비 중…" : "새 데모 시작"}
+              {busy ? "준비 중…" : pendingSession?.brandName ? "설정 복제 후 시작" : "새 데모 시작"}
             </button>
           </div>
         </div>

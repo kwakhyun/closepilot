@@ -123,10 +123,63 @@
 .ai-draft-result .text-button {
   margin-top: 10px;
 }
+.ai-draft-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 7px 9px;
+  border: 1px solid #d8e5d5;
+  border-radius: 7px;
+  background: #f6faf2;
+  color: #3f6a51;
+  font-size: 11px;
+  font-weight: 650;
+}
+.ai-draft-jump svg:last-child {
+  opacity: 0.65;
+}
+.ai-draft-progress {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #dfe8d6;
+}
+.ai-draft-progress > span {
+  display: flex;
+  gap: 5px;
+}
+.ai-draft-progress i {
+  width: 24px;
+  height: 3px;
+  border-radius: 999px;
+  background: #dce4d8;
+}
+.ai-draft-progress i.is-active {
+  background: #62856d;
+}
+.ai-draft-progress strong {
+  color: #3d594a;
+  font-size: 12px;
+}
+.ai-draft-progress small {
+  color: #718078;
+}
+.ai-draft-error {
+  margin-top: 10px;
+}
+.ai-draft-error .text-button {
+  margin-top: 7px;
+}
 @media (max-width: 540px) {
   .ai-draft-heading {
     align-items: flex-start;
     flex-direction: column;
     gap: 3px;
+  }
+  .ai-draft-jump {
+    width: 100%;
+    justify-content: center;
   }
 }

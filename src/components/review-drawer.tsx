@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Check,
   ChevronLeft,
@@ -27,6 +27,7 @@ export function ReviewDrawer({
   onClose,
   onSelect,
   onCommand,
+  onSessionExpired,
   busy,
 }: {
   row: ReviewedRow | null;
@@ -34,6 +35,7 @@ export function ReviewDrawer({
   onClose: () => void;
   onSelect: (rowKey: string) => void;
   onCommand: (command: Command) => Promise<boolean>;
+  onSessionExpired: () => Promise<boolean>;
   busy: boolean;
 }) {
   const [note, setNote] = useState("");
@@ -42,6 +44,11 @@ export function ReviewDrawer({
   const [draft, setDraft] = useState<ReviewDraftResponse | null>(null);
   const [draftLoading, setDraftLoading] = useState(false);
   const [draftError, setDraftError] = useState("");
+  const [draftStage, setDraftStage] = useState(0);
+  const [sessionExpired, setSessionExpired] = useState(false);
+  const aiPanel = useRef<HTMLElement>(null);
+  const aiAction = useRef<HTMLButtonElement>(null);
+  const draftStages = ["근거 묶음 확인 중", "거래별 근거 ID 검증 중", "검토 메모 정리 중"];
   const disposition =
     row?.kind === "timing"
       ? "carry_forward"
@@ -57,10 +64,21 @@ export function ReviewDrawer({
   const evidenceReady = evidence.trim().length >= 5;
   const latestRunReady = !!workspace.lastRunAt;
   const reviewReady = noteReady && evidenceReady && confirmed && latestRunReady;
+  useEffect(() => {
+    if (!draftLoading) return;
+    const evidenceTimer = setTimeout(() => setDraftStage(1), 1_800);
+    const composeTimer = setTimeout(() => setDraftStage(2), 4_200);
+    return () => {
+      clearTimeout(evidenceTimer);
+      clearTimeout(composeTimer);
+    };
+  }, [draftLoading]);
   async function createDraft() {
     if (!row || draftLoading) return;
     setDraftLoading(true);
+    setDraftStage(0);
     setDraftError("");
+    setSessionExpired(false);
     try {
       const response = await fetch("/api/review-draft", {
         method: "POST",
@@ -68,6 +86,10 @@ export function ReviewDrawer({
         body: JSON.stringify({ rowKey: row.key, expectedVersion: workspace.version }),
       });
       const data = await response.json();
+      if (response.status === 401) {
+        setSessionExpired(true);
+        if (await onSessionExpired()) return;
+      }
       if (!response.ok)
         throw new Error(data.error?.message || "검토 메모 초안을 만들지 못했습니다.");
       setDraft(data);
@@ -93,6 +115,20 @@ export function ReviewDrawer({
               <span>·</span>
               {row.date}
             </p>
+            {!row.resolution && row.kind !== "matched" && workspace.status !== "closed" && (
+              <button
+                type="button"
+                className="ai-draft-jump"
+                onClick={() => {
+                  aiPanel.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+                  setTimeout(() => aiAction.current?.focus(), 350);
+                }}
+              >
+                <Sparkles size={14} />
+                AI 초안 사용 가능
+                <ChevronRight size={14} />
+              </button>
+            )}
           </div>
           {queueIndex >= 0 && (
             <nav className="review-navigation" aria-label="미검토 거래 이동">
@@ -246,7 +282,7 @@ export function ReviewDrawer({
                   검토 예시 불러오기
                 </button>
               </div>
-              <section className="ai-draft-panel" aria-labelledby="ai-draft-title">
+              <section ref={aiPanel} className="ai-draft-panel" aria-labelledby="ai-draft-title">
                 <div className="ai-draft-heading">
                   <span>
                     <Sparkles size={16} />
@@ -259,6 +295,7 @@ export function ReviewDrawer({
                   상태는 바꾸지 않습니다.
                 </p>
                 <button
+                  ref={aiAction}
                   type="button"
                   className="button secondary small"
                   disabled={draftLoading || busy}
@@ -276,7 +313,33 @@ export function ReviewDrawer({
                       : "초안 만들기"}
                 </button>
                 <div className="ai-draft-result" aria-live="polite">
-                  {draftError && <p className="form-error">{draftError}</p>}
+                  {draftLoading && (
+                    <div className="ai-draft-progress" role="status">
+                      <span aria-hidden="true">
+                        {[0, 1, 2].map((step) => (
+                          <i key={step} className={step <= draftStage ? "is-active" : ""} />
+                        ))}
+                      </span>
+                      <strong>{draftStages[draftStage]}</strong>
+                      <small>
+                        응답이 늦거나 실패하면 검증된 규칙 기반 초안으로 자동 전환합니다.
+                      </small>
+                    </div>
+                  )}
+                  {draftError && (
+                    <div className="ai-draft-error">
+                      <p className="form-error">{draftError}</p>
+                      {sessionExpired && (
+                        <button
+                          type="button"
+                          className="text-button"
+                          onClick={() => void onSessionExpired()}
+                        >
+                          새 데모 시작
+                        </button>
+                      )}
+                    </div>
+                  )}
                   {draft && (
                     <div>
                       <div className="ai-draft-meta">

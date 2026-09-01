@@ -12,7 +12,7 @@ import {
   ShieldCheck,
   Upload,
 } from "lucide-react";
-import { CHANNELS, CHANNEL_LABELS, FEE_BPS } from "@/domain/model";
+import { CHANNEL_LABELS } from "@/domain/model";
 import { describeAuditEvent } from "@/domain/review-copy";
 import type { WorkspaceView } from "@/application/workbench";
 import { ChannelBadge } from "./transaction-table";
@@ -30,14 +30,14 @@ export function ChannelPanel({
       <div className="card-heading">
         <div>
           <h2>채널별 마감 현황</h2>
-          <p>대사 대상 판매 채널 3개</p>
+          <p>대사 대상 판매 채널 {workspace.profile.policy.enabledChannels.length}개</p>
         </div>
         <span className="icon-muted">
           <FolderOpen size={18} />
         </span>
       </div>
       <div className="channel-list">
-        {CHANNELS.map((channel) => {
+        {workspace.profile.policy.enabledChannels.map((channel) => {
           const rows = workspace.rows.filter((row) => row.channel === channel);
           const unresolved = rows.filter((row) => row.kind !== "matched" && !row.resolution).length;
           const amount = rows.reduce((sum, row) => sum + row.expectedNet, 0);
@@ -84,7 +84,7 @@ export function SourcesPanel({
   return (
     <>
       <div className="connector-grid">
-        {CHANNELS.map((channel) => (
+        {workspace.profile.policy.enabledChannels.map((channel) => (
           <section className="card connector-card" key={channel}>
             <div>
               <ChannelBadge channel={channel} />
@@ -95,7 +95,7 @@ export function SourcesPanel({
             <dl>
               <div>
                 <dt>데모 수수료율</dt>
-                <dd>{FEE_BPS[channel] / 100}%</dd>
+                <dd>{workspace.profile.policy.feeBps[channel] / 100}%</dd>
               </div>
               <div>
                 <dt>지원 통화</dt>

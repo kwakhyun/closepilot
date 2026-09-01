@@ -1,6 +1,7 @@
 package io.closepilot
 
 import io.closepilot.application.sha256
+import io.closepilot.application.reconcileRequest
 import io.closepilot.application.verifyClosePackage
 import io.closepilot.domain.BasisPoints
 import io.closepilot.domain.Channel
@@ -62,7 +63,7 @@ class VerifierTest {
         assertFailsWith<IllegalArgumentException> { verifyClosePackage(forged.toString()) }
     }
     @Test fun `tampering with approval evidence breaks the audit chain`() {
-        assertFailsWith<IllegalArgumentException> { verifyClosePackage(fixture.replaceFirst("가상 브랜드 LUMIÈRE", "변조된 브랜드 LUMIÈRE")) }
+        assertFailsWith<IllegalArgumentException> { verifyClosePackage(fixture.replaceFirst("가상 K-Beauty 브랜드 LUMIÈRE", "변조된 K-Beauty 브랜드 LUMIÈRE")) }
     }
     @Test fun `duplicate settlements remain an explicit typed exception`() {
         val key = OrderKey(Channel.D2C, "A-1")
@@ -73,6 +74,45 @@ class VerifierTest {
         assertIs<Reconciliation.Exception>(result)
         assertEquals("duplicate", result.kind)
         assertEquals(193400L, result.evidence.actualNet.amount)
+    }
+    @Test fun `application use case accepts a versioned customer fee policy`() {
+        val request = """{
+          "ruleVersion":"krw-net-v1.1.0",
+          "asOf":"2026-08-31",
+          "feeBps":{"d2c":500,"naver":385,"coupang":880},
+          "orders":[{"id":"ORD-1","channel":"d2c","date":"2026-08-15","gross":100000,"refund":0,"sourceId":"orders"}],
+          "settlements":[{"id":"SET-1","orderId":"ORD-1","channel":"d2c","gross":100000,"refund":0,"fee":3300,"net":96700,"dueDate":"2026-08-31","paidDate":"2026-08-31","sourceId":"settlements"}]
+        }""".trimIndent()
+        val result = reconcileRequest(request)
+        val row = result.getValue("rows").jsonArray.single().jsonObject
+        assertEquals("fee", row.getValue("kind").jsonPrimitive.content)
+        assertEquals(5000, row.getValue("expectedFee").jsonPrimitive.int)
+        assertEquals(1700, row.getValue("delta").jsonPrimitive.int)
+    }
+    @Test fun `http boundary executes the reconciliation use case`() {
+        val request = """{
+          "ruleVersion":"krw-net-v1.1.0",
+          "asOf":"2026-08-31",
+          "feeBps":{"d2c":330,"naver":385,"coupang":880},
+          "orders":[{"id":"ORD-1","channel":"d2c","date":"2026-08-15","gross":100000,"refund":0,"sourceId":"orders"}],
+          "settlements":[{"id":"SET-1","orderId":"ORD-1","channel":"d2c","gross":100000,"refund":0,"fee":3300,"net":96700,"dueDate":"2026-08-31","paidDate":"2026-08-31","sourceId":"settlements"}]
+        }""".trimIndent()
+        val server = VerifierHttpServer(0).start()
+        try {
+            val response = HttpClient.newHttpClient().send(
+                HttpRequest.newBuilder(URI("http://127.0.0.1:${server.port}/reconcile"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(request))
+                    .build(),
+                HttpResponse.BodyHandlers.ofString(),
+            )
+            assertEquals(200, response.statusCode())
+            val body = Json.parseToJsonElement(response.body()).jsonObject
+            assertEquals("kotlin-jvm", body.getValue("engine").jsonPrimitive.content)
+            assertEquals("matched", body.getValue("rows").jsonArray.single().jsonObject.getValue("kind").jsonPrimitive.content)
+        } finally {
+            server.stop()
+        }
     }
     @Test fun `http boundary verifies the TypeScript close package`() {
         val server = VerifierHttpServer(0).start()
