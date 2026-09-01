@@ -75,9 +75,9 @@ export function json(data: unknown, status = 200, requestId = randomUUID()) {
     headers: { "Cache-Control": "no-store, private", "X-Request-Id": requestId },
   });
 }
-export function apiError(error: unknown) {
+export function apiError(error: unknown, requestId = randomUUID()) {
   if (error instanceof DomainError)
-    return json({ error: { code: error.code, message: error.message } }, error.status);
+    return json({ error: { code: error.code, message: error.message } }, error.status, requestId);
   if (error instanceof ZodError)
     return json(
       {
@@ -91,8 +91,8 @@ export function apiError(error: unknown) {
         },
       },
       400,
+      requestId,
     );
-  const requestId = randomUUID();
   console.error(
     JSON.stringify({
       level: "error",
@@ -112,4 +112,36 @@ export function apiError(error: unknown) {
     500,
     requestId,
   );
+}
+
+export async function observeRequest(
+  request: Request,
+  operation: string,
+  handler: (context: { requestId: string }) => Promise<Response>,
+): Promise<Response> {
+  const requestId = randomUUID();
+  const startedAt = performance.now();
+  let response: Response;
+  try {
+    response = await handler({ requestId });
+  } catch (error) {
+    response = apiError(error, requestId);
+  }
+  const durationMs = Math.round((performance.now() - startedAt) * 10) / 10;
+  response.headers.set("X-Request-Id", requestId);
+  response.headers.set("Server-Timing", `app;dur=${durationMs}`);
+  const status = response.status;
+  console.info(
+    JSON.stringify({
+      level: status >= 500 ? "error" : status >= 400 ? "warn" : "info",
+      event: "http_request_completed",
+      requestId,
+      operation,
+      method: request.method,
+      path: new URL(request.url).pathname,
+      status,
+      durationMs,
+    }),
+  );
+  return response;
 }

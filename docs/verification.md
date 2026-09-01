@@ -12,13 +12,13 @@
 | Web 전체 흐름      | `scripts/smoke-api.mjs`        | CSV 반영 → 재대사 → 검토 승인 → 마감 확정 → JSON·CSV 내보내기             |
 | Kotlin/JVM         | JDK 21 + Gradle                | 원본 재계산, 검토 결과 해시, 감사 기록, 변조된 증빙 거부                  |
 
-TypeScript 테스트는 77개, Kotlin 테스트는 6개다. HTTP smoke 검사는 하나의 시나리오를 20단계로 확인하며, 별도의 단위 테스트 20개를 뜻하지 않는다.
+현재 TypeScript 테스트는 85개, Kotlin 테스트는 7개다. HTTP smoke 검사는 하나의 시나리오를 20단계로 확인하며, 별도의 단위 테스트 20개를 뜻하지 않는다. 아래 실행별 테스트 수는 해당 시점의 커밋에 포함된 수치다.
 
 로컬 API 실행 기록은 [api-smoke-local.json](evidence/api-smoke-local.json)에 있다. 고정된 입력으로 만든 기준 마감 증빙은 [closed-package.json](../fixtures/closed-package.json), 기준 합계는 [baseline.json](../fixtures/baseline.json)을 참고한다.
 
 ## GitHub Actions 실행 결과
 
-2026-08-31, 커밋 `e9dab668427f5475df6b8107067e9c9c16ad3a0d`의 [실행 #33348712211](https://github.com/kwakhyun/closepilot/actions/runs/33348712211)에서 `web`, `kotlin` 작업 모두 `success`로 완료됐다.
+2026-08-31, 커밋 `e9dab668427f5475df6b8107067e9c9c16ad3a0d`의 [실행 #33348712211](https://github.com/kwakhyun/closepilot/actions/runs/33348712211)에서 `web`, `kotlin` 작업 모두 `success`로 완료됐다. 이 구간은 최초 배포 커밋의 기록이다.
 
 - **Web / Ubuntu / Node.js 24 / PostgreSQL 17**: 포맷, 레이어 경계, 타입, lint, TypeScript 테스트 77개, 프로덕션 빌드, 고정 데이터 재생성 일치, 실행 중인 API의 20개 검증 단계를 통과했다. DB 테스트와 HTTP 흐름 모두 실제 PostgreSQL 서비스에 연결했다.
 - **Kotlin / Ubuntu / JDK 21**: 테스트와 독립 패키지 재계산을 통과했다. 출력은 `128 rows, 120 matches, 8 evidence-backed reviews, 11 audit events`였다.
@@ -90,3 +90,17 @@ README의 대시보드·거래 검토·모바일 캡처도 교정본으로 갱�
 ## 검증하지 않은 범위
 
 실제 PG·은행 연동, 고객 자료, 대량·장시간 트래픽, 여러 승인자의 작업, 보안 침투 테스트, 백업 복구, Docker 실행, 회계·개인정보 관련 법적 요건 충족 여부는 검증하지 않았다. 로컬 PGlite와 CI PostgreSQL의 테스트 통과를 클라우드 운영 성능의 근거로 사용하지 않는다.
+
+## 2026-09-01 전체 개선 검증
+
+P1·P2 개선과 AI 검토 초안, Kotlin HTTP 경계, 관측성 보강을 마친 뒤 다음 항목을 다시 확인했다.
+
+- `npm run verify`: 아키텍처 경계 41개 모듈, TypeScript 타입 검사, ESLint, Vitest 85개, Next.js 16 프로덕션 빌드가 모두 통과했다.
+- `npm run fixtures`: 합성 자료 128행과 예외 거래 8건을 재생성했으며 체크섬 `16713c14726c4498278c01fef4f1623c330b24dedc4756dfeb98d7d60fd5b3ab`이 유지됐다. `fixtures`와 `migrations`에는 예상하지 않은 변경이 없었다.
+- `npm run smoke -- http://localhost:3000`: 세션 격리, 원자적 가져오기, 멱등성, 동시성, 대사, 검토, 마감, 내보내기, 감사 해시를 다루는 20단계가 모두 통과했다.
+- `npm run benchmark -- http://localhost:3000`: 30회 제한 요청, 동시성 5에서 오류율 0%, p50 55.9ms, p95 78.5ms였다. 이 수치는 로컬 작업 공간 읽기 경로의 회귀 확인용이며 용량이나 SLA 지표가 아니다.
+- Kotlin 검증기: JDK 21에서 7개 테스트가 통과했고, 동일한 합성 마감 패키지에서 128행, 자동 일치 120건, 근거가 있는 검토 8건, 감사 이벤트 11건을 재현했다. CLI와 `POST /verify`가 같은 검증 함수를 사용한다.
+
+승인된 OpenAI 프로젝트 키로 `gpt-5.6-luna` 기반 검토 초안을 실제 평가했다. 중복 정산, 입금 시점 차이, 수수료 차이 세 사례가 모두 `ai` 모드로 생성됐고, 허용된 원본 자료·정산 ID만 인용했다. 생성 시간은 각각 5,203ms, 4,453ms, 4,248ms였다. 에이전트는 읽기 전용 근거 조회 도구만 사용할 수 있고, 초안을 적용해도 확인 체크박스와 승인·마감 상태는 바뀌지 않는다. API 키, 요청 본문, 프롬프트는 로그에 기록하지 않는다.
+
+1280×720 브라우저에서 URL 기반 화면 이동, 뒤로 가기 복원, 제목 포커스와 상단 스크롤, CSV 가져오기 단계 표시와 고정 푸터, 마감 모달의 독립 스크롤과 고정 행동 영역, AI 초안 생성·적용 범위를 확인했다. 브라우저 콘솔에는 애플리케이션 오류가 없었다. 개선 전후 화면을 같은 크기로 나란히 비교해 잘린 요소, 불필요한 포커스 테두리, 간격과 정렬을 재검토했고 발견한 제목 테두리를 제거했다.

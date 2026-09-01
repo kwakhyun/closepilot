@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   CheckCircle2,
@@ -42,7 +42,15 @@ export function ImportModal({
   const [validating, setValidating] = useState(false);
   const [error, setError] = useState("");
   const input = useRef<HTMLInputElement>(null);
+  const mappingSection = useRef<HTMLElement>(null);
   const requestVersion = useRef(0);
+  const currentStep = preview?.valid ? 3 : csv ? 2 : 1;
+  useEffect(() => {
+    if (!open || !preview?.valid) return;
+    requestAnimationFrame(() =>
+      mappingSection.current?.scrollIntoView({ block: "start", behavior: "smooth" }),
+    );
+  }, [open, preview?.valid]);
   async function validate(text: string, mapping?: Record<string, string>, importKind = kind) {
     const version = ++requestVersion.current;
     setValidating(true);
@@ -90,20 +98,54 @@ export function ImportModal({
   return (
     <Modal open={open} onClose={onClose} title="CSV 자료 가져오기" wide className="import-modal">
       <div className="import-body">
-        <div className="import-scroll">
-          <div className="import-steps">
-            <span className="active">
-              <i>1</i>자료 선택
-            </span>
-            <ArrowRight size={14} />
-            <span className={csv ? "active" : ""}>
-              <i>2</i>열 연결·검증
-            </span>
-            <ArrowRight size={14} />
-            <span className={preview?.valid ? "active" : ""}>
-              <i>3</i>자료 반영
-            </span>
-          </div>
+        <div className={`import-scroll ${preview ? "has-preview" : ""}`}>
+          <ol className="import-steps" aria-label="자료 가져오기 단계">
+            {(
+              [
+                [1, "자료 선택"],
+                [2, "열 연결·검증"],
+                [3, "자료 반영"],
+              ] as const
+            ).map(([step, label], index) => (
+              <li
+                key={String(label)}
+                className={step < currentStep ? "completed" : step === currentStep ? "active" : ""}
+                aria-current={step === currentStep ? "step" : undefined}
+              >
+                {index > 0 && <ArrowRight size={14} aria-hidden="true" />}
+                <span>
+                  <i>{step}</i>
+                  {label}
+                </span>
+              </li>
+            ))}
+          </ol>
+          {preview && (
+            <div className="validated-file-summary">
+              <div>
+                <CheckCircle2 size={18} />
+                <p>
+                  <strong>{filename}</strong>
+                  <span>
+                    {kind === "orders" ? "주문 자료" : "채널 정산 자료"} · {preview.count}행
+                  </span>
+                </p>
+              </div>
+              <button
+                className="text-button"
+                type="button"
+                onClick={() => {
+                  setCsv("");
+                  setFilename("");
+                  setPreview(null);
+                  setError("");
+                  requestVersion.current++;
+                }}
+              >
+                파일 또는 자료 유형 바꾸기
+              </button>
+            </div>
+          )}
           <div className="notice warm">
             <AlertCircle size={18} />
             <p>
@@ -198,7 +240,7 @@ export function ImportModal({
             </p>
           )}
           {preview && (
-            <section className="mapping-section">
+            <section className="mapping-section" ref={mappingSection}>
               <div className="section-heading">
                 <h3>원본 열 연결 확인</h3>
                 <span className="soft-tag">자동 연결 · 직접 수정 가능</span>
@@ -249,7 +291,7 @@ export function ImportModal({
               )}
               {preview.valid && (
                 <>
-                  <div className="validation-success">
+                  <div className="validation-success" role="status">
                     <CheckCircle2 size={17} />
                     {preview.count}행 검증 완료 · 자료 반영을 누르면 전체 내용을 한 번에 저장합니다.
                   </div>
@@ -280,7 +322,15 @@ export function ImportModal({
           )}
         </div>
         <div className="modal-footer import-footer">
-          <p>자료를 반영한 뒤 대사를 다시 실행하세요.</p>
+          <p aria-live="polite">
+            {validating
+              ? "열 연결과 금액·날짜 형식을 확인하고 있습니다."
+              : preview?.valid
+                ? `${preview.count}행 검증 완료 · 반영하면 대사를 다시 실행합니다.`
+                : preview?.errors.length
+                  ? `오류 ${preview.errors.length}건을 수정한 뒤 다시 검증하세요.`
+                  : "CSV 파일을 선택하고 열 연결을 확인하세요."}
+          </p>
           <button
             className="button primary"
             disabled={!preview?.valid || validating || busy}

@@ -43,12 +43,19 @@ import { deltaMoney, money } from "./format";
 
 type Section = "overview" | "transactions" | "sources" | "audit";
 type Analysis = ReturnType<typeof explainIssues>;
+const SECTION_VALUES: Section[] = ["overview", "transactions", "sources", "audit"];
 const SECTIONS = {
   overview: "마감 대시보드",
   transactions: "거래 대사",
   sources: "자료 관리",
   audit: "감사 기록",
 };
+
+function sectionFromUrl(): Section {
+  if (typeof window === "undefined") return "overview";
+  const value = new URL(window.location.href).searchParams.get("view");
+  return SECTION_VALUES.includes(value as Section) ? (value as Section) : "overview";
+}
 
 async function responseData(response: Response) {
   const data = await response.json();
@@ -73,6 +80,7 @@ export function Dashboard() {
   const [toast, setToast] = useState<{ message: string; error: boolean } | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const searchInput = useRef<HTMLInputElement>(null);
+  const pageHeading = useRef<HTMLHeadingElement>(null);
   const mobileMenuButton = useRef<HTMLButtonElement>(null);
   const mobileMenuCloseButton = useRef<HTMLButtonElement>(null);
   const sidebar = useRef<HTMLElement>(null);
@@ -106,6 +114,21 @@ export function Dashboard() {
       controller.abort();
       window.removeEventListener("keydown", shortcut);
     };
+  }, []);
+  useEffect(() => {
+    const restoreView = (focusHeading = false) => {
+      const nextSection = sectionFromUrl();
+      setSection(nextSection);
+      setMobileNav(false);
+      setSearch("");
+      if (nextSection === "transactions") setFilter("issues");
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      if (focusHeading) requestAnimationFrame(() => pageHeading.current?.focus());
+    };
+    restoreView();
+    const onPopState = () => restoreView(true);
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
   }, []);
   useEffect(
     () => () => {
@@ -219,7 +242,7 @@ export function Dashboard() {
       setWorkspace(view);
       setResetOpen(false);
       setSelectedKey(null);
-      setSection("overview");
+      navigate("overview");
       setSearch("");
       setFilter("issues");
       setError("");
@@ -245,12 +268,18 @@ export function Dashboard() {
     setMobileNav(false);
     setSearch("");
     if (value === "transactions") setFilter(workspace?.summary.unresolved ? "issues" : "all");
+    const url = new URL(window.location.href);
+    if (value === "overview") url.searchParams.delete("view");
+    else url.searchParams.set("view", value);
+    const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+    const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (nextUrl !== currentUrl) window.history.pushState({ view: value }, "", nextUrl);
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    requestAnimationFrame(() => pageHeading.current?.focus());
   }
   function reviewIssues() {
-    setSection("transactions");
+    navigate("transactions");
     setFilter("issues");
-    setSearch("");
-    setMobileNav(false);
   }
   const selectedRow = workspace?.rows.find((row) => row.key === selectedKey) ?? null;
   const progress = workspace
@@ -311,6 +340,7 @@ export function Dashboard() {
         <nav>
           <button
             className={section === "overview" ? "active" : ""}
+            aria-current={section === "overview" ? "page" : undefined}
             onClick={() => navigate("overview")}
           >
             <LayoutDashboard size={18} />
@@ -318,6 +348,7 @@ export function Dashboard() {
           </button>
           <button
             className={section === "transactions" ? "active" : ""}
+            aria-current={section === "transactions" ? "page" : undefined}
             onClick={() => navigate("transactions")}
           >
             <ListChecks size={18} />
@@ -328,12 +359,17 @@ export function Dashboard() {
           </button>
           <button
             className={section === "sources" ? "active" : ""}
+            aria-current={section === "sources" ? "page" : undefined}
             onClick={() => navigate("sources")}
           >
             <Database size={18} />
             자료 관리
           </button>
-          <button className={section === "audit" ? "active" : ""} onClick={() => navigate("audit")}>
+          <button
+            className={section === "audit" ? "active" : ""}
+            aria-current={section === "audit" ? "page" : undefined}
+            onClick={() => navigate("audit")}
+          >
             <ShieldCheck size={18} />
             감사 기록
           </button>
@@ -414,6 +450,13 @@ export function Dashboard() {
                 onFocus={() => {
                   setSection("transactions");
                   setFilter("all");
+                  const url = new URL(window.location.href);
+                  url.searchParams.set("view", "transactions");
+                  window.history.replaceState(
+                    { view: "transactions" },
+                    "",
+                    `${url.pathname}${url.search}${url.hash}`,
+                  );
                 }}
                 onChange={(event) => setSearch(event.target.value)}
               />
@@ -439,7 +482,9 @@ export function Dashboard() {
                 <span>2026년 8월</span>
               </div>
               <div className="page-title-row">
-                <h1>{section === "overview" ? "매출 마감" : SECTIONS[section]}</h1>
+                <h1 ref={pageHeading} tabIndex={-1}>
+                  {section === "overview" ? "매출 마감" : SECTIONS[section]}
+                </h1>
                 <span className={`period-status ${workspace?.close ? "is-closed" : ""}`}>
                   {workspace?.close ? "마감 완료" : "마감 진행 중"}
                 </span>
@@ -745,6 +790,7 @@ export function Dashboard() {
                     <button
                       onClick={() => {
                         setAnalysis(null);
+                        navigate("transactions");
                         setSelectedKey(step.rowKey);
                       }}
                     >

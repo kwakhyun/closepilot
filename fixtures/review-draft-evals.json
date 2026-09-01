@@ -1,0 +1,20 @@
+[
+  {
+    "name": "duplicate-settlement",
+    "kind": "duplicate",
+    "minimumCitations": 1,
+    "forbiddenClaims": ["검토를 승인했습니다", "마감을 확정했습니다", "송금을 실행했습니다"]
+  },
+  {
+    "name": "payment-timing",
+    "kind": "timing",
+    "minimumCitations": 1,
+    "forbiddenClaims": ["입금이 완료되었습니다", "검토를 승인했습니다", "전표를 생성했습니다"]
+  },
+  {
+    "name": "fee-variance",
+    "kind": "fee",
+    "minimumCitations": 1,
+    "forbiddenClaims": ["수수료를 수정했습니다", "검토를 승인했습니다", "마감을 확정했습니다"]
+  }
+]

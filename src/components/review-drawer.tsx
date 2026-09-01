@@ -7,11 +7,14 @@ import {
   ChevronRight,
   Circle,
   FileText,
+  LoaderCircle,
+  Sparkles,
   ShieldCheck,
   Info,
 } from "lucide-react";
 import type { Command, ReviewedRow, WorkspaceView } from "@/application/workbench";
 import { CHANNEL_LABELS, ISSUE_LABELS } from "@/domain/model";
+import type { ReviewDraftResponse } from "@/domain/review-draft";
 import { describeReconciliation, REVIEW_ACTION_LABELS } from "@/domain/review-copy";
 import { Modal } from "./modal";
 import { deltaMoney, money, timestamp } from "./format";
@@ -36,6 +39,9 @@ export function ReviewDrawer({
   const [note, setNote] = useState("");
   const [evidence, setEvidence] = useState("");
   const [confirmed, setConfirmed] = useState(false);
+  const [draft, setDraft] = useState<ReviewDraftResponse | null>(null);
+  const [draftLoading, setDraftLoading] = useState(false);
+  const [draftError, setDraftError] = useState("");
   const disposition =
     row?.kind === "timing"
       ? "carry_forward"
@@ -51,6 +57,26 @@ export function ReviewDrawer({
   const evidenceReady = evidence.trim().length >= 5;
   const latestRunReady = !!workspace.lastRunAt;
   const reviewReady = noteReady && evidenceReady && confirmed && latestRunReady;
+  async function createDraft() {
+    if (!row || draftLoading) return;
+    setDraftLoading(true);
+    setDraftError("");
+    try {
+      const response = await fetch("/api/review-draft", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rowKey: row.key, expectedVersion: workspace.version }),
+      });
+      const data = await response.json();
+      if (!response.ok)
+        throw new Error(data.error?.message || "검토 메모 초안을 만들지 못했습니다.");
+      setDraft(data);
+    } catch (error) {
+      setDraftError((error as Error).message);
+    } finally {
+      setDraftLoading(false);
+    }
+  }
   return (
     <Modal open={!!row} onClose={onClose} title="거래 검토" drawer>
       {row && (
@@ -220,6 +246,67 @@ export function ReviewDrawer({
                   검토 예시 불러오기
                 </button>
               </div>
+              <section className="ai-draft-panel" aria-labelledby="ai-draft-title">
+                <div className="ai-draft-heading">
+                  <span>
+                    <Sparkles size={16} />
+                    <strong id="ai-draft-title">AI 검토 메모 초안</strong>
+                  </span>
+                  <small>읽기 전용 · 승인 권한 없음</small>
+                </div>
+                <p>
+                  이 거래에 저장된 합성 주문·정산 근거만 읽어 초안을 만듭니다. 금액, 검토 상태, 마감
+                  상태는 바꾸지 않습니다.
+                </p>
+                <button
+                  type="button"
+                  className="button secondary small"
+                  disabled={draftLoading || busy}
+                  onClick={() => void createDraft()}
+                >
+                  {draftLoading ? (
+                    <LoaderCircle className="spin" size={15} />
+                  ) : (
+                    <Sparkles size={15} />
+                  )}
+                  {draftLoading
+                    ? "근거를 확인하는 중…"
+                    : draft
+                      ? "초안 다시 만들기"
+                      : "초안 만들기"}
+                </button>
+                <div className="ai-draft-result" aria-live="polite">
+                  {draftError && <p className="form-error">{draftError}</p>}
+                  {draft && (
+                    <div>
+                      <div className="ai-draft-meta">
+                        <span>{draft.mode === "ai" ? "AI 초안" : "규칙 기반 대체"}</span>
+                        <span>{draft.latencyMs.toLocaleString("ko-KR")}ms</span>
+                      </div>
+                      <strong>{draft.draft.summary}</strong>
+                      <ul>
+                        {draft.draft.checks.map((check) => (
+                          <li key={check}>{check}</li>
+                        ))}
+                      </ul>
+                      <p className="ai-draft-citations">
+                        근거 ID · {draft.draft.citations.join(" · ")}
+                      </p>
+                      <small>{draft.notice}</small>
+                      <button
+                        type="button"
+                        className="text-button"
+                        onClick={() => {
+                          setNote(draft.draft.note);
+                          setEvidence(draft.draft.evidenceReference);
+                        }}
+                      >
+                        검토 사유와 증빙 참조에 적용
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </section>
               <label>
                 검토 사유 <span className="required">*</span>
                 <textarea

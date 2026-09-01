@@ -10,7 +10,7 @@ K-브랜드 재무 담당자가 주문과 정산 자료의 차이를 확인하�
 
 ![ClosePilot 매출 마감 대시보드](docs/evidence/dashboard.jpg)
 
-> PortOne Commerce Ops Product Engineer 지원을 위해 기획·설계·구현·검증·배포한 개인 포트폴리오입니다. PortOne 공식 제품이나 제휴 서비스가 아닙니다. 브랜드·주문·수수료율은 모두 가상입니다. 고객 인터뷰나 도입 성과 측정은 진행하지 않았으며, 실제 결제·송금 기능은 제공하지 않습니다. 검토 가이드는 **규칙 기반이며 LLM을 호출하지 않습니다.**
+> PortOne Commerce Ops Product Engineer 지원을 위해 기획·설계·구현·검증·배포한 개인 포트폴리오입니다. PortOne 공식 제품이나 제휴 서비스가 아닙니다. 브랜드·주문·수수료율은 모두 가상입니다. 고객 인터뷰나 도입 성과 측정은 진행하지 않았으며, 실제 결제·송금 기능은 제공하지 않습니다. 선택형 AI 검토 메모 초안은 **저장된 합성 근거만 읽으며 금액·승인·마감 권한이 없습니다.**
 
 ## 왜 이 문제인가
 
@@ -25,13 +25,13 @@ K-브랜드 재무 담당자가 주문과 정산 자료의 차이를 확인하�
 | 타입으로 도메인 복잡도 통제    | TypeScript 경계 검증, 정수 KRW 연산, Kotlin 값 클래스·sealed 결과 타입     |
 | 재사용 가능한 기능과 개발 자산 | CSV 어댑터, 순수 대사 함수, 명령 처리기, 독립 검증기, 고정 검증 데이터     |
 | 운영을 고려한 설계             | 중복 요청·동시 수정 방지, DB 잠금, 감사 기록, 오류 추적, 운영 가이드       |
-| AI를 개발 과정에 통합          | Codex로 구현·검증하고, 에이전트 지침·커밋 훅·CI로 변경 시 지킬 기준을 관리 |
+| AI를 개발·제품 과정에 통합     | Codex 기반 개발 파이프라인과 읽기 전용 근거 도구·구조화 출력·평가 데이터셋 |
 
 ## 3분 체험
 
 1. 대시보드에서 **128건 중 일치 120건, 확인 필요 8건**을 확인하고 **확인할 거래 보기**를 누릅니다.
 2. 우선순위가 가장 높은 `LM-2608045` 중복 정산 거래를 엽니다. 연결된 정산 내역 두 행을 펼쳐 예상 정산액과 자료상 정산액을 비교합니다.
-3. **검토 예시 불러오기**를 누르고 원본 자료와 사유를 확인한 뒤 **기록하고 다음 거래 보기**를 선택합니다. 미검토 건수가 줄고 다음 거래가 바로 열리지만, 원본 금액과 자동 일치율은 변하지 않습니다.
+3. 필요하면 **AI 검토 메모 초안**을 만들어 근거 ID와 확인 항목을 검토한 뒤 사유·증빙 참조에 적용합니다. 직접 입력하거나 **검토 예시 불러오기**를 사용해도 됩니다. **기록하고 다음 거래 보기**를 선택하면 미검토 건수가 줄고 다음 거래가 바로 열리지만, 원본 금액과 자동 일치율은 변하지 않습니다.
 4. **자료 가져오기**에서 주문·정산 샘플을 각각 미리 보고 **자료 반영**을 누릅니다. 새 자료를 반영하면 대사를 다시 실행해야 검토를 승인할 수 있습니다.
 5. 나머지 예외 거래를 검토한 뒤 **마감 점검 → 8월 마감 확정**을 실행합니다. 마감 증빙 파일(JSON)을 내려받아 Kotlin 검증기로 다시 계산할 수 있습니다.
 
@@ -51,13 +51,19 @@ K-브랜드 재무 담당자가 주문과 정산 자료의 차이를 확인하�
 
 검토 승인은 사유와 증빙 참조 정보를 남기는 기능입니다. 금액을 보정하거나 회계 전표를 만들지 않습니다. 원본이 바뀌면 해당 대사 결과의 식별 해시(fingerprint)가 달라져 이전 승인을 그대로 사용할 수 없습니다. 마감 후에는 API와 DB 트리거 모두 수정 요청을 거부합니다.
 
-### 3. Kotlin으로 독립 재검증
+### 3. 근거 밖으로 나가지 않는 AI 검토 초안
+
+AI 초안은 현재 거래의 합성 주문·정산 자료를 반환하는 읽기 전용 도구 하나만 사용할 수 있습니다. 구조화 출력의 근거 ID가 허용 목록을 벗어나거나 승인·마감 완료를 단정하면 결과를 폐기하고 같은 근거로 만든 규칙 기반 초안으로 전환합니다. 초안을 적용해도 텍스트 입력만 채우며, 사용자가 원본을 확인하고 체크박스와 처리 버튼을 직접 선택해야 합니다.
+
+모델 호출에는 Vercel AI SDK의 `ToolLoopAgent`와 OpenAI Responses API를 사용합니다. 응답 저장을 끄고, 모델·지연 시간·토큰 사용량·규칙 기반 전환을 구조화 로그로 남깁니다. [평가 데이터](fixtures/review-draft-evals.json)와 [실행 스크립트](scripts/evaluate-review-drafts.mjs)로 근거 범위와 권한 초과 표현을 검사합니다.
+
+### 4. Kotlin으로 독립 재검증
 
 [Kotlin/JVM 모듈](verifier)은 내보낸 마감 증빙의 주문·정산 입력으로 대사를 다시 수행합니다. 웹에서 계산한 결과와 행별 금액·분류·합계를 비교하고, 검토 근거와 감사 기록의 해시를 검사합니다.
 
-`Won`, `BasisPoints`, `OrderKey` 값 객체와 `Reconciliation` sealed 타입으로 금액과 대사 결과를 표현합니다. 금액 계산에는 `Long`과 `BigInteger`를 사용합니다. **웹 백엔드는 TypeScript/Next.js이며, Kotlin은 별도의 오프라인 검증 CLI입니다.**
+`Won`, `BasisPoints`, `OrderKey` 값 객체와 `Reconciliation` sealed 타입으로 금액과 대사 결과를 표현합니다. 금액 계산에는 `Long`과 `BigInteger`를 사용합니다. **웹 백엔드는 TypeScript/Next.js이며, Kotlin은 오프라인 CLI와 로컬 전용 `POST /verify` REST 경계를 함께 제공합니다.** 계약 테스트는 TypeScript가 만든 고정 마감 패키지를 Kotlin HTTP 경계로 전송해 결과를 확인합니다.
 
-### 4. 온보딩과 운영까지 연결
+### 5. 온보딩과 운영까지 연결
 
 CSV의 BOM·줄바꿈·따옴표 처리, 한글·영문 열 연결, 숫자·날짜·기간 검증, 파일 중복 방지, 입력 한도, CSV 수식 주입 방어를 구현했습니다. 상태는 PostgreSQL에 저장합니다. 공개 배포 환경에서 DB 설정이 빠지면 오류를 반환하며, 임시 메모리 저장소로 대체하지 않습니다.
 
@@ -67,12 +73,14 @@ CSV의 BOM·줄바꿈·따옴표 처리, 한글·영문 열 연결, 숫자·날�
 flowchart LR
   User[재무 담당자 · 가상 시나리오] --> UI[Next.js / React UI]
   UI --> API[REST · Zod · 세션 / Origin 검사]
+  UI --> Agent[읽기 전용 AI 검토 초안]
+  Agent --> Evidence[허용된 거래 근거 도구]
   API --> App[Application · 명령과 마감 정책]
   App --> Domain[Domain · 정수 금액 / 대사 / 감사]
   API --> Repo[Repository · 행 잠금 / 멱등성]
   Repo --> DB[(PostgreSQL · Neon)]
   App --> Package[마감 증빙 JSON]
-  Package --> Kotlin[Kotlin/JVM 독립 재계산]
+  Package --> Kotlin[Kotlin/JVM CLI · REST 독립 재계산]
 ```
 
 | 영역      | 선택                                                                     |
@@ -81,6 +89,7 @@ flowchart LR
 | 도메인    | 프레임워크에 의존하지 않는 대사 함수, 레이어 경계 검사                   |
 | DB        | 운영: Neon PostgreSQL / 로컬: PGlite / CI: PostgreSQL 17                 |
 | 독립 검증 | Kotlin 2.4.10, JVM 21, Gradle Wrapper 9.4.1                              |
+| AI 초안   | Vercel AI SDK ToolLoopAgent, OpenAI, Zod 구조화 출력, 근거 ID 검증       |
 | UI        | 자체 CSS, Pretendard, Lucide, 반응형 화면·키보드 탭·포커스 잠금 대화상자 |
 | 검증/배포 | Vitest, 실제 HTTP 검증 스크립트, Kotlin 테스트, GitHub Actions, Vercel   |
 
@@ -101,15 +110,15 @@ flowchart LR
 
 예외 8건은 정산 누락 2건, 수수료 차이 2건, 환불액 차이 1건, 중복 정산 1건, 입금 확인 필요 2건입니다. 입금 확인이 필요한 2건은 차액이 0원이지만, 정산 자료의 입금일이 비어 있거나 마감 기준일 이후입니다. 차액의 절댓값 합계는 순차액이나 실제 회수할 수 있는 금액을 뜻하지 않습니다.
 
-- TypeScript **80개 테스트**: 금액, CSV, 대사 우선순위, 도메인 상태, HTTP 보안, DB 트랜잭션·동시성·세션 격리.
-- Kotlin **6개 테스트**: 고정 패키지 재계산, 중복, 체크섬·계산값·감사 기록 변조 거부.
+- TypeScript **85개 테스트**: 금액, CSV, 대사 우선순위, 도메인 상태, HTTP 보안·관측 헤더, AI 근거 제한, DB 트랜잭션·동시성·세션 격리.
+- Kotlin **7개 테스트**: 고정 패키지 재계산, REST 계약, 중복, 체크섬·계산값·감사 기록 변조 거부.
 - HTTP **20개 검증 단계**: 실제 서버에서 세션 생성부터 CSV 반영·예외 승인·마감·내보내기까지.
-- [GitHub Actions 실행](https://github.com/kwakhyun/closepilot/actions/runs/33348712211): PostgreSQL 17 웹 검증과 JDK 21 Kotlin 검증 모두 통과.
+- [GitHub Actions 실행 기록](https://github.com/kwakhyun/closepilot/actions): PostgreSQL 17 웹 검증과 JDK 21 Kotlin 검증을 커밋마다 다시 실행합니다.
 - 브라우저 확인과 배포 결과는 [검증 기록](docs/verification.md)에 환경과 한계를 함께 기록합니다.
 
 ## 로컬 실행
 
-Node.js 24를 기준으로 검증했습니다. **웹 데모만 로컬에서 실행할 때는 DB 계정이나 API 키가 필요 없습니다.**
+Node.js 24를 기준으로 검증했습니다. **대사·검토·마감 기능만 실행할 때는 DB 계정이나 API 키가 필요 없습니다.** AI 초안을 사용하려면 `.env.local`의 `OPENAI_API_KEY`가 필요하며 브라우저에는 노출되지 않습니다.
 
 ```bash
 npm ci
@@ -120,9 +129,11 @@ npm run dev
 `DATABASE_URL`이 없으면 `.data/closepilot`에 PGlite 데이터를 저장합니다. PostgreSQL 사용 시 `.env.example`을 참고해 서버 환경 변수로 연결 문자열을 설정하세요. 브라우저 코드에 비밀키를 넣지 않습니다.
 
 ```bash
-npm run verify                     # 레이어 검사, 타입, lint, 80개 테스트, 빌드
+npm run verify                     # 레이어 검사, 타입, lint, 85개 테스트, 빌드
 npm run fixtures                   # 고정 데이터와 검증 패키지 재생성
 npm run smoke -- http://localhost:3000
+npm run benchmark -- http://localhost:3000
+npm run eval:review-drafts -- http://localhost:3000
 ```
 
 Kotlin 독립 검증에는 JDK 21이 필요합니다. 첫 실행은 Gradle·의존성을 다운로드합니다.
@@ -132,6 +143,8 @@ cd verifier
 bash gradlew test run --args='../fixtures/closed-package.json'
 # 실제로 내려받은 패키지:
 bash gradlew run --args='/absolute/path/to/closepilot-2026-08-close.json'
+# 로컬 REST 검증 경계
+bash gradlew run --args='--server 8081'
 ```
 
 Windows에서는 `JAVA_HOME`을 JDK 21로 설정하고 루트에서 `./scripts/verify-kotlin.ps1`을 실행합니다. 한글 경로에서 Gradle 테스트 작업자의 classpath가 깨지는 문제를 피하도록 임시 ASCII 빌드 경로를 사용합니다.
@@ -147,7 +160,7 @@ Docker 설정도 제공합니다: `docker compose up --build`. 이 환경에서�
 - [pre-commit 훅](.githooks/pre-commit): `git config core.hooksPath .githooks`로 활성화. CI에서도 같은 검증 실행.
 - [변경 검토 절차](docs/ai-development.md): 근거 확인 → 제한된 변경 → 반례 검증 → 결과 기록.
 
-공개 제품에 유료 LLM 호출이나 자율 승인 에이전트는 연결하지 않았습니다. 향후 설명 보조에 추가하더라도 금액·승인·마감 권한은 주지 않는 설계를 문서화했습니다.
+공개 데모의 AI는 사용자가 선택한 거래의 검토 메모 초안에만 유료 LLM을 호출합니다. 읽기 전용 근거 도구 외의 도구는 제공하지 않으며 금액·승인·마감 권한이 없습니다. 호출 실패, 근거 ID 오류, 권한 초과 표현은 규칙 기반 초안으로 전환합니다. [AI 개발·운영 원칙](docs/ai-development.md)과 [관측 기준](docs/observability.md)에 재현·평가·비용 확인 절차를 기록했습니다.
 
 ## 범위와 남은 위험
 

@@ -15,11 +15,18 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.boolean
+import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.junit.jupiter.api.Test
 import java.nio.file.Files
 import java.nio.file.Path
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 import java.time.LocalDate
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -66,5 +73,24 @@ class VerifierTest {
         assertIs<Reconciliation.Exception>(result)
         assertEquals("duplicate", result.kind)
         assertEquals(193400L, result.evidence.actualNet.amount)
+    }
+    @Test fun `http boundary verifies the TypeScript close package`() {
+        val server = VerifierHttpServer(0).start()
+        try {
+            val response = HttpClient.newHttpClient().send(
+                HttpRequest.newBuilder(URI("http://127.0.0.1:${server.port}/verify"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(fixture))
+                    .build(),
+                HttpResponse.BodyHandlers.ofString(),
+            )
+            assertEquals(200, response.statusCode())
+            val body = Json.parseToJsonElement(response.body()).jsonObject
+            assertEquals(true, body.getValue("valid").jsonPrimitive.boolean)
+            assertEquals(128, body.getValue("rows").jsonPrimitive.int)
+            assertEquals(8, body.getValue("reviewed").jsonPrimitive.int)
+        } finally {
+            server.stop()
+        }
     }
 }

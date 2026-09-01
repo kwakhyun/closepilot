@@ -13,6 +13,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 This portfolio uses synthetic data. It does not process live payments or accounting entries.
 Do not claim customer interviews, measured operational savings, real PG/bank
 integration, enterprise access controls, or LLM calls that do not exist.
+Do not describe the bounded review-draft agent as autonomous approval or financial automation.
 
 ## Before changing code
 
@@ -35,6 +36,7 @@ connection strings, cookie values or actual customer data in commits or logs.
 - Sessions are opaque bearer capabilities, not enterprise user accounts.
 - Hashes check integrity; they are not signatures or protection from DB admins.
 - The public review guide is deterministic and must be labelled as such.
+- The optional AI review draft may read only the server-built evidence packet. It has no money, approval, close or transfer tools; citations must be validated and failures must use the deterministic fallback.
 - Copy-only changes must preserve existing fingerprints, stored review notes and closed packages. Follow `docs/copy-guide.md`.
 
 ## Change workflow

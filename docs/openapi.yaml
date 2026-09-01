@@ -3,7 +3,8 @@ info:
   title: ClosePilot 데모 REST API
   version: 1.0.0
   description: |
-    가상 데이터를 사용하는 포트폴리오 데모입니다. 실제 결제, 송금, 회계 전표 생성, LLM 호출은 수행하지 않습니다.
+    가상 데이터를 사용하는 포트폴리오 데모입니다. 실제 결제, 송금, 회계 전표 생성은 수행하지 않습니다.
+    선택형 AI 검토 메모 초안은 현재 거래에 저장된 합성 근거만 읽으며 금액·승인·마감 권한이 없습니다.
     자료를 변경하는 요청에는 사이트 주소와 일치하는 Origin이 필요합니다.
     명령 실행에는 세션, expectedVersion, Idempotency-Key가 필요하며 금액은 원 단위 정수로 처리합니다.
 servers:
@@ -166,6 +167,39 @@ paths:
                   steps: { type: array, items: { type: object } }
                   guardrail: { type: string }
         "401": { $ref: "#/components/responses/Error" }
+  /api/review-draft:
+    post:
+      operationId: createReviewDraft
+      summary: 현재 거래의 저장된 근거로 선택형 검토 메모 초안 생성
+      description: |
+        읽기 전용 근거 도구와 구조화 출력 스키마를 사용합니다. 허용된 근거 ID 밖의 인용이나 승인 완료 단정은 폐기합니다.
+        AI 호출을 완료하지 못하면 같은 근거로 만든 규칙 기반 초안을 반환합니다. 어떤 모드에서도 작업 상태는 바뀌지 않습니다.
+      parameters:
+        - $ref: "#/components/parameters/Origin"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [rowKey, expectedVersion]
+              properties:
+                rowKey: { type: string, minLength: 1, maxLength: 100 }
+                expectedVersion: { type: integer, minimum: 1 }
+      responses:
+        "200":
+          description: AI 또는 규칙 기반 초안과 근거 ID, 실행 모드를 반환합니다.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ReviewDraftResponse" }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "403": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
+        "409": { $ref: "#/components/responses/Error" }
+        "413": { $ref: "#/components/responses/Error" }
+        "415": { $ref: "#/components/responses/Error" }
   /api/export:
     get:
       operationId: exportEvidence
@@ -273,6 +307,25 @@ components:
           }
         csv: { type: string, minLength: 1, maxLength: 256000 }
         mapping: { $ref: "#/components/schemas/Mapping" }
+    ReviewDraftResponse:
+      type: object
+      required: [mode, model, generatedAt, latencyMs, draft, notice]
+      properties:
+        mode: { enum: [ai, rules] }
+        model: { type: [string, "null"] }
+        generatedAt: { type: string, format: date-time }
+        latencyMs: { type: integer, minimum: 0 }
+        notice: { type: string }
+        draft:
+          type: object
+          additionalProperties: false
+          required: [summary, note, evidenceReference, checks, citations]
+          properties:
+            summary: { type: string, minLength: 20, maxLength: 280 }
+            note: { type: string, minLength: 20, maxLength: 600 }
+            evidenceReference: { type: string, minLength: 5, maxLength: 200 }
+            checks: { type: array, minItems: 2, maxItems: 4, items: { type: string } }
+            citations: { type: array, minItems: 1, maxItems: 8, items: { type: string } }
     WorkspaceView:
       type: object
       description: 전체 타입은 src/application/workbench.ts의 WorkspaceView를 참고하세요. 세션의 가상 데이터만 포함합니다.

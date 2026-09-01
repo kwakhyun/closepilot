@@ -1,11 +1,11 @@
 import { workspaceView } from "@/application/workbench";
 import { csvCell } from "@/domain/csv";
 import { DomainError } from "@/domain/model";
-import { apiError, repository, sessionHash } from "@/infrastructure/http";
+import { observeRequest, repository, sessionHash } from "@/infrastructure/http";
 
 export const runtime = "nodejs";
 export async function GET(request: Request) {
-  try {
+  return observeRequest(request, "export.download", async () => {
     const workspace = await (await repository()).get(await sessionHash());
     const format = new URL(request.url).searchParams.get("format") || "csv";
     if (format === "json") {
@@ -78,7 +78,5 @@ export async function GET(request: Request) {
         "Cache-Control": "no-store, private",
       },
     });
-  } catch (error) {
-    return apiError(error);
-  }
+  });
 }

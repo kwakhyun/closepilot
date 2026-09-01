@@ -2,16 +2,16 @@ import { randomBytes } from "node:crypto";
 import { workspaceView } from "@/application/workbench";
 import {
   COOKIE_NAME,
-  apiError,
   assertSameOrigin,
   hashToken,
   json,
+  observeRequest,
   repository,
 } from "@/infrastructure/http";
 
 export const runtime = "nodejs";
 export async function POST(request: Request) {
-  try {
+  return observeRequest(request, "session.create", async () => {
     assertSameOrigin(request);
     const token = randomBytes(32).toString("hex");
     const address = process.env.VERCEL
@@ -29,7 +29,5 @@ export async function POST(request: Request) {
       maxAge: 6 * 60 * 60,
     });
     return response;
-  } catch (error) {
-    return apiError(error);
-  }
+  });
 }

@@ -154,6 +154,7 @@ export function SourcesPanel({
                     }
                   }}
                   title={source.digest}
+                  aria-label={`${source.name} 체크섬 복사`}
                 >
                   <code>{source.digest.slice(0, 16)}…</code>
                   <Copy size={13} />

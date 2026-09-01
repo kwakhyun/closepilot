@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { apiError, assertSameOrigin, readJson } from "@/infrastructure/http";
+import { apiError, assertSameOrigin, observeRequest, readJson } from "@/infrastructure/http";
 
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -65,5 +65,18 @@ describe("HTTP trust boundary", () => {
     expect(log).toHaveBeenCalledWith(expect.stringContaining(body.error.requestId));
     expect(JSON.stringify(body)).not.toContain("credential");
     expect(log.mock.calls.flat().join()).not.toContain("credential");
+  });
+  it("adds request correlation and server timing without logging query values", async () => {
+    const log = vi.spyOn(console, "info").mockImplementation(() => {});
+    const response = await observeRequest(
+      new Request("https://close.example/api/workspace?secret=hidden"),
+      "workspace.read",
+      async () => new Response(null, { status: 204 }),
+    );
+    expect(response.headers.get("X-Request-Id")).toMatch(/^[a-f0-9-]{36}$/);
+    expect(response.headers.get("Server-Timing")).toMatch(/^app;dur=\d/);
+    const entry = log.mock.calls.flat().join();
+    expect(entry).toContain('"path":"/api/workspace"');
+    expect(entry).not.toContain("hidden");
   });
 });

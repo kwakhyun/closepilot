@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { importCsv, parseCsv, suggestMapping } from "@/domain/csv";
 import {
-  apiError,
   assertSameOrigin,
   json,
+  observeRequest,
   readJson,
   repository,
   sessionHash,
@@ -18,7 +18,7 @@ const schema = z
   .strict();
 export const runtime = "nodejs";
 export async function POST(request: Request) {
-  try {
+  return observeRequest(request, "import.preview", async () => {
     assertSameOrigin(request);
     const body = schema.parse(await readJson(request));
     const workspace = await (await repository()).get(await sessionHash());
@@ -44,7 +44,5 @@ export async function POST(request: Request) {
         errors: [(error as Error).message],
       });
     }
-  } catch (error) {
-    return apiError(error);
-  }
+  });
 }

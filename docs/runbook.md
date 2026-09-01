@@ -6,6 +6,8 @@ Node.js 24에서 `npm ci`로 의존성을 설치한 뒤 `npm run dev`로 실행�
 
 PostgreSQL을 사용할 때는 서버 환경 변수 `DATABASE_URL`을 설정한다. 공개 배포는 TLS를 사용하는 Neon의 풀링 연결 문자열로 접속한다. `.env.example`에 필요한 변수를 정리했다. 현재 서버의 DB 계정에는 초기 테이블과 트리거를 만들 권한이 필요하다. 실제 운영에서는 스키마 변경용 계정과 최소 권한의 앱 실행용 계정을 분리해야 한다.
 
+선택형 AI 검토 메모 초안을 사용하려면 서버 전용 `OPENAI_API_KEY`를 설정한다. 기본 모델은 `gpt-5.6-luna`이며 `OPENAI_REVIEW_MODEL`로 바꿀 수 있다. 두 변수 모두 브라우저 번들에 포함하지 않는다. 키가 없거나 호출·출력 검증에 실패하면 규칙 기반 초안으로 전환되므로 대사·검토·마감 흐름은 계속 사용할 수 있다.
+
 ## 배포
 
 새 환경에 배포할 때는 Vercel 프로젝트에 전용 Neon DB를 연결하고 production·preview 환경 변수를 확인한다. 기존 서비스의 DB를 공유하지 않는다. 이 프로젝트의 함수와 DB는 싱가포르 리전을 사용한다. 무료 플랜의 한도와 정책은 바뀔 수 있으므로 사용량을 확인한다.
@@ -17,6 +19,7 @@ npm run verify
 vercel deploy --prod
 # 배포 뒤 실제 공개 URL에서 합성 데이터로 검사
 node scripts/smoke-api.mjs https://YOUR-DOMAIN --allow-remote --report docs/evidence/api-smoke-production.json
+npm run eval:review-drafts -- https://YOUR-DOMAIN --allow-remote
 ```
 
 원격 smoke 검사는 대상 서버에 데모 세션 2개를 만들고 20개 검증 단계를 수행한다. 이 프로젝트가 소유한 환경에서만 실행한다. 토큰·쿠키·DB URL은 보고서에 기록하지 않는다. 세션 생성 한도에 도달하면 반복 재시도를 중단하고 한도를 확인한다.
@@ -35,9 +38,12 @@ node scripts/smoke-api.mjs https://YOUR-DOMAIN --allow-remote --report docs/evid
 | 409 CLOSE_LOCKED                 | 확정한 자료는 수정할 수 없다. 다른 작업을 체험하려면 새 데모를 시작한다.                                 |
 | 429 RATE_LIMITED / COMMAND_LIMIT | 세션 생성 한도와 변경 기록 수를 확인한다. 오류를 피하려고 보호 장치를 제거하지 않는다.                   |
 | 500 INTERNAL_ERROR               | 응답 본문·헤더의 requestId로 Vercel 로그를 찾는다. errorType과 DB 연결·권한을 확인한다.                  |
+| AI 초안이 규칙 기반으로 전환됨   | `review_draft_fallback` 로그의 requestId·errorType을 확인한다. 원본 검토 흐름과 안전장치는 유지한다.     |
 | 상태 확인 실패                   | DB 서비스, 연결 문자열, TLS, 초기 마이그레이션 권한을 확인한다.                                          |
 
 네트워크 연결 실패나 일부 5xx 오류가 발생하면 **같은 요청 키와 본문**으로 재시도한다. 응답을 받지 못했어도 서버에서는 처리가 끝났을 수 있으므로, 새 키로 같은 명령을 곧바로 다시 보내지 않는다.
+
+모든 API 응답의 `Server-Timing`과 구조화 로그로 오류율·p95·명령 수행 시간·AI 전환율을 집계한다. 지표 정의와 초기 경보 기준은 [운영 관측 기준](observability.md)을 따른다.
 
 ## 배포 되돌리기와 데이터 보관
 
@@ -54,3 +60,5 @@ node scripts/smoke-api.mjs https://YOUR-DOMAIN --allow-remote --report docs/evid
 ## Kotlin
 
 JDK 21과 Gradle Wrapper를 사용한다. Wrapper와 배포 ZIP의 공식 체크섬을 확인했고, 배포 ZIP의 체크섬은 `verifier/gradle/wrapper/gradle-wrapper.properties`에 고정했다. Windows의 한글 경로에서 발생하는 classpath 문제는 `scripts/verify-kotlin.ps1`에서 영문·숫자만 포함된 임시 빌드 경로를 사용해 피한다. 실행 후 임시 파일이 남을 수 있으므로 필요하면 별도로 정리한다.
+
+`bash gradlew run --args='--server 8081'`은 `127.0.0.1`에만 바인딩되는 로컬 검증 REST 경계를 연다. `POST /verify`는 최대 5MB의 JSON 마감 패키지만 받고, CLI와 같은 독립 재계산 함수를 호출한다. 인증·TLS·외부 공개 운영은 이 경계의 범위가 아니다.

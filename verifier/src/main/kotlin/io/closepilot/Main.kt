@@ -6,8 +6,17 @@ import java.nio.file.Path
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
+    if (args.firstOrNull() == "--server") {
+        val port = args.getOrNull(1)?.toIntOrNull() ?: 8081
+        require(port in 0..65535) { "Port must be between 0 and 65535" }
+        val server = VerifierHttpServer(port).start()
+        Runtime.getRuntime().addShutdownHook(Thread { server.stop() })
+        println("ClosePilot verifier listening on http://127.0.0.1:${server.port}")
+        Thread.currentThread().join()
+        return
+    }
     if (args.size != 1) {
-        System.err.println("Usage: closepilot-verifier <close-package.json>")
+        System.err.println("Usage: closepilot-verifier <close-package.json> | --server [port]")
         exitProcess(2)
     }
     try {
