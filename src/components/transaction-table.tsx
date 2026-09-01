@@ -244,6 +244,61 @@ export function TransactionTable({
             </tbody>
           </table>
         </div>
+        <div className="mobile-transaction-list" aria-label="거래 목록">
+          {visible.map((row) => (
+            <button
+              type="button"
+              key={row.key}
+              className={`mobile-transaction-card ${row.resolution ? "is-resolved" : ""}`}
+              aria-label={`${row.orderId} 거래 상세`}
+              onClick={() => onSelect(row)}
+            >
+              <span className="mobile-transaction-heading">
+                <span>
+                  <strong>{row.orderId}</strong>
+                  <small>{row.date.replaceAll("-", ".")}</small>
+                </span>
+                <span
+                  className={`status-badge ${row.resolution ? "reviewed" : row.kind === "matched" ? "matched" : row.kind === "timing" ? "timing" : "issue"}`}
+                >
+                  {row.resolution ? (
+                    <>
+                      <CheckCircle2 size={12} />
+                      검토 완료
+                    </>
+                  ) : (
+                    <>
+                      <i />
+                      {ISSUE_LABELS[row.kind]}
+                    </>
+                  )}
+                </span>
+              </span>
+              <span className="mobile-transaction-channel">
+                <ChannelBadge channel={row.channel} />
+                <ArrowRight size={16} aria-hidden="true" />
+              </span>
+              <span className="mobile-transaction-amounts">
+                <span>
+                  <small>예상</small>
+                  <b>{money(row.expectedNet)}</b>
+                </span>
+                <span>
+                  <small>자료상</small>
+                  <b>{money(row.actualNet)}</b>
+                </span>
+                <span
+                  className={
+                    row.delta ? (row.resolution ? "resolved-delta" : "negative") : "neutral"
+                  }
+                >
+                  <small>차이</small>
+                  <b>{deltaMoney(row.delta)}</b>
+                </span>
+              </span>
+            </button>
+          ))}
+        </div>
         {rows.length === 0 && (
           <div className="empty-state">
             <CheckCircle2 size={30} />

@@ -38,8 +38,19 @@ export function Modal({
       ref={ref}
       className={`modal ${wide ? "modal-wide" : ""} ${drawer ? "drawer" : ""} ${className}`}
       aria-labelledby={titleId}
-      onCancel={onClose}
-      onClose={onClose}
+      onCancel={(event) => {
+        event.preventDefault();
+        onClose();
+      }}
+      onClose={() => {
+        if (open) onClose();
+      }}
+      onKeyDown={(event) => {
+        if (event.key !== "Escape") return;
+        event.preventDefault();
+        event.stopPropagation();
+        onClose();
+      }}
       onClick={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}

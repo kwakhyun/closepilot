@@ -36,6 +36,12 @@ jobs:
       - run: npm ci
       - run: npm run format:check
       - run: npm run verify
+      - name: Enforce unit coverage thresholds
+        run: npm run test:coverage
+      - name: Install browser runtime
+        run: npx playwright install --with-deps chromium
+      - name: Run browser regression suite
+        run: npm run test:e2e
       - name: Rebuild deterministic evidence
         run: |
           npm run fixtures
@@ -54,6 +60,9 @@ jobs:
           name: web-verification
           path: |
             docs/evidence/api-smoke-ci.json
+            coverage/coverage-summary.json
+            playwright-report
+            test-results
             .data/local-close.json
             /tmp/closepilot-server.log
   kotlin:

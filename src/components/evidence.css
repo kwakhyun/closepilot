@@ -166,6 +166,10 @@
 .ai-draft-progress small {
   color: #718078;
 }
+.ai-draft-progress .text-button {
+  width: fit-content;
+  margin-top: 2px;
+}
 .ai-draft-error {
   margin-top: 10px;
 }

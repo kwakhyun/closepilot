@@ -22,6 +22,9 @@ export function CloseModal({
   busy: boolean;
 }) {
   const [confirmed, setConfirmed] = useState(false);
+  const [year, month] = workspace.profile.period.split("-");
+  const closePeriod =
+    year && month ? `${year}년 ${Number.parseInt(month, 10)}월` : workspace.profile.period;
   const checklist = [
     {
       title: "원본 자료 수집",
@@ -52,13 +55,15 @@ export function CloseModal({
     <Modal
       open={open}
       onClose={onClose}
-      title={workspace.close ? "8월 마감을 완료했습니다" : "마감 전 최종 확인"}
+      title={workspace.close ? `${closePeriod} 마감을 완료했습니다` : "마감 전 최종 확인"}
     >
       <div className="close-body">
         <div className="close-scroll">
           <div className={`close-hero ${workspace.close ? "closed" : ""}`}>
             <span>{workspace.close ? <ShieldCheck size={27} /> : <LockKeyhole size={26} />}</span>
-            <p>2026년 8월 · LUMIÈRE</p>
+            <p>
+              {closePeriod} · {workspace.profile.brandName}
+            </p>
             <h3>
               {workspace.close
                 ? "마감 결과와 검토 근거를 저장했습니다."
@@ -152,7 +157,7 @@ export function CloseModal({
                 }
               >
                 <LockKeyhole size={16} />
-                {busy ? "마감을 확정하는 중…" : "8월 마감 확정"}
+                {busy ? "마감을 확정하는 중…" : `${closePeriod} 마감 확정`}
               </button>
             </>
           )}

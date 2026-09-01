@@ -98,11 +98,12 @@ export async function createDatabase(
 
 const runtimeCache = globalThis as typeof globalThis & { closepilotDatabase?: Promise<Database> };
 export function getDatabase(): Promise<Database> {
-  runtimeCache.closepilotDatabase ??= createDatabase(process.env.DATABASE_URL || undefined).catch(
-    (error) => {
-      runtimeCache.closepilotDatabase = undefined;
-      throw error;
-    },
-  );
+  runtimeCache.closepilotDatabase ??= createDatabase(
+    process.env.DATABASE_URL || undefined,
+    process.env.PGLITE_PATH || ".data/closepilot",
+  ).catch((error) => {
+    runtimeCache.closepilotDatabase = undefined;
+    throw error;
+  });
   return runtimeCache.closepilotDatabase;
 }

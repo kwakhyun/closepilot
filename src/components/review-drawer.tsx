@@ -6,6 +6,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Circle,
+  CircleStop,
   FileText,
   LoaderCircle,
   Sparkles,
@@ -20,6 +21,13 @@ import { Modal } from "./modal";
 import { deltaMoney, money, timestamp } from "./format";
 import { unresolvedReviewQueue } from "./review-queue";
 import "./evidence.css";
+
+const DRAFT_STAGES = [
+  "원본 근거 묶음을 확인하고 있습니다",
+  "거래별 근거 ID를 검증하고 있습니다",
+  "검토 메모 초안을 작성하고 있습니다",
+  "응답을 기다리고 있습니다",
+] as const;
 
 export function ReviewDrawer({
   row,
@@ -48,7 +56,7 @@ export function ReviewDrawer({
   const [sessionExpired, setSessionExpired] = useState(false);
   const aiPanel = useRef<HTMLElement>(null);
   const aiAction = useRef<HTMLButtonElement>(null);
-  const draftStages = ["근거 묶음 확인 중", "거래별 근거 ID 검증 중", "검토 메모 정리 중"];
+  const draftRequest = useRef<AbortController | null>(null);
   const disposition =
     row?.kind === "timing"
       ? "carry_forward"
@@ -68,22 +76,42 @@ export function ReviewDrawer({
     if (!draftLoading) return;
     const evidenceTimer = setTimeout(() => setDraftStage(1), 1_800);
     const composeTimer = setTimeout(() => setDraftStage(2), 4_200);
+    const waitTimer = setTimeout(() => setDraftStage(3), 7_500);
     return () => {
       clearTimeout(evidenceTimer);
       clearTimeout(composeTimer);
+      clearTimeout(waitTimer);
     };
   }, [draftLoading]);
+  useEffect(
+    () => () => {
+      draftRequest.current?.abort();
+      draftRequest.current = null;
+    },
+    [],
+  );
+  function cancelDraft() {
+    draftRequest.current?.abort();
+    draftRequest.current = null;
+    setDraftLoading(false);
+    setDraftStage(0);
+    setDraftError("초안 생성을 취소했습니다. 필요하면 다시 시도할 수 있습니다.");
+  }
   async function createDraft() {
     if (!row || draftLoading) return;
+    const controller = new AbortController();
+    draftRequest.current = controller;
     setDraftLoading(true);
     setDraftStage(0);
     setDraftError("");
+    setDraft(null);
     setSessionExpired(false);
     try {
       const response = await fetch("/api/review-draft", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ rowKey: row.key, expectedVersion: workspace.version }),
+        signal: controller.signal,
       });
       const data = await response.json();
       if (response.status === 401) {
@@ -94,9 +122,13 @@ export function ReviewDrawer({
         throw new Error(data.error?.message || "검토 메모 초안을 만들지 못했습니다.");
       setDraft(data);
     } catch (error) {
+      if ((error as Error).name === "AbortError") return;
       setDraftError((error as Error).message);
     } finally {
-      setDraftLoading(false);
+      if (draftRequest.current === controller) {
+        draftRequest.current = null;
+        setDraftLoading(false);
+      }
     }
   }
   return (
@@ -316,14 +348,18 @@ export function ReviewDrawer({
                   {draftLoading && (
                     <div className="ai-draft-progress" role="status">
                       <span aria-hidden="true">
-                        {[0, 1, 2].map((step) => (
+                        {[0, 1, 2, 3].map((step) => (
                           <i key={step} className={step <= draftStage ? "is-active" : ""} />
                         ))}
                       </span>
-                      <strong>{draftStages[draftStage]}</strong>
+                      <strong>{DRAFT_STAGES[draftStage]}</strong>
                       <small>
-                        응답이 늦거나 실패하면 검증된 규칙 기반 초안으로 자동 전환합니다.
+                        최대 15초 동안 기다린 뒤 검증된 규칙 기반 초안으로 자동 전환합니다.
                       </small>
+                      <button type="button" className="text-button" onClick={cancelDraft}>
+                        <CircleStop size={14} />
+                        생성 취소
+                      </button>
                     </div>
                   )}
                   {draftError && (
@@ -336,6 +372,15 @@ export function ReviewDrawer({
                           onClick={() => void onSessionExpired()}
                         >
                           새 데모 시작
+                        </button>
+                      )}
+                      {!sessionExpired && (
+                        <button
+                          type="button"
+                          className="text-button"
+                          onClick={() => void createDraft()}
+                        >
+                          다시 시도
                         </button>
                       )}
                     </div>

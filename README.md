@@ -1,6 +1,6 @@
 # ClosePilot
 
-[![Verify portfolio](https://github.com/kwakhyun/closepilot/actions/workflows/verify.yml/badge.svg?branch=codex%2Fclosepilot)](https://github.com/kwakhyun/closepilot/actions/workflows/verify.yml)
+[![Verify portfolio](https://github.com/kwakhyun/closepilot/actions/workflows/verify.yml/badge.svg?branch=main)](https://github.com/kwakhyun/closepilot/actions/workflows/verify.yml)
 
 **주문·정산 대사부터 검토와 마감 증빙까지.**
 
@@ -10,7 +10,7 @@ K-브랜드 재무 담당자가 주문과 정산 자료의 차이를 확인하�
 
 ![ClosePilot 매출 마감 대시보드](docs/evidence/dashboard.jpg)
 
-> PortOne Commerce Ops Product Engineer 지원을 위해 기획·설계·구현·검증·배포한 개인 포트폴리오입니다. PortOne 공식 제품이나 제휴 서비스가 아닙니다. 브랜드·주문·수수료율은 모두 가상입니다. 고객 인터뷰나 도입 성과 측정은 진행하지 않았으며, 실제 결제·송금 기능은 제공하지 않습니다. 선택형 AI 검토 메모 초안은 **저장된 합성 근거만 읽으며 금액·승인·마감 권한이 없습니다.**
+> B2B 커머스 운영 Product Engineer 역할을 가정해 기획·설계·구현·검증·배포한 개인 포트폴리오입니다. 특정 기업의 공식 제품이나 제휴 서비스가 아닙니다. 브랜드·주문·수수료율은 모두 가상입니다. 고객 인터뷰나 도입 성과 측정은 진행하지 않았으며, 실제 결제·송금 기능은 제공하지 않습니다. 선택형 AI 검토 메모 초안은 **저장된 합성 근거만 읽으며 금액·승인·마감 권한이 없습니다.**
 
 ## 왜 이 문제인가
 
@@ -114,6 +114,8 @@ flowchart LR
 예외 8건은 정산 누락 2건, 수수료 차이 2건, 환불액 차이 1건, 중복 정산 1건, 입금 확인 필요 2건입니다. 입금 확인이 필요한 2건은 차액이 0원이지만, 정산 자료의 입금일이 비어 있거나 마감 기준일 이후입니다. 차액의 절댓값 합계는 순차액이나 실제 회수할 수 있는 금액을 뜻하지 않습니다.
 
 - TypeScript **95개 테스트**: 금액, CSV, 프로필별 샘플·비활성 채널 차단, 프로필 복제·열 연결 저장, 세션 옵션 호환성, 대사 우선순위, 도메인 상태, HTTP 보안·관측 헤더, AI 근거 제한, DB 트랜잭션·동시성·세션 격리.
+- Playwright **5개 브라우저 테스트**: 프로필 전환과 마감 화면 일치, Escape 닫기, AI 초안 적용·취소·승인 조건, 모바일 거래 카드 진입.
+- 핵심 모듈 커버리지 기준: statements 80%, branches 75%, functions 80%, lines 80% 이상을 CI에서 강제합니다.
 - Kotlin **9개 테스트**: 프로필 요율 대사 유스케이스, `/reconcile`·`/verify` HTTP 계약, 고정 패키지 재계산, 중복, 체크섬·계산값·감사 기록 변조 거부.
 - HTTP **20개 검증 단계**: 실제 서버에서 세션 생성부터 CSV 반영·예외 승인·마감·내보내기까지.
 - [GitHub Actions 실행 기록](https://github.com/kwakhyun/closepilot/actions): PostgreSQL 17 웹 검증과 JDK 21 Kotlin 검증을 커밋마다 다시 실행합니다.
@@ -133,6 +135,8 @@ npm run dev
 
 ```bash
 npm run verify                     # 레이어 검사, 타입, lint, 95개 테스트, 빌드
+npm run test:coverage              # 핵심 모듈 커버리지 기준 검증
+npm run test:e2e                   # 브라우저 회귀 테스트 5개
 npm run fixtures                   # 고정 데이터와 검증 패키지 재생성
 npm run smoke -- http://localhost:3000
 npm run benchmark -- http://localhost:3000
@@ -173,6 +177,6 @@ Docker 설정도 제공합니다: `docker compose up --build`. 이 환경에서�
 
 ## 참고 자료와 라이선스
 
-도메인과 통신 설계의 참고 자료: [PortOne V2 REST API](https://developers.portone.io/api/rest-v2), [PortOne 파트너 정산 서비스 가이드](https://help.portone.io/content/partner_settlement_service_guide), [PostgreSQL 행 잠금](https://www.postgresql.org/docs/17/explicit-locking.html), [Next.js Route Handlers](https://nextjs.org/docs/app/getting-started/route-handlers). 실제 서비스 정책을 복제하거나 공식 연동을 주장하지 않습니다.
+도메인과 통신 설계의 참고 자료: [PostgreSQL 행 잠금](https://www.postgresql.org/docs/17/explicit-locking.html), [Next.js Route Handlers](https://nextjs.org/docs/app/getting-started/route-handlers), [OpenAI Structured Outputs](https://platform.openai.com/docs/guides/structured-outputs). 실제 서비스 정책을 복제하거나 공식 연동을 주장하지 않습니다.
 
 코드: [MIT](LICENSE). Pretendard: [SIL Open Font License](public/fonts/OFL.txt). 채널명은 시나리오 설명을 위한 표시이며 로고·공식 에셋은 사용하지 않았습니다.

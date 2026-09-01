@@ -74,7 +74,7 @@ export default function Guide() {
             </a>
           </div>
           <div className="guide-disclaimer">
-            개인 포트폴리오 · PortOne 비공식 · 가상 브랜드와 거래 사용
+            개인 포트폴리오 · 가상 브랜드와 거래 사용 · 실제 결제 없음
           </div>
         </section>
         <section className="guide-numbers">
@@ -294,8 +294,12 @@ export default function Guide() {
         <footer className="guide-footer">
           <span>ClosePilot · by kwakhyun</span>
           <div>
-            <a href="https://developers.portone.io/api/rest-v2" target="_blank" rel="noreferrer">
-              PortOne 공개 API 문서
+            <a
+              href="https://www.postgresql.org/docs/17/explicit-locking.html"
+              target="_blank"
+              rel="noreferrer"
+            >
+              PostgreSQL 행 잠금 문서
               <ArrowUpRight size={11} />
             </a>
             <a href="https://github.com/kwakhyun/closepilot" target="_blank" rel="noreferrer">

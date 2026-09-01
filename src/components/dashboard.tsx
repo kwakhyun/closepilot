@@ -845,7 +845,7 @@ export function Dashboard() {
               ClosePilot<span className="footer-dot">·</span>근거를 남기는 매출 마감
             </span>
             <span>
-              개인 포트폴리오 · PortOne 비공식 · 실제 결제 없음
+              개인 포트폴리오 · 가상 시나리오 · 실제 결제 없음
               <Link href="/guide">
                 프로젝트 소개
                 <ArrowUpRight size={12} />
