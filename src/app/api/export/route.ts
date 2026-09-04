@@ -1,5 +1,5 @@
 import { workspaceView } from "@/application/workbench";
-import { csvCell } from "@/domain/csv";
+import { buildReconciliationCsv } from "@/application/export";
 import { DomainError } from "@/domain/model";
 import { observeRequest, repository, sessionHash } from "@/infrastructure/http";
 
@@ -33,44 +33,7 @@ export async function GET(request: Request) {
     }
     if (format !== "csv")
       throw new DomainError("INVALID_FORMAT", "csv 또는 json 형식을 사용하세요.", 400);
-    const rows = workspaceView(workspace).rows;
-    const columns = [
-      "order_id",
-      "channel",
-      "gross_krw",
-      "refund_krw",
-      "expected_fee_krw",
-      "actual_fee_krw",
-      "expected_net_krw",
-      "actual_net_krw",
-      "delta_krw",
-      "issue",
-      "review",
-      "note",
-      "evidence",
-      "rule_version",
-    ];
-    const body = [
-      columns,
-      ...rows.map((row) => [
-        row.orderId,
-        row.channel,
-        row.gross,
-        row.refund,
-        row.expectedFee,
-        row.actualFee,
-        row.expectedNet,
-        row.actualNet,
-        row.delta,
-        row.kind,
-        row.resolution?.disposition || "",
-        row.resolution?.note || "",
-        row.resolution?.evidence || "",
-        "krw-net-v1.0.0",
-      ]),
-    ]
-      .map((row) => row.map(csvCell).join(","))
-      .join("\r\n");
+    const body = buildReconciliationCsv(workspaceView(workspace));
     return new Response(`\uFEFF${body}`, {
       headers: {
         "Content-Type": "text/csv; charset=utf-8",

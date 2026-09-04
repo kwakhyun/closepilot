@@ -23,6 +23,15 @@ describe("session options", () => {
     });
   });
 
+  it("accepts only the explicit completed showcase mode", async () => {
+    const request = new Request("https://close.example/api/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ showcase: "completed" }),
+    });
+    await expect(readSessionOptions(request)).resolves.toEqual({ showcase: "completed" });
+  });
+
   it("rejects unknown profile options", async () => {
     const request = new Request("https://close.example/api/session", {
       method: "POST",

@@ -5,11 +5,7 @@ import { Check, Code2, Copy, GitBranch, Network, Save, Settings2, Target } from 
 import type { WorkspaceView } from "@/application/workbench";
 import { CHANNEL_LABELS } from "@/domain/model";
 import { timestamp } from "./format";
-
-export interface SessionSelection {
-  templateId: "lumiere-beauty-v1" | "morrow-food-v1";
-  brandName?: string;
-}
+import type { SessionSelection } from "./use-workspace-session";
 
 export function OnboardingPanel({
   workspace,

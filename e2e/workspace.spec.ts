@@ -95,3 +95,71 @@ test("모바일에서는 거래 핵심 정보가 카드로 보이고 상세 검�
   await firstCard.click();
   await expect(page.getByRole("dialog", { name: "거래 검토" })).toBeVisible();
 });
+
+test("주문·정산 자료 반영부터 재대사, 전건 검토, 마감 증빙 다운로드까지 완결한다", async ({
+  page,
+}) => {
+  test.setTimeout(90_000);
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "자료 가져오기" }).click();
+  let importDialog = page.getByRole("dialog", { name: "자료 가져오기" });
+  await importDialog.getByRole("button", { name: "샘플 주문 불러오기" }).click();
+  await expect(importDialog.locator(".validation-success")).toContainText("3행 검증 완료");
+  await importDialog.getByRole("button", { name: "자료 반영" }).click();
+  await expect(importDialog).toBeHidden();
+
+  await page.getByRole("button", { name: "자료 가져오기" }).click();
+  importDialog = page.getByRole("dialog", { name: "자료 가져오기" });
+  await importDialog.getByLabel(/채널 정산 자료/).check();
+  await importDialog.getByRole("button", { name: "샘플 정산 불러오기" }).click();
+  await expect(importDialog.locator(".validation-success")).toContainText("3행 검증 완료");
+  await importDialog.getByRole("button", { name: "자료 반영" }).click();
+  await expect(importDialog).toBeHidden();
+
+  await page.getByRole("button", { name: "대사 실행" }).click();
+  await expect(
+    page.getByText("대사를 완료했습니다. 최신 자료로 결과를 갱신했습니다."),
+  ).toBeVisible();
+  await page.getByRole("button", { name: /거래 대사/ }).click();
+  await page.locator(".row-arrow").first().click();
+
+  for (let reviewed = 1; reviewed <= 8; reviewed++) {
+    const drawer = page.getByRole("dialog", { name: "거래 검토" });
+    await drawer.getByRole("button", { name: "검토 예시 불러오기" }).click();
+    await drawer.getByRole("checkbox", { name: /원본 자료와 검토 사유/ }).check();
+    const submit = drawer.locator(".review-submit-actions .primary");
+    await expect(submit).toBeEnabled();
+    await submit.click();
+    if (reviewed < 8) {
+      await expect(drawer.getByRole("textbox", { name: /검토 사유/ })).toHaveValue("");
+    } else {
+      await expect(drawer.getByText(/검토 승인 완료/)).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(drawer).toBeHidden();
+    }
+  }
+
+  await page.getByRole("button", { name: "마감 점검" }).first().click();
+  let closeDialog = page.getByRole("dialog", { name: "마감 전 최종 확인" });
+  await closeDialog.getByRole("checkbox", { name: /검토 사유와 남아 있는 금액 차이/ }).check();
+  await closeDialog.getByRole("button", { name: "2026년 8월 마감 확정" }).click();
+  closeDialog = page.getByRole("dialog", { name: "2026년 8월 마감을 완료했습니다" });
+  await expect(closeDialog).toBeVisible();
+
+  const downloadPromise = page.waitForEvent("download");
+  await closeDialog.getByRole("link", { name: "마감 증빙 다운로드 (JSON)" }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toMatch(/^closepilot-2026-08-close\.json$/);
+  await expect(page.getByRole("button", { name: "자료 가져오기" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "대사 실행" })).toBeDisabled();
+});
+
+test("완료된 합성 예시는 명확히 표시되고 처음부터 읽기 전용이다", async ({ page }) => {
+  await page.goto("/?showcase=completed");
+  await expect(page.getByText("미리 완료된 합성 마감 예시입니다.")).toBeVisible();
+  await expect(page.getByText("마감 완료")).toBeVisible();
+  await expect(page.getByRole("button", { name: "자료 가져오기" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "대사 실행" })).toBeDisabled();
+  await expect(page.getByRole("link", { name: "마감 증빙 내려받기" })).toBeVisible();
+});

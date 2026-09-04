@@ -1,7 +1,7 @@
 import { openai } from "@ai-sdk/openai";
 import { isStepCount, Output, tool, ToolLoopAgent } from "ai";
 import { z } from "zod";
-import type { ReviewEvidencePacket } from "@/application/review-draft";
+import { reviewDraftGrounding, type ReviewEvidencePacket } from "@/application/review-draft";
 import {
   reviewDraftContentSchema,
   validateGroundedDraft,
@@ -32,7 +32,7 @@ export async function generateGroundedReviewDraft(
 - 첫 단계에서 반드시 readEvidence 도구로 저장된 합성 근거를 읽습니다.
 - 도구가 돌려준 값만 사용하고 추측하거나 외부 지식을 추가하지 않습니다.
 - citations에는 allowedCitationIds에 실제로 있는 ID만 그대로 적습니다.
-- evidenceReference에는 citations 중 하나 이상을 그대로 포함합니다.
+- evidenceReference에는 citations의 모든 값을 그대로 포함합니다. 서버가 적용 전에 허용된 citations만으로 이 필드를 다시 구성합니다.
 - 원본 금액 변경, 검토 승인, 마감 확정, 전표 생성, 송금 실행을 수행하거나 완료했다고 말하지 않습니다.
 - 최종 판단은 사용자가 원본 자료를 확인한 뒤 내립니다.
 - 간결하고 자연스러운 한국어로 씁니다.`,
@@ -58,7 +58,7 @@ export async function generateGroundedReviewDraft(
     abortSignal: AbortSignal.timeout(15_000),
   });
   return {
-    draft: validateGroundedDraft(result.output, packet.allowedCitationIds),
+    draft: validateGroundedDraft(result.output, reviewDraftGrounding(packet)),
     model,
     totalTokens: result.usage.totalTokens,
   };

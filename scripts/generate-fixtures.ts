@@ -2,10 +2,55 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { seedWorkspace } from "../src/domain/seed";
 import { applyCommand, reviewedRows, workspaceView } from "../src/application/workbench";
 import { SCHEMA, JSONB_GUARDS } from "../src/infrastructure/schema";
+import { RULE_VERSION } from "../src/domain/model";
+import { reconcile } from "../src/domain/reconcile";
 
 const at = "2026-08-31T09:00:00.000Z";
 let workspace = seedWorkspace(at);
 const baseline = workspaceView(workspace).summary;
+const contractSeed = seedWorkspace(at);
+const contractKinds = ["matched", "missing", "duplicate", "refund", "fee", "timing"] as const;
+const contractKeys = new Set(
+  contractKinds.map((kind) => reviewedRows(contractSeed).find((row) => row.kind === kind)!.key),
+);
+const contractOrders = contractSeed.orders.filter((order) =>
+  contractKeys.has(`${order.channel}:${order.id}`),
+);
+const contractSettlements = contractSeed.settlements.filter((settlement) =>
+  contractKeys.has(`${settlement.channel}:${settlement.orderId}`),
+);
+const contractFeeBps = contractSeed.profile!.policy.feeBps;
+const contractRows = reconcile(
+  contractOrders,
+  contractSettlements,
+  contractSeed.asOf,
+  contractFeeBps,
+);
+const contractRequest = {
+  ruleVersion: RULE_VERSION,
+  asOf: contractSeed.asOf,
+  feeBps: contractFeeBps,
+  orders: contractOrders,
+  settlements: contractSettlements,
+};
+const contractExpectedRows = contractRows.map((row) => {
+  const { explanation, ...expectedRow } = row;
+  void explanation;
+  return expectedRow;
+});
+const contractExpected = {
+  ruleVersion: RULE_VERSION,
+  engine: "kotlin-jvm",
+  rows: contractExpectedRows,
+  summary: {
+    total: contractRows.length,
+    matched: contractRows.filter((row) => row.kind === "matched").length,
+    issues: contractRows.filter((row) => row.kind !== "matched").length,
+    expectedNet: contractRows.reduce((sum, row) => sum + row.expectedNet, 0),
+    actualNet: contractRows.reduce((sum, row) => sum + row.actualNet, 0),
+    delta: contractRows.reduce((sum, row) => sum + row.delta, 0),
+  },
+};
 for (const row of reviewedRows(workspace).filter((row) => row.kind !== "matched")) {
   workspace = applyCommand(
     workspace,
@@ -43,7 +88,19 @@ writeFileSync(
 writeFileSync(
   "fixtures/baseline.json",
   JSON.stringify(
-    { ruleVersion: "krw-net-v1.0.0", dataset: "lumiere-2026-08-synthetic", summary: baseline },
+    { ruleVersion: RULE_VERSION, dataset: "lumiere-2026-08-synthetic", summary: baseline },
+    null,
+    2,
+  ) + "\n",
+);
+writeFileSync(
+  "fixtures/reconciliation-contract.json",
+  JSON.stringify(
+    {
+      generatedBy: "TypeScript reconciliation domain",
+      request: contractRequest,
+      expected: contractExpected,
+    },
     null,
     2,
   ) + "\n",

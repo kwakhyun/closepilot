@@ -1,0 +1,286 @@
+{
+  "generatedBy": "TypeScript reconciliation domain",
+  "request": {
+    "ruleVersion": "krw-net-v1.1.0",
+    "asOf": "2026-08-31",
+    "feeBps": {
+      "d2c": 330,
+      "naver": 385,
+      "coupang": 880
+    },
+    "orders": [
+      {
+        "id": "LM-2608003",
+        "channel": "coupang",
+        "date": "2026-08-01",
+        "gross": 93000,
+        "refund": 0,
+        "sourceId": "SRC-ORD-01"
+      },
+      {
+        "id": "LM-2608022",
+        "channel": "d2c",
+        "date": "2026-08-05",
+        "gross": 85000,
+        "refund": 0,
+        "sourceId": "SRC-ORD-01"
+      },
+      {
+        "id": "LM-2608034",
+        "channel": "d2c",
+        "date": "2026-08-08",
+        "gross": 95000,
+        "refund": 15000,
+        "sourceId": "SRC-ORD-01"
+      },
+      {
+        "id": "LM-2608045",
+        "channel": "coupang",
+        "date": "2026-08-11",
+        "gross": 201000,
+        "refund": 0,
+        "sourceId": "SRC-ORD-01"
+      },
+      {
+        "id": "LM-2608063",
+        "channel": "coupang",
+        "date": "2026-08-15",
+        "gross": 123000,
+        "refund": 0,
+        "sourceId": "SRC-ORD-01"
+      },
+      {
+        "id": "LM-2608127",
+        "channel": "d2c",
+        "date": "2026-08-30",
+        "gross": 91000,
+        "refund": 0,
+        "sourceId": "SRC-ORD-01"
+      }
+    ],
+    "settlements": [
+      {
+        "id": "ST-2608003",
+        "orderId": "LM-2608003",
+        "channel": "coupang",
+        "gross": 93000,
+        "refund": 0,
+        "fee": 8184,
+        "net": 84816,
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31",
+        "sourceId": "SRC-SET-COUPANG"
+      },
+      {
+        "id": "ST-2608022",
+        "orderId": "LM-2608022",
+        "channel": "d2c",
+        "gross": 85000,
+        "refund": 0,
+        "fee": 5205,
+        "net": 79795,
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31",
+        "sourceId": "SRC-SET-D2C"
+      },
+      {
+        "id": "ST-2608034",
+        "orderId": "LM-2608034",
+        "channel": "d2c",
+        "gross": 95000,
+        "refund": 0,
+        "fee": 3135,
+        "net": 91865,
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31",
+        "sourceId": "SRC-SET-D2C"
+      },
+      {
+        "id": "ST-2608045",
+        "orderId": "LM-2608045",
+        "channel": "coupang",
+        "gross": 201000,
+        "refund": 0,
+        "fee": 17688,
+        "net": 183312,
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31",
+        "sourceId": "SRC-SET-COUPANG"
+      },
+      {
+        "id": "ST-2608045",
+        "orderId": "LM-2608045",
+        "channel": "coupang",
+        "gross": 201000,
+        "refund": 0,
+        "fee": 17688,
+        "net": 183312,
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31",
+        "sourceId": "SRC-SET-COUPANG"
+      },
+      {
+        "id": "ST-2608127",
+        "orderId": "LM-2608127",
+        "channel": "d2c",
+        "gross": 91000,
+        "refund": 0,
+        "fee": 3003,
+        "net": 87997,
+        "dueDate": "2026-09-02",
+        "paidDate": null,
+        "sourceId": "SRC-SET-D2C"
+      }
+    ]
+  },
+  "expected": {
+    "ruleVersion": "krw-net-v1.1.0",
+    "engine": "kotlin-jvm",
+    "rows": [
+      {
+        "key": "coupang:LM-2608045",
+        "orderId": "LM-2608045",
+        "channel": "coupang",
+        "date": "2026-08-11",
+        "gross": 201000,
+        "refund": 0,
+        "expectedFee": 17688,
+        "actualFee": 35376,
+        "expectedNet": 183312,
+        "actualNet": 366624,
+        "delta": 183312,
+        "kind": "duplicate",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608045",
+          "ST-2608045"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "coupang:LM-2608063",
+        "orderId": "LM-2608063",
+        "channel": "coupang",
+        "date": "2026-08-15",
+        "gross": 123000,
+        "refund": 0,
+        "expectedFee": 10824,
+        "actualFee": 0,
+        "expectedNet": 112176,
+        "actualNet": 0,
+        "delta": -112176,
+        "kind": "missing",
+        "sources": [
+          "SRC-ORD-01"
+        ],
+        "settlementIds": [],
+        "dueDate": null,
+        "paidDate": null
+      },
+      {
+        "key": "d2c:LM-2608034",
+        "orderId": "LM-2608034",
+        "channel": "d2c",
+        "date": "2026-08-08",
+        "gross": 95000,
+        "refund": 15000,
+        "expectedFee": 2640,
+        "actualFee": 3135,
+        "expectedNet": 77360,
+        "actualNet": 91865,
+        "delta": 14505,
+        "kind": "refund",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608034"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608022",
+        "orderId": "LM-2608022",
+        "channel": "d2c",
+        "date": "2026-08-05",
+        "gross": 85000,
+        "refund": 0,
+        "expectedFee": 2805,
+        "actualFee": 5205,
+        "expectedNet": 82195,
+        "actualNet": 79795,
+        "delta": -2400,
+        "kind": "fee",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608022"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608127",
+        "orderId": "LM-2608127",
+        "channel": "d2c",
+        "date": "2026-08-30",
+        "gross": 91000,
+        "refund": 0,
+        "expectedFee": 3003,
+        "actualFee": 3003,
+        "expectedNet": 87997,
+        "actualNet": 87997,
+        "delta": 0,
+        "kind": "timing",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608127"
+        ],
+        "dueDate": "2026-09-02",
+        "paidDate": null
+      },
+      {
+        "key": "coupang:LM-2608003",
+        "orderId": "LM-2608003",
+        "channel": "coupang",
+        "date": "2026-08-01",
+        "gross": 93000,
+        "refund": 0,
+        "expectedFee": 8184,
+        "actualFee": 8184,
+        "expectedNet": 84816,
+        "actualNet": 84816,
+        "delta": 0,
+        "kind": "matched",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-COUPANG"
+        ],
+        "settlementIds": [
+          "ST-2608003"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      }
+    ],
+    "summary": {
+      "total": 6,
+      "matched": 1,
+      "issues": 5,
+      "expectedNet": 627856,
+      "actualNet": 711097,
+      "delta": 83241
+    }
+  }
+}

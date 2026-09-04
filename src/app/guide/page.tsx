@@ -59,9 +59,13 @@ export default function Guide() {
             <br className="desktop-break" /> 커머스 매출 마감 도구입니다.
           </p>
           <div className="guide-hero-actions">
-            <Link href="/" className="button primary">
-              3분 데모 시작
+            <Link href="/?view=transactions" className="button primary">
+              90초 핵심 데모
               <ArrowRight size={16} />
+            </Link>
+            <Link href="/?showcase=completed" className="button secondary">
+              완료된 결과 보기
+              <ArrowRight size={15} />
             </Link>
             <a
               href="https://github.com/kwakhyun/closepilot#readme"
@@ -168,30 +172,31 @@ export default function Guide() {
                 </div>
               ))}
             </div>
+            <p>
+              처음 보는 검토자는 아래 세 단계만 따라가도 핵심 설계와 완료 결과를 확인할 수 있습니다.
+              자료 반영부터 마감까지 직접 실행하는 전체 흐름은 별도 시연 문서에 남겼습니다.
+            </p>
             <ol className="guide-instructions">
               <li>
-                <b>온보딩 설계에서 브랜드 설정을 비교하세요.</b> 채널·요율·열 연결·검토 규칙이
-                프로필 버전에 어떻게 고정되는지 확인하고, 다른 가상 브랜드로 새 데모를 시작하거나
-                현재 설정을 복제할 수 있습니다.
+                <b>확인할 거래에서 `LM-2608045`를 여세요.</b> 중복된 정산 두 행과 원본 금액을
+                비교하고, 자동 계산 결과를 승인으로 덮어쓰지 않는지 확인합니다.
               </li>
               <li>
-                <b>검토할 거래를 선택하세요.</b> 정산 누락, 중복, 환불액·수수료 차이, 입금 확인이
-                필요한 거래를 원본 자료와 비교합니다.
+                <b>검토 예시를 불러와 한 건만 기록하세요.</b> 사유와 증빙 참조, 사용자 확인이 모두
+                있어야 승인되며 다음 미검토 거래로 이어집니다.
               </li>
               <li>
-                <b>거래 상세에서 검토 근거를 남기세요.</b> ‘검토 예시 불러오기’로 입력을 연습할 수
-                있습니다. 원본 자료를 확인한 뒤 체크하고 ‘기록하고 다음 거래 보기’를 누르면 다음
-                미검토 거래로 이어집니다.
-              </li>
-              <li>
-                <b>CSV 자료를 추가해 보세요.</b> ‘자료 가져오기’에서 주문·정산 샘플을 각각 반영한 뒤
-                대사를 다시 실행합니다.
-              </li>
-              <li>
-                <b>모든 예외 거래를 검토한 뒤 마감을 확정하세요.</b> 원본 입력, 검토 근거, 감사
-                기록과 체크섬이 담긴 마감 증빙 파일(JSON)을 내려받을 수 있습니다.
+                <b>완료된 결과 보기로 이동하세요.</b> 미리 완료된 합성 예시에서 읽기 전용 상태, 검토
+                기록, 감사 이력과 마감 증빙 JSON을 확인합니다.
               </li>
             </ol>
+            <p>
+              <Link href="/?showcase=completed">완료된 합성 예시 열기</Link>
+              {" · "}
+              <a href="https://github.com/kwakhyun/closepilot/blob/main/docs/demo-script.md">
+                전체 시연 순서 보기
+              </a>
+            </p>
           </div>
         </section>
         <section className="guide-section">

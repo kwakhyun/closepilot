@@ -1,7 +1,7 @@
 import { DomainError, type Workspace } from "@/domain/model";
-import { seedWorkspace, type SeedOptions } from "@/domain/seed";
 import { digest } from "@/domain/canonical";
 import { applyCommand, type Command } from "@/application/workbench";
+import { createDemoWorkspace, type DemoSessionOptions } from "@/application/showcase";
 import type { Database, DbSession } from "./database";
 
 const TTL_MS = 6 * 60 * 60 * 1000;
@@ -42,9 +42,9 @@ export class WorkspaceRepository {
     session: string,
     clientBucket: string,
     now = new Date(),
-    seedOptions: SeedOptions = {},
+    seedOptions: DemoSessionOptions = {},
   ): Promise<Workspace> {
-    const workspace = seedWorkspace(now.toISOString(), seedOptions);
+    const workspace = createDemoWorkspace(now.toISOString(), seedOptions);
     return this.database.transaction(async (transaction) => {
       await transaction.query("DELETE FROM closepilot_workspaces WHERE expires_at < $1", [
         now.toISOString(),

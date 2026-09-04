@@ -50,6 +50,11 @@ paths:
               properties:
                 templateId: { enum: [lumiere-beauty-v1, morrow-food-v1] }
                 brandName: { type: string, minLength: 2, maxLength: 40 }
+                showcase:
+                  {
+                    const: completed,
+                    description: "미리 검토와 마감을 완료한 읽기 전용 합성 예시를 생성합니다.",
+                  }
       responses:
         "201":
           description: 가상 자료를 포함한 작업 공간과 HttpOnly·SameSite=Lax 쿠키를 생성합니다. 공개 배포에서는 Secure도 적용합니다.
@@ -380,6 +385,11 @@ components:
         auditValid: { type: boolean }
         ruleVersion: { const: krw-net-v1.1.0 }
         sandbox: { const: true }
+        demoMode:
+          {
+            enum: [fresh, completed-showcase],
+            description: "completed-showcase는 실제 고객 승인이나 결제가 아닌 미리 완료한 합성 예시입니다.",
+          }
         profile:
           {
             type: object,

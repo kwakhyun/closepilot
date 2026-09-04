@@ -9,6 +9,7 @@ verifier/.gradle
 verifier/build
 fixtures/closed-package.json
 fixtures/baseline.json
+fixtures/reconciliation-contract.json
 migrations/001_initial.sql
 migrations/002_jsonb_guards.sql
 public/fonts

@@ -1,6 +1,6 @@
 import { DomainError, ISSUE_LABELS, type Workspace } from "@/domain/model";
 import { describeReconciliation } from "@/domain/review-copy";
-import type { ReviewDraftContent } from "@/domain/review-draft";
+import type { ReviewDraftContent, ReviewDraftGrounding } from "@/domain/review-draft";
 import { reviewedRows } from "./workbench";
 
 export interface ReviewEvidencePacket {
@@ -21,7 +21,7 @@ export interface ReviewEvidencePacket {
     delta: number;
   };
   dates: { orderDate: string; dueDate: string | null; paidDate: string | null };
-  sourceFiles: Array<{ id: string; name: string; kind: string; digest: string }>;
+  sourceFiles: Array<{ id: string; kind: string; digest: string }>;
   sourceRows: Array<{
     id: string;
     sourceId: string;
@@ -43,7 +43,8 @@ export function buildReviewEvidence(workspace: Workspace, rowKey: string): Revie
     );
   const sourceFiles = workspace.sources
     .filter((source) => row.sources.includes(source.id))
-    .map(({ id, name, kind, digest }) => ({ id, name, kind, digest }));
+    // File names are user-controlled display text and are not needed by the model.
+    .map(({ id, kind, digest }) => ({ id, kind, digest }));
   const sourceRows = workspace.settlements
     .filter((entry) => entry.channel === row.channel && entry.orderId === row.orderId)
     .map(({ id, sourceId, net, fee, dueDate, paidDate }) => ({
@@ -76,6 +77,22 @@ export function buildReviewEvidence(workspace: Workspace, rowKey: string): Revie
     sourceFiles,
     sourceRows,
     allowedCitationIds,
+  };
+}
+
+export function reviewDraftGrounding(packet: ReviewEvidencePacket): ReviewDraftGrounding {
+  return {
+    allowedCitationIds: packet.allowedCitationIds,
+    allowedAmounts: [
+      ...Object.values(packet.amounts),
+      ...packet.sourceRows.flatMap((row) => [row.net, row.fee]),
+    ],
+    allowedDates: [
+      packet.dates.orderDate,
+      packet.dates.dueDate,
+      packet.dates.paidDate,
+      ...packet.sourceRows.flatMap((row) => [row.dueDate, row.paidDate]),
+    ].filter((value): value is string => !!value),
   };
 }
 

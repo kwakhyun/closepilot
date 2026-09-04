@@ -17,7 +17,7 @@
     "check:architecture": "node scripts/check-architecture.mjs",
     "smoke": "node scripts/smoke-api.mjs",
     "benchmark": "node scripts/benchmark-api.mjs",
-    "eval:review-drafts": "node scripts/evaluate-review-drafts.mjs",
+    "eval:review-drafts": "tsx scripts/evaluate-review-drafts.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "verify": "npm run check:architecture && npm run typecheck && npm run lint && npm test && npm run build"

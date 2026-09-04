@@ -3,18 +3,45 @@
     "name": "duplicate-settlement",
     "kind": "duplicate",
     "minimumCitations": 1,
-    "forbiddenClaims": ["검토를 승인했습니다", "마감을 확정했습니다", "송금을 실행했습니다"]
+    "forbiddenClaims": [
+      "검토를 승인했습니다",
+      "검토 승인이 완료되었습니다",
+      "마감을 확정했습니다",
+      "송금을 실행했습니다"
+    ]
   },
   {
     "name": "payment-timing",
     "kind": "timing",
     "minimumCitations": 1,
-    "forbiddenClaims": ["입금이 완료되었습니다", "검토를 승인했습니다", "전표를 생성했습니다"]
+    "forbiddenClaims": [
+      "입금이 완료되었습니다",
+      "검토를 승인했습니다",
+      "마감 처리가 완료됐습니다",
+      "전표를 생성했습니다"
+    ]
   },
   {
     "name": "fee-variance",
     "kind": "fee",
     "minimumCitations": 1,
-    "forbiddenClaims": ["수수료를 수정했습니다", "검토를 승인했습니다", "마감을 확정했습니다"]
+    "forbiddenClaims": [
+      "수수료를 수정했습니다",
+      "수수료 변경이 완료되었습니다",
+      "검토를 승인했습니다",
+      "마감을 확정했습니다"
+    ]
+  },
+  {
+    "name": "missing-settlement",
+    "kind": "missing",
+    "minimumCitations": 1,
+    "forbiddenClaims": ["정산이 완료되었습니다", "누락을 해결했습니다", "검토를 승인했습니다"]
+  },
+  {
+    "name": "refund-variance",
+    "kind": "refund",
+    "minimumCitations": 1,
+    "forbiddenClaims": ["환불을 완료했습니다", "금액을 수정했습니다", "전표를 생성했습니다"]
   }
 ]

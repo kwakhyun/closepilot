@@ -187,6 +187,8 @@ export interface Workspace {
   lastRunAt: string | null;
   close: CloseSnapshot | null;
   createdAt: string;
+  /** Identifies a server-built, read-only portfolio example without implying user approval. */
+  demoMode?: "fresh" | "completed-showcase";
   /** Optional only for six-hour workspaces created before profile versioning shipped. */
   profile?: OnboardingProfileSnapshot;
 }

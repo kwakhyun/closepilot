@@ -2,128 +2,94 @@
 
 [![Verify portfolio](https://github.com/kwakhyun/closepilot/actions/workflows/verify.yml/badge.svg?branch=main)](https://github.com/kwakhyun/closepilot/actions/workflows/verify.yml)
 
-**주문·정산 대사부터 검토와 마감 증빙까지.**
+주문과 채널 정산 자료를 대조하고, 예외 거래의 검토 근거와 확정한 마감 결과를 남기는 커머스 매출 마감 도구입니다.
 
-K-브랜드 재무 담당자가 주문과 정산 자료의 차이를 확인하고, 검토 근거를 남기고, 확정한 결과를 다시 검증할 수 있도록 만든 매출 마감 도구입니다. **대사**는 주문 자료와 정산 자료를 대조해 일치 여부를 확인하는 작업을 뜻합니다.
-
-[공개 데모](https://closepilot-delta.vercel.app) · [제품 가이드](https://closepilot-delta.vercel.app/guide) · [설계 기록](docs/architecture.md) · [검증 근거](docs/verification.md)
+[공개 데모](https://closepilot-delta.vercel.app) · [완료된 합성 예시](https://closepilot-delta.vercel.app/?showcase=completed) · [제품 가이드](https://closepilot-delta.vercel.app/guide) · [설계 기록](docs/architecture.md) · [검증 근거](docs/verification.md)
 
 ![ClosePilot 매출 마감 대시보드](docs/evidence/dashboard.jpg)
 
-> B2B 커머스 운영 Product Engineer 역할을 가정해 기획·설계·구현·검증·배포한 개인 포트폴리오입니다. 특정 기업의 공식 제품이나 제휴 서비스가 아닙니다. 브랜드·주문·수수료율은 모두 가상입니다. 고객 인터뷰나 도입 성과 측정은 진행하지 않았으며, 실제 결제·송금 기능은 제공하지 않습니다. 선택형 AI 검토 메모 초안은 **저장된 합성 근거만 읽으며 금액·승인·마감 권한이 없습니다.**
+> B2B 커머스 운영 Product Engineer 역할을 가정해 만든 개인 포트폴리오입니다. 브랜드, 거래, 수수료율은 모두 합성이며 고객 인터뷰나 도입 성과 측정은 진행하지 않았습니다. 실제 결제, 송금, 회계 전표 생성 기능은 없습니다. AI는 저장된 합성 근거로 검토 메모 초안만 만들며 금액, 승인, 마감 권한이 없습니다.
 
-## 왜 이 문제인가
+## 90초 검토 경로
 
-월 마감에서 합계를 맞추는 것만큼 **“왜 금액이 다르고, 어떤 근거로 검토했는지”를 설명하는 일**이 중요하다고 가정했습니다. 채널마다 다른 CSV를 가져와 부분 환불, 수수료 차이, 중복 정산, 입금 확인이 필요한 거래를 한 화면에서 검토하는 범위로 문제를 좁혔습니다.
+1. [거래 대사 화면](https://closepilot-delta.vercel.app/?view=transactions)에서 `LM-2608045`를 열고 중복된 정산 두 행, 예상 정산액, 자료상 정산액을 비교합니다.
+2. **검토 예시 불러오기**를 누르고 원본 확인란을 체크한 뒤 기록합니다. 원본 금액과 자동 일치 결과는 유지되고 사유와 증빙 참조만 저장됩니다.
+3. [완료된 합성 예시](https://closepilot-delta.vercel.app/?showcase=completed)에서 읽기 전용 상태, 감사 기록과 마감 증빙 JSON을 확인합니다.
 
-가상의 K-Beauty 브랜드 **LUMIÈRE**와 K-Food 브랜드 **MORROW FOODS**를 설정하고 서로 다른 채널·수수료·열 연결 조건의 주문·정산 샘플을 만들었습니다. 실제 채널의 내보내기 형식을 그대로 재현한 자료는 아닙니다. 고객에게 확인할 질문, 설정에 반영한 가상 진단 결과, 도입 시 점검할 항목은 제품의 **온보딩 설계** 화면과 [제품 기획서](docs/product-brief.md)에 정리했습니다.
+자료 반영부터 전건 검토, 마감까지 직접 실행하려면 [전체 시연 순서](docs/demo-script.md)를 참고하세요. 방문자별 데모 세션은 6시간 동안 접근할 수 있습니다. 실제 거래 자료나 개인정보는 업로드하지 마세요.
 
-| 지원 직무의 기대               | 이 프로젝트에서 확인할 수 있는 작업                                         |
-| ------------------------------ | --------------------------------------------------------------------------- |
-| 모호한 운영 문제 정의          | 가설, 인터뷰 질문, 입력 규칙, 완료 기준, 남은 위험 정리                     |
-| 온보딩부터 구현·배포까지 수행  | CSV 열 연결·미리보기 → 일괄 반영 → 대사 → 검토 → 마감 → Vercel 배포         |
-| 타입으로 도메인 복잡도 통제    | TypeScript 경계 검증, 정수 KRW 연산, Kotlin 값 클래스·sealed 결과 타입      |
-| 재사용 가능한 기능과 개발 자산 | 버전형 온보딩 프로필, 열 연결 저장·복제, Kotlin 대사 REST, 고정 검증 데이터 |
-| 운영을 고려한 설계             | 중복 요청·동시 수정 방지, DB 잠금, 감사 기록, 오류 추적, 운영 가이드        |
-| AI를 개발·제품 과정에 통합     | Codex 기반 개발 파이프라인과 읽기 전용 근거 도구·구조화 출력·평가 데이터셋  |
+## 문제 가설과 직무 연관성
 
-## 3분 체험
+월 마감에서는 합계를 맞추는 것뿐 아니라 “왜 금액이 다르고, 어떤 근거로 검토했는가”를 설명해야 한다고 가정했습니다. 채널마다 다른 CSV를 표준화하고 부분 환불, 수수료 차이, 중복 정산, 입금 시점 차이를 검토하는 범위로 문제를 좁혔습니다.
 
-1. 대시보드에서 **128건 중 일치 120건, 확인 필요 8건**을 확인하고 **확인할 거래 보기**를 누릅니다.
-2. **온보딩 설계**에서 LUMIÈRE와 MORROW FOODS의 채널·요율·열 연결을 비교합니다. 다른 프로필로 새 데모를 시작하거나 현재 설정을 새 가상 브랜드로 복제할 수 있습니다.
-3. 우선순위가 가장 높은 `LM-2608045` 중복 정산 거래를 엽니다. 연결된 정산 내역 두 행을 펼쳐 예상 정산액과 자료상 정산액을 비교합니다.
-4. 필요하면 상단의 **AI 초안 사용 가능** 버튼으로 이동해 검토 메모 초안을 만듭니다. 근거 ID와 확인 항목을 검토한 뒤 사유·증빙 참조에 적용합니다. 직접 입력하거나 **검토 예시 불러오기**를 사용해도 됩니다. **기록하고 다음 거래 보기**를 선택하면 미검토 건수가 줄고 다음 거래가 바로 열리지만, 원본 금액과 자동 일치율은 변하지 않습니다.
-5. **자료 가져오기**에서 현재 프로필의 열 이름·사용 채널·가상 요율로 만든 주문·정산 샘플을 미리 봅니다. 저장된 열 연결을 적용하거나 새 연결을 프로필에 저장한 뒤 **자료 반영**을 누릅니다. 프로필에서 사용하지 않는 채널은 반영하지 않으며, 새 자료를 반영하면 대사를 다시 실행해야 검토를 승인할 수 있습니다.
-6. 나머지 예외 거래를 검토한 뒤 **마감 점검 → 8월 마감 확정**을 실행합니다. 마감 증빙 파일(JSON)을 내려받아 Kotlin 서비스로 다시 계산할 수 있습니다.
+| FDE/Product Engineer에게 필요한 역량 | 저장소에서 확인할 수 있는 근거                                              |
+| ------------------------------------ | --------------------------------------------------------------------------- |
+| 모호한 운영 문제를 구현 범위로 전환  | 문제 가설, 확인 질문, 입력 규칙, 완료 기준, 실제 도입 전 확인할 위험        |
+| 온보딩부터 배포까지 완결             | 버전형 고객 프로필, CSV 열 연결, 대사, 검토, 마감, 공개 데모                |
+| 도메인 복잡도를 타입과 규칙으로 통제 | 정수 KRW, BigInt 중간 계산, Kotlin 값 객체와 sealed 결과, 상태 불변식       |
+| 고객별 요구를 재사용 자산으로 전환   | 프로필 복제, 채널별 요율, 열 연결 저장, TypeScript/Kotlin 공통 계약 fixture |
+| 운영과 실패를 고려한 설계            | 행 잠금, 버전 검사, 멱등 요청, 감사 기록, 마감 후 변경 차단, 운영 문서      |
+| AI를 제한된 제품 흐름에 적용         | 읽기 전용 근거 패킷, 구조화 출력, 인용·금액·날짜·권한 검증, 결정적 fallback |
 
-방문자마다 6시간 동안 이용할 수 있는 별도의 데모 세션이 생성됩니다. 실제 거래 자료나 개인정보를 올리지 마세요. [자세한 시연 순서](docs/demo-script.md)
+실제 고객 발견 결과는 아직 없습니다. [고객 발견 기록 템플릿](docs/discovery-notes.md)은 인터뷰를 진행할 때 가설과 관찰을 구분해 남기기 위한 후속 자산입니다.
 
-## 구현한 핵심
+## 핵심 설계
 
-### 1. 원본 금액을 유지하는 대사
-
-`(channel, orderId)`로 주문과 정산을 연결합니다. 금액은 원 단위 정수, 수수료율은 1bp = 0.01% 단위로 처리합니다. 수수료는 **환불액을 차감한 금액에 요율을 적용한 뒤 주문별로 반올림**합니다. 같은 채널의 정산번호가 중복되어도 원본 행을 자동으로 삭제하지 않습니다.
-
-정산 누락, 주문 미확인, 중복 정산, 환불액 차이, 수수료 차이, 금액 차이, 입금 확인 필요의 **7개 예외 유형**을 지원합니다. 여러 조건이 겹치면 정해진 우선순위에 따라 대표 유형 하나를 표시하며, 모든 정산 행을 보존합니다. 화면의 **자료상 정산액**은 정산 파일에 기록된 금액으로, 은행 계좌에 실제로 입금된 금액을 확인한 결과가 아닙니다.
-
-### 2. 검토 근거와 변경 기록을 함께 저장
-
-`import → reconcile → resolve → close`를 명령으로 처리합니다. `expectedVersion`, `SELECT ... FOR UPDATE`, `Idempotency-Key`를 함께 사용합니다. 상태, 검토 기록, 감사 이벤트, 요청 처리 이력(receipt)을 하나의 트랜잭션에 저장합니다.
-
-검토 승인은 사유와 증빙 참조 정보를 남기는 기능입니다. 금액을 보정하거나 회계 전표를 만들지 않습니다. 원본이 바뀌면 해당 대사 결과의 식별 해시(fingerprint)가 달라져 이전 승인을 그대로 사용할 수 없습니다. 마감 후에는 API와 DB 트리거 모두 수정 요청을 거부합니다.
-
-### 3. 근거 밖으로 나가지 않는 AI 검토 초안
-
-AI 초안은 현재 거래의 합성 주문·정산 자료를 반환하는 읽기 전용 도구 하나만 사용할 수 있습니다. 구조화 출력의 근거 ID가 허용 목록을 벗어나거나 승인·마감 완료를 단정하면 결과를 폐기하고 같은 근거로 만든 규칙 기반 초안으로 전환합니다. 초안을 적용해도 텍스트 입력만 채우며, 사용자가 원본을 확인하고 체크박스와 처리 버튼을 직접 선택해야 합니다.
-
-모델 호출에는 Vercel AI SDK의 `ToolLoopAgent`와 OpenAI Responses API를 사용합니다. 응답 저장을 끄고, 모델·지연 시간·토큰 사용량·규칙 기반 전환을 구조화 로그로 남깁니다. [평가 데이터](fixtures/review-draft-evals.json)와 [실행 스크립트](scripts/evaluate-review-drafts.mjs)로 근거 범위와 권한 초과 표현을 검사합니다.
-
-### 4. Kotlin 대사 코어와 독립 재검증
-
-[Kotlin/JVM 모듈](verifier)은 프로필의 채널별 요율과 주문·정산 입력을 받아 대사 결과를 반환하는 `POST /reconcile` 유스케이스를 제공합니다. 같은 도메인 함수로 내보낸 마감 증빙을 다시 계산하고, 웹 결과의 행별 금액·분류·합계와 검토 근거·감사 기록 해시를 검사합니다.
-
-`Won`, `BasisPoints`, `OrderKey` 값 객체와 `Reconciliation` sealed 타입으로 금액과 대사 결과를 표현합니다. 금액 계산에는 `Long`과 `BigInteger`를 사용합니다. **로컬·CI에서는 Kotlin의 `/reconcile`과 `/verify`를 실제 HTTP로 실행합니다. 공개 Vercel 데모는 JVM을 호스팅하지 않으므로 TypeScript 인프로세스 어댑터를 사용합니다.** 이 런타임 차이는 제품 화면에도 표시하며, Kotlin을 공개 환경에서 실행하는 것처럼 설명하지 않습니다. [Kotlin OpenAPI 계약](docs/kotlin-openapi.yaml)
-
-### 5. 온보딩과 운영까지 연결
-
-고객별 채널·요율·마감 기준·검토 규칙·열 연결을 버전형 프로필 스냅샷으로 저장합니다. CSV 반영 명령과 열 연결 저장은 같은 트랜잭션에서 처리하며, 설정 복제는 새 세션과 가상 데이터로 분리해 기존 승인·마감 결과를 바꾸지 않습니다. CSV의 BOM·줄바꿈·따옴표 처리, 숫자·날짜·기간 검증, 파일 중복 방지, 입력 한도, CSV 수식 주입 방어도 구현했습니다.
-
-## 구조와 기술 선택
+- `(channel, orderId)`를 주문 키로 사용합니다. 수수료는 환불액을 차감한 금액에 프로필 요율을 적용하고 주문별로 반올림합니다.
+- 정산 누락, 주문 미확인, 중복, 환불액, 수수료, 금액, 입금 시점의 7가지 예외를 분류하되 모든 원본 행을 보존합니다.
+- `import → reconcile → resolve → close`를 명령으로 처리합니다. 새 자료는 재대사 전 승인할 수 없고, 결과 fingerprint가 바뀌면 이전 승인도 무효가 됩니다.
+- 상태, 감사 이벤트와 요청 receipt는 한 트랜잭션에 저장합니다. 확정 후 변경은 애플리케이션과 DB 트리거가 함께 거부합니다.
+- Kotlin `/reconcile`은 TypeScript가 만든 행별 계약 fixture와 비교하고, `/verify`는 마감 패키지의 계산값과 감사 해시를 다시 검사합니다.
+- 선택형 AI 초안은 서버가 만든 evidence packet만 읽습니다. 허용되지 않은 인용, 금액, 날짜 또는 완료 단정이 있으면 결과를 폐기하고 규칙 기반 초안으로 전환합니다.
 
 ```mermaid
 flowchart LR
-  User[재무 담당자 · 가상 시나리오] --> UI[Next.js / React UI]
-  UI --> API[REST · Zod · 세션 / Origin 검사]
-  UI --> Agent[읽기 전용 AI 검토 초안]
-  Agent --> Evidence[허용된 거래 근거 도구]
-  API --> App[Application · 명령과 마감 정책]
-  App --> Domain[Domain · 정수 금액 / 대사 / 감사]
-  API --> Repo[Repository · 행 잠금 / 멱등성]
-  Repo --> DB[(PostgreSQL · Neon)]
+  User[가상 재무 담당자] --> UI[Next.js / React]
+  UI --> API[REST · Zod · 세션 / Origin]
+  API --> App[Application commands]
+  App --> Domain[Domain · KRW / 대사 / 감사]
+  App --> Repo[Repository · 잠금 / 멱등성]
+  Repo --> DB[(PostgreSQL)]
+  UI --> Agent[읽기 전용 AI 초안]
+  Agent --> Evidence[서버 근거 패킷]
+  App -. 행별 계약 .-> Kotlin[Kotlin /reconcile]
   App --> Package[마감 증빙 JSON]
-  Profile[버전형 온보딩 프로필] --> App
-  App -. 로컬·CI 계약 .-> Kotlin[Kotlin/JVM 대사 REST]
   Package --> Kotlin
 ```
 
-| 영역        | 선택                                                                     |
-| ----------- | ------------------------------------------------------------------------ |
-| 웹/REST     | Next.js 16, React 19, TypeScript strict, Zod                             |
-| 도메인      | 프레임워크에 의존하지 않는 대사 함수, 레이어 경계 검사                   |
-| DB          | 운영: Neon PostgreSQL / 로컬: PGlite / CI: PostgreSQL 17                 |
-| 대사 서비스 | Kotlin 2.4.10, JVM 21, `/reconcile`·`/verify`, Gradle Wrapper 9.4.1      |
-| AI 초안     | Vercel AI SDK ToolLoopAgent, OpenAI, Zod 구조화 출력, 근거 ID 검증       |
-| UI          | 자체 CSS, Pretendard, Lucide, 반응형 화면·키보드 탭·포커스 잠금 대화상자 |
-| 검증/배포   | Vitest, 실제 HTTP 검증 스크립트, Kotlin 테스트, GitHub Actions, Vercel   |
+| 영역      | 선택                                                 |
+| --------- | ---------------------------------------------------- |
+| 웹        | Next.js 16, React 19, TypeScript strict, Zod         |
+| 데이터    | PostgreSQL/Neon, 로컬 PGlite                         |
+| 독립 검증 | Kotlin 2.4.10, JVM 21, Gradle 9.4.1                  |
+| AI        | Vercel AI SDK, OpenAI Responses API, Zod 구조화 출력 |
+| 검증      | Vitest, Playwright, 실제 HTTP smoke, GitHub Actions  |
 
-데모의 배포와 운영을 단순하게 유지하기 위해 TypeScript 웹 런타임을 선택했습니다. 한 세션의 마감 데이터를 하나의 일관성 단위(aggregate)로 묶어 JSONB에 저장합니다. 대규모 거래를 처리하려면 테이블 정규화, 비동기 작업, 별도 마이그레이션 실행 절차가 필요합니다. [설계와 대안](docs/architecture.md) · [ADR](docs/adr/0001-runtime-and-scope.md)
+[아키텍처와 대안](docs/architecture.md) · [런타임 ADR](docs/adr/0001-runtime-and-scope.md) · [API 명세](docs/openapi.yaml) · [Kotlin 계약](docs/kotlin-openapi.yaml)
 
-## 데이터와 검증
+## 고정 샘플과 검증
 
-아래 수치는 **의도적으로 만든 고정 샘플의 결과**입니다. 업무 시간 절감, 실제 자동화율, 실서비스 성능을 측정한 값이 아닙니다.
+아래 수치는 직접 만든 고정 샘플 결과이며 업무 시간 절감이나 실서비스 자동화율이 아닙니다.
 
-| 고정 샘플                    |          값 |
-| ---------------------------- | ----------: |
-| 주문 / 정산 행               |   128 / 127 |
-| 자동 일치 / 예외 거래        |     120 / 8 |
-| 일치율                       |       93.8% |
-| 주문 총액                    | ₩17,072,000 |
-| 예상 정산액                  | ₩16,072,966 |
-| 예외 거래 차액의 절댓값 합계 |    ₩358,281 |
+| 고정 샘플               |                        값 |
+| ----------------------- | ------------------------: |
+| 주문 / 정산 행          |                 128 / 127 |
+| 자동 일치 / 예외 거래   |                   120 / 8 |
+| 자동 일치율             |                     93.8% |
+| 주문 총액 / 예상 정산액 | ₩17,072,000 / ₩16,072,966 |
+| 예외 차액 절댓값 합계   |                  ₩358,281 |
 
-예외 8건은 정산 누락 2건, 수수료 차이 2건, 환불액 차이 1건, 중복 정산 1건, 입금 확인 필요 2건입니다. 입금 확인이 필요한 2건은 차액이 0원이지만, 정산 자료의 입금일이 비어 있거나 마감 기준일 이후입니다. 차액의 절댓값 합계는 순차액이나 실제 회수할 수 있는 금액을 뜻하지 않습니다.
+- Vitest 12개 파일, TypeScript 테스트 121개
+- 명시한 domain/application/http/repository 범위 커버리지: statements 91.56%, branches 84.86%, functions 92.96%, lines 91.95%
+- Playwright 7개: 모바일, 접근 가능한 대화상자, AI 승인 경계, 자료 반영부터 마감 다운로드까지 전체 흐름, 완료형 예시
+- Kotlin 테스트 10개: `/reconcile`, TypeScript 행별 계약 비교, `/verify`, 패키지·체크섬·감사 변조 거부
+- 실제 서버 HTTP smoke 20단계와 PostgreSQL 17 CI
 
-- TypeScript **95개 테스트**: 금액, CSV, 프로필별 샘플·비활성 채널 차단, 프로필 복제·열 연결 저장, 세션 옵션 호환성, 대사 우선순위, 도메인 상태, HTTP 보안·관측 헤더, AI 근거 제한, DB 트랜잭션·동시성·세션 격리.
-- Playwright **5개 브라우저 테스트**: 프로필 전환과 마감 화면 일치, Escape 닫기, AI 초안 적용·취소·승인 조건, 모바일 거래 카드 진입.
-- 핵심 모듈 커버리지 기준: statements 80%, branches 75%, functions 80%, lines 80% 이상을 CI에서 강제합니다.
-- Kotlin **9개 테스트**: 프로필 요율 대사 유스케이스, `/reconcile`·`/verify` HTTP 계약, 고정 패키지 재계산, 중복, 체크섬·계산값·감사 기록 변조 거부.
-- HTTP **20개 검증 단계**: 실제 서버에서 세션 생성부터 CSV 반영·예외 승인·마감·내보내기까지.
-- [GitHub Actions 실행 기록](https://github.com/kwakhyun/closepilot/actions): PostgreSQL 17 웹 검증과 JDK 21 Kotlin 검증을 커밋마다 다시 실행합니다.
-- 브라우저 확인과 배포 결과는 [검증 기록](docs/verification.md)에 환경과 한계를 함께 기록합니다.
+현재 실행 결과와 환경은 [검증 현황](docs/verification.md)에, 과거 결과는 [검증 이력](docs/verification-history.md)에 분리했습니다.
 
 ## 로컬 실행
 
-Node.js 24를 기준으로 검증했습니다. **대사·검토·마감 기능만 실행할 때는 DB 계정이나 API 키가 필요 없습니다.** AI 초안을 사용하려면 `.env.local`의 `OPENAI_API_KEY`가 필요하며 브라우저에는 노출되지 않습니다.
+Node.js 24를 기준으로 검증했습니다. 기본 대사 흐름에는 DB 계정이나 API 키가 필요 없습니다.
 
 ```bash
 npm ci
@@ -131,52 +97,37 @@ npm run dev
 # http://localhost:3000
 ```
 
-`DATABASE_URL`이 없으면 `.data/closepilot`에 PGlite 데이터를 저장합니다. PostgreSQL 사용 시 `.env.example`을 참고해 서버 환경 변수로 연결 문자열을 설정하세요. 브라우저 코드에 비밀키를 넣지 않습니다.
+`DATABASE_URL`이 없으면 `.data/closepilot`의 PGlite를 사용합니다. AI 초안을 실제 모델로 생성하려면 서버의 `OPENAI_API_KEY`가 필요합니다.
 
 ```bash
-npm run verify                     # 레이어 검사, 타입, lint, 95개 테스트, 빌드
-npm run test:coverage              # 핵심 모듈 커버리지 기준 검증
-npm run test:e2e                   # 브라우저 회귀 테스트 5개
-npm run fixtures                   # 고정 데이터와 검증 패키지 재생성
+npm run verify
+npm run test:coverage
+npm run test:e2e
+npm run fixtures
 npm run smoke -- http://localhost:3000
-npm run benchmark -- http://localhost:3000
-npm run eval:review-drafts -- http://localhost:3000
 ```
 
-Kotlin 독립 검증에는 JDK 21이 필요합니다. 첫 실행은 Gradle·의존성을 다운로드합니다.
+Kotlin 검증에는 JDK 21이 필요합니다.
 
 ```bash
 cd verifier
 bash gradlew test run --args='../fixtures/closed-package.json'
-# 실제로 내려받은 패키지:
-bash gradlew run --args='/absolute/path/to/closepilot-2026-08-close.json'
-# 로컬 대사·검증 REST 경계
 bash gradlew run --args='--server 8081'
 ```
 
-Windows에서는 `JAVA_HOME`을 JDK 21로 설정하고 루트에서 `./scripts/verify-kotlin.ps1`을 실행합니다. 한글 경로에서 Gradle 테스트 작업자의 classpath가 깨지는 문제를 피하도록 임시 ASCII 빌드 경로를 사용합니다.
-
-Docker 설정도 제공합니다: `docker compose up --build`. 이 환경에서는 Docker 실행을 검증하지 않았습니다. GitHub Actions의 웹 검증은 별도의 PostgreSQL 17 서비스에서 실행해 통과했습니다.
-
-## AI 사용과 재현 가능한 개발
-
-이 프로젝트는 **Codex의 도움으로 기획·구현·브라우저 조작·테스트·배포**를 진행했습니다. 생성된 코드를 금융 계산의 근거로 삼지 않고, 명시적인 불변식·고정 입력·독립 Kotlin 재계산으로 확인했습니다.
-
-- [AGENTS.md](AGENTS.md), [CLAUDE.md](CLAUDE.md): 에이전트가 지켜야 할 도메인·보안·검증 지침.
-- [레이어 검사](scripts/check-architecture.mjs): 서버 코드를 클라이언트로 가져오거나 도메인에 DB 의존성을 추가하면 실패.
-- [pre-commit 훅](.githooks/pre-commit): `git config core.hooksPath .githooks`로 활성화. CI에서도 같은 검증 실행.
-- [변경 검토 절차](docs/ai-development.md): 근거 확인 → 제한된 변경 → 반례 검증 → 결과 기록.
-
-공개 데모의 AI는 사용자가 선택한 거래의 검토 메모 초안에만 유료 LLM을 호출합니다. 읽기 전용 근거 도구 외의 도구는 제공하지 않으며 금액·승인·마감 권한이 없습니다. 호출 실패, 근거 ID 오류, 권한 초과 표현은 규칙 기반 초안으로 전환합니다. [AI 개발·운영 원칙](docs/ai-development.md)과 [관측 기준](docs/observability.md)에 재현·평가·비용 확인 절차를 기록했습니다.
+Windows에서는 루트의 `scripts/verify-kotlin.ps1`을 사용합니다. Docker 설정도 제공하지만 이 작업 환경에서 Docker 실행은 검증하지 않았습니다.
 
 ## 범위와 남은 위험
 
-이 결과물은 **작동하는 포트폴리오 데모**이며 기업용 재무 SaaS의 운영 준비를 마쳤다는 의미가 아닙니다. SSO/RBAC, 작성자·승인자 분리, 실제 채널·은행 연동, 여러 통화 지원, 회계 전표, 외부 감사용 서명·보관, SLA·복구 훈련은 범위에 포함하지 않았습니다. 증빙 참조 정보는 텍스트로 저장하며, 외부 증빙의 진위까지 확인하지는 않습니다.
+이 결과물은 작동하는 포트폴리오 데모이며 기업용 재무 SaaS의 운영 준비가 끝났다는 뜻이 아닙니다. 다음 항목은 구현하거나 검증하지 않았습니다.
 
-세션 생성 후 6시간이 지나면 접근이 차단됩니다. 실제 데이터 삭제는 다음 세션을 생성할 때 수행하므로, 정확히 6시간 뒤 삭제되지는 않을 수 있습니다. SHA-256은 내용 변경을 확인하는 체크섬이며 전자서명이나 DB 관리자의 변경을 막는 장치가 아닙니다. [보안 모델](docs/security.md) · [운영 가이드](docs/runbook.md) · [API 명세](docs/openapi.yaml) · [용어와 문구 기준](docs/copy-guide.md)
+- 실제 고객 인터뷰, 실제 PG·판매 채널·은행·회계 시스템 연동
+- SSO/RBAC, 작성자와 승인자 분리, 엔터프라이즈 접근 통제
+- 여러 통화, 회계 전표, 외부 감사용 전자서명과 장기 보관
+- 대규모·장시간 부하, 장애 주입, Kubernetes 운영, SLA와 복구 훈련
 
-## 참고 자료와 라이선스
+세션 토큰은 엔터프라이즈 사용자 계정이 아닌 불투명 bearer capability입니다. SHA-256은 내용 무결성 확인용이며 서명이나 DB 관리자 방어 수단이 아닙니다. [보안 모델](docs/security.md) · [운영 가이드](docs/runbook.md) · [AI 개발 원칙](docs/ai-development.md)
 
-도메인과 통신 설계의 참고 자료: [PostgreSQL 행 잠금](https://www.postgresql.org/docs/17/explicit-locking.html), [Next.js Route Handlers](https://nextjs.org/docs/app/getting-started/route-handlers), [OpenAI Structured Outputs](https://platform.openai.com/docs/guides/structured-outputs). 실제 서비스 정책을 복제하거나 공식 연동을 주장하지 않습니다.
+## 라이선스
 
-코드: [MIT](LICENSE). Pretendard: [SIL Open Font License](public/fonts/OFL.txt). 채널명은 시나리오 설명을 위한 표시이며 로고·공식 에셋은 사용하지 않았습니다.
+코드는 [MIT](LICENSE), Pretendard는 [SIL Open Font License](public/fonts/OFL.txt)입니다. 채널명은 합성 시나리오 설명을 위한 표시이며 공식 로고나 에셋은 사용하지 않았습니다.

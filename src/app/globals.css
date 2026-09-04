@@ -1697,6 +1697,16 @@ a svg {
 .stale-notice {
   margin-bottom: 22px;
 }
+.showcase-notice {
+  margin-bottom: 22px;
+}
+.showcase-notice p {
+  flex: 1;
+}
+.showcase-notice .text-button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
 .download-templates {
   display: flex;
   gap: 20px;

@@ -11,6 +11,12 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "json-summary", "html"],
       reportsDirectory: "coverage",
+      include: [
+        "src/domain/**/*.ts",
+        "src/application/**/*.ts",
+        "src/infrastructure/http.ts",
+        "src/infrastructure/repository.ts",
+      ],
       thresholds: {
         statements: 80,
         branches: 75,

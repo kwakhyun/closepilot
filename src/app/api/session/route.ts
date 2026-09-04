@@ -16,6 +16,7 @@ const sessionOptionsSchema = z
   .object({
     templateId: z.enum(["lumiere-beauty-v1", "morrow-food-v1"]).optional(),
     brandName: z.string().trim().min(2).max(40).optional(),
+    showcase: z.literal("completed").optional(),
   })
   .strict();
 

@@ -19,7 +19,7 @@ npm run verify
 vercel deploy --prod
 # 배포 뒤 실제 공개 URL에서 합성 데이터로 검사
 node scripts/smoke-api.mjs https://YOUR-DOMAIN --allow-remote --report docs/evidence/api-smoke-production.json
-npm run eval:review-drafts -- https://YOUR-DOMAIN --allow-remote
+npm run eval:review-drafts -- https://YOUR-DOMAIN --allow-remote --require-ai
 ```
 
 원격 smoke 검사는 대상 서버에 데모 세션 2개를 만들고 20개 검증 단계를 수행한다. 이 프로젝트가 소유한 환경에서만 실행한다. 토큰·쿠키·DB URL은 보고서에 기록하지 않는다. 세션 생성 한도에 도달하면 반복 재시도를 중단하고 한도를 확인한다.

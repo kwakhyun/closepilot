@@ -1,6 +1,7 @@
 package io.closepilot
 
 import io.closepilot.application.sha256
+import io.closepilot.application.canonical
 import io.closepilot.application.reconcileRequest
 import io.closepilot.application.verifyClosePackage
 import io.closepilot.domain.BasisPoints
@@ -110,6 +111,28 @@ class VerifierTest {
             val body = Json.parseToJsonElement(response.body()).jsonObject
             assertEquals("kotlin-jvm", body.getValue("engine").jsonPrimitive.content)
             assertEquals("matched", body.getValue("rows").jsonArray.single().jsonObject.getValue("kind").jsonPrimitive.content)
+        } finally {
+            server.stop()
+        }
+    }
+    @Test fun `http boundary matches the TypeScript generated row contract`() {
+        val contract = Json.parseToJsonElement(
+            Files.readString(Path.of("../fixtures/reconciliation-contract.json")),
+        ).jsonObject
+        val request = contract.getValue("request").toString()
+        val expected = contract.getValue("expected")
+        val server = VerifierHttpServer(0).start()
+        try {
+            val response = HttpClient.newHttpClient().send(
+                HttpRequest.newBuilder(URI("http://127.0.0.1:${server.port}/reconcile"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(request))
+                    .build(),
+                HttpResponse.BodyHandlers.ofString(),
+            )
+            assertEquals(200, response.statusCode())
+            val actual = Json.parseToJsonElement(response.body())
+            assertEquals(canonical(expected), canonical(actual))
         } finally {
             server.stop()
         }
