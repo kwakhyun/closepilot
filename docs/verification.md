@@ -62,6 +62,8 @@ CI는 [GitHub Actions](https://github.com/kwakhyun/closepilot/actions/workflows/
 3. AI 검토 초안이 저장된 합성 근거 ID만 인용하며 실패·시간 초과 시 규칙 기반 초안으로 전환한다.
 4. 데스크톱과 390px 모바일 화면에서 핵심 흐름과 키보드 동작을 확인한다.
 
+현재 런타임 커밋 `993bcc7`은 Vercel 배포 `dpl_6xrht6CHG6dX6uhKicwrBzVYfr8g`에서 `READY` 상태다. [GitHub Actions #33833005110](https://github.com/kwakhyun/closepilot/actions/runs/33833005110)의 PostgreSQL 17 Web 작업과 JDK 21 Kotlin 작업이 모두 성공했다. 공개 배포의 [HTTP smoke 보고서](evidence/api-smoke-production-20260904.json)는 20단계 통과를 기록하며, 실제 AI 응답을 요구한 5개 합성 평가도 모두 `ai` 모드로 근거 검증을 통과했다.
+
 ## 검증 범위의 한계
 
 현재 검증은 합성 거래, 로컬 PGlite, CI PostgreSQL, 관리형 PostgreSQL 배포 환경을 대상으로 한다. 실제 PG 연동, 회계 시스템 연동, 대량·장시간 부하, 장애 주입, Kubernetes 운영, 실사용자 접근성 평가는 포함하지 않는다. 성능 측정값은 개발 환경의 회귀 탐지 자료이며 처리량이나 SLA 약속으로 사용하지 않는다.

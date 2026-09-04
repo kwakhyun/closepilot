@@ -153,4 +153,10 @@ P1·P2 개선과 AI 검토 초안, Kotlin HTTP 경계, 관측성 보강을 마�
 - `npm audit --omit=dev --audit-level=high`: 프로덕션 의존성의 알려진 취약점 0건으로 완료됐다.
 - 시각 검수: 제품 가이드 전체를 1440×900과 390×844로 캡처하고, 완료형 첫 화면을 1440×900에서 확인했다. 90초·완료형·설계 링크 버튼의 줄바꿈, 네 단계 흐름, 구현/미구현 카드, 푸터와 완료형 알림·다운로드 링크에서 겹침이나 잘림을 발견하지 않았다.
 
-이 변경은 아직 공개 배포와 원격 CI에서 재검증하지 않았다. 로컬 PGlite·브라우저·JDK 21 결과를 실제 PostgreSQL 17 CI나 프로덕션 배포 결과로 확대해 설명하지 않는다.
+커밋 `993bcc7`을 Vercel 프로덕션 배포 `dpl_6xrht6CHG6dX6uhKicwrBzVYfr8g`에 반영했고 상태는 `READY`다. 공개 별칭은 [closepilot-delta.vercel.app](https://closepilot-delta.vercel.app)이며 Node.js 24 런타임과 관리형 PostgreSQL을 사용한다.
+
+- [GitHub Actions #33833005110](https://github.com/kwakhyun/closepilot/actions/runs/33833005110): PostgreSQL 17을 사용하는 Web 작업과 JDK 21 Kotlin 작업이 모두 성공했다. Web 작업은 포맷, 전체 검증, 커버리지, Playwright 7개, fixture 재생성 일치, 실행 중인 API의 20단계를 포함한다.
+- 공개 HTTP smoke: 20단계가 모두 통과했고 전체 실행은 8,129ms였다. [실행 보고서](evidence/api-smoke-production-20260904.json)는 합성 세션의 검사 이름과 상태만 기록하며 쿠키, 토큰, DB 연결 문자열을 포함하지 않는다.
+- 공개 AI 평가: `--require-ai`를 사용한 중복 정산, 입금 시점, 수수료 차이, 정산 누락, 환불액 차이 5건이 모두 `ai` 모드로 통과했다. 생성 시간은 각각 5,897ms, 5,067ms, 4,788ms, 5,259ms, 4,414ms였고 근거 검증 오류는 없었다.
+- 공개 화면·상태: `/api/health`는 PostgreSQL 합성 샌드박스를 반환했다. 제품 가이드에서 90초 경로와 완료된 합성 예시 링크를 확인했고, 완료형 세션은 `completed-showcase`, `closed`, 미검토 0건으로 응답했다.
+- 검증 직후 Vercel 오류 수준 로그는 0건이었다. 이는 확인한 시간 구간의 결과이며 장기 무오류나 운영 SLA를 뜻하지 않는다.
