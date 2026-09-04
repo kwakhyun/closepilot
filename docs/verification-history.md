@@ -172,4 +172,4 @@ README와 프로젝트 문서, 제품 가이드, 공유 메타데이터에서 �
 - 시각 검수: 제품 가이드 전체를 1440×900과 390×844 뷰포트에서 캡처했다. 첫 화면과 문제, 작업 흐름, 설계, 범위, 하단 안내에서 겹침이나 잘림을 발견하지 않았다. 모바일에서 숨긴 줄바꿈 뒤 문장이 붙어 보이던 문제도 수정했다.
 - 공개 저장소 소개는 특정 기업을 지칭하지 않는 B2B 정산 포트폴리오 설명으로 변경했다.
 
-이 문서와 가이드 문구는 로컬에서 검증했다. 공개 앱에는 아직 재배포하지 않았으므로, 배포 전까지 공개 URL에는 이전 문구가 표시될 수 있다.
+커밋 `204adf8`을 `main`에 푸시한 뒤 Vercel Git 연동이 프로덕션 배포 `dpl_5ihBVp4TrPBygLk8CU6Frbp5uFxh`를 자동으로 생성했다. 배포 상태는 `READY`이며 [closepilot-delta.vercel.app](https://closepilot-delta.vercel.app)에 연결됐다. 공개 제품 가이드에서 교정한 문구가 반영된 것도 확인했다. 같은 커밋의 [GitHub Actions #33836685653](https://github.com/kwakhyun/closepilot/actions/runs/33836685653)은 Web과 Kotlin 작업을 모두 통과했다. GitHub Actions는 검증만 수행하고, Vercel 자동 배포는 그 결과를 기다리지 않고 별도로 실행된다.

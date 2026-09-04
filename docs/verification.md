@@ -62,7 +62,9 @@ CI는 [GitHub Actions](https://github.com/kwakhyun/closepilot/actions/workflows/
 3. AI 검토 초안이 저장된 합성 근거 ID만 인용하며, 호출에 실패하거나 시간이 초과되면 규칙 기반 초안으로 전환한다.
 4. 데스크톱과 390px 모바일 화면에서 핵심 흐름과 키보드 동작을 확인한다.
 
-현재 런타임 커밋 `993bcc7`은 Vercel 배포 `dpl_6xrht6CHG6dX6uhKicwrBzVYfr8g`에서 `READY` 상태다. [GitHub Actions #33833005110](https://github.com/kwakhyun/closepilot/actions/runs/33833005110)의 PostgreSQL 17 Web 작업과 JDK 21 Kotlin 작업이 모두 성공했다. 공개 배포의 [HTTP smoke 보고서](evidence/api-smoke-production-20260904.json)는 20단계 통과를 기록하며, 실제 AI 응답을 요구한 5개 합성 평가도 모두 `ai` 모드로 근거 검증을 통과했다.
+Vercel Git 연동은 `main` 브랜치의 푸시를 프로덕션에 자동 배포한다. GitHub Actions는 별도로 검증을 실행하며 배포를 승인하는 게이트는 아니다. 2026-09-04에 문서와 표시 문구를 교정한 커밋 `204adf8`은 Vercel 배포 `dpl_5ihBVp4TrPBygLk8CU6Frbp5uFxh`로 자동 반영됐고 `READY` 상태를 확인했다. 같은 커밋의 [GitHub Actions #33836685653](https://github.com/kwakhyun/closepilot/actions/runs/33836685653)에서는 PostgreSQL 17 Web 작업과 JDK 21 Kotlin 작업이 모두 성공했다.
+
+[HTTP smoke 보고서](evidence/api-smoke-production-20260904.json)의 20단계 검사와 실제 AI 응답을 요구한 합성 평가 5건은 직전 기능 커밋 `993bcc7`의 공개 배포에서 실행했다. 이후 `204adf8`에서는 API와 도메인 규칙을 바꾸지 않고 문서, 제품 가이드와 공유 메타데이터만 교정했다. 따라서 두 실행의 대상과 범위를 같은 최신 검증으로 합쳐 표현하지 않는다.
 
 ## 검증 범위의 한계
 

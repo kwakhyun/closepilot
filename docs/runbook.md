@@ -12,15 +12,19 @@ AI 검토 메모 초안 기능을 사용하려면 서버 전용 `OPENAI_API_KEY`
 
 새 환경에 배포할 때는 Vercel 프로젝트에 전용 Neon DB를 연결하고 production과 preview 환경 변수를 확인한다. 기존 서비스의 DB를 공유하지 않는다. 이 프로젝트의 함수와 DB는 싱가포르 리전을 사용한다. 무료 플랜의 한도와 정책은 바뀔 수 있으므로 사용량을 확인한다.
 
-현재 공개 배포는 Vercel CLI로 수행했다. GitHub Actions는 검증만 실행하며 Git push에 따른 자동 배포는 연결하지 않았다. 변경 내용을 공개하려면 해당 Vercel 프로젝트에 연결된 작업 디렉터리에서 검증을 통과한 뒤 아래 배포 명령을 실행한다. 자동 배포는 저장소 접근 권한과 웹훅 권한을 별도로 검토한 뒤 연결할 수 있다.
+현재 Vercel 프로젝트는 GitHub 저장소와 연결되어 있다. `main` 브랜치에 푸시하면 Vercel이 프로덕션 배포를 자동으로 시작한다. GitHub Actions는 검증만 담당하며 Vercel 배포를 실행하거나 승인하지 않는다. 두 작업은 독립적으로 시작되므로 자동 배포가 GitHub Actions 성공을 기다리지는 않는다. `main`에 푸시하기 전에 로컬 검증을 통과시키고, 푸시한 뒤에는 GitHub Actions와 Vercel 배포 결과를 각각 확인한다.
 
 ```bash
 npm run verify
-vercel deploy --prod
+git push origin main
+gh run list --branch main --limit 1
+vercel inspect https://closepilot-delta.vercel.app
 # 배포 뒤 실제 공개 URL에서 합성 데이터로 검사
 node scripts/smoke-api.mjs https://YOUR-DOMAIN --allow-remote --report docs/evidence/api-smoke-production.json
 npm run eval:review-drafts -- https://YOUR-DOMAIN --allow-remote --require-ai
 ```
+
+Git 연동을 사용할 수 없거나 명시적으로 다시 배포해야 할 때만 연결된 작업 디렉터리에서 `vercel deploy --prod`를 실행한다. 자동 배포를 CI 성공 뒤로 제한하려면 Vercel의 Git 프로덕션 배포를 끄고, 검증 작업이 성공한 뒤 배포하는 별도 워크플로를 구성해야 한다.
 
 원격 smoke 검사는 대상 서버에 데모 세션 두 개를 만들고 20단계를 검증한다. 이 프로젝트가 소유한 환경에서만 실행한다. 토큰, 쿠키, DB URL은 보고서에 기록하지 않는다. 세션 생성 한도에 도달하면 반복 재시도를 중단하고 한도를 확인한다.
 
