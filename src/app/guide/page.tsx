@@ -45,7 +45,7 @@ export default function Guide() {
         <section className="guide-hero">
           <div className="guide-kicker">
             <span />
-            COMMERCE OPS · PRODUCT ENGINEERING
+            B2B COMMERCE · PRODUCT ENGINEERING
           </div>
           <h1>
             마감 전에 남은 <em>{view.summary.issues}건,</em>
@@ -53,9 +53,8 @@ export default function Guide() {
             근거를 확인하세요.
           </h1>
           <p>
-            채널마다 다른 자료와 설명이 필요한 차이를 한곳에서 확인하세요.
-            <br />
-            ClosePilot은 주문·정산 대사부터 검토와 마감 증빙까지 돕는
+            채널마다 다른 자료를 모아 차이와 검토 근거를 확인하세요.
+            <br /> ClosePilot은 주문·정산 대사부터 마감 증빙까지 이어지는
             <br className="desktop-break" /> 커머스 매출 마감 도구입니다.
           </p>
           <div className="guide-hero-actions">
@@ -124,8 +123,8 @@ export default function Guide() {
               시점을 확인해야 차이의 원인을 설명할 수 있다고 가정했습니다.
             </p>
             <p>
-              이 시나리오는 채용 공고와 공개 자료를 바탕으로 만든 <b>고객 문제 가설</b>
-              입니다. 실제 고객 인터뷰는 진행하지 않았으며, 수수료율과 거래는 모두 가상입니다.
+              이 시나리오는 공개 자료를 바탕으로 만든 <b>고객 문제 가설</b>입니다. 실제 고객
+              인터뷰는 진행하지 않았으며, 수수료율과 거래는 모두 가상입니다.
             </p>
             <div className="guide-question">
               <span>제품이 답하려는 질문</span>
@@ -231,7 +230,7 @@ export default function Guide() {
                 ],
                 [
                   "규칙 기반 검토 가이드",
-                  "규칙 기반 검토 가이드는 LLM을 호출하지 않습니다. 선택형 AI 초안은 저장된 합성 근거만 읽으며, 검토 승인은 사용자가 직접 수행합니다. 송금이나 회계 전표 생성 기능은 제공하지 않습니다.",
+                  "규칙 기반 검토 가이드는 LLM을 호출하지 않습니다. AI 검토 초안은 사용자가 요청할 때만 저장된 합성 근거를 읽으며, 검토 승인은 사용자가 직접 수행합니다. 송금이나 회계 전표 생성 기능은 제공하지 않습니다.",
                 ],
               ].map(([title, body]) => (
                 <article key={title}>
@@ -287,8 +286,8 @@ export default function Guide() {
         </section>
         <section className="guide-cta">
           <div>
-            <span className="eyebrow">BUILDING FOR THE LAST MILE</span>
-            <h2>문제 정의부터 검증과 배포까지.</h2>
+            <span className="eyebrow">문제 가설에서 검증 가능한 데모까지</span>
+            <h2>문제 정의부터 구현, 검증, 배포까지.</h2>
             <p>고객 문제 가설, 도메인 설계, 검증 결과와 운영 방법을 저장소에 기록했습니다.</p>
           </div>
           <Link href="/" className="button primary">

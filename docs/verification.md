@@ -1,6 +1,6 @@
 # 검증 현황
 
-이 문서는 현재 리비전의 검증 기준과 재현 방법만 담는다. 날짜별 실행 기록과 과거 수치는 [검증 이력](verification-history.md)에 보존한다. 모든 수치는 합성 데이터와 검증 환경에서 얻었으며 실제 고객 성과나 운영 SLA를 뜻하지 않는다.
+이 문서는 현재 커밋의 검증 기준과 재현 방법만 담는다. 날짜별 실행 기록과 과거 수치는 [검증 이력](verification-history.md)에 보존한다. 모든 수치는 합성 데이터와 검증 환경에서 얻었으며 실제 고객 성과나 운영 SLA를 뜻하지 않는다.
 
 ## 현재 검증 기준
 
@@ -14,10 +14,10 @@
 | 브라우저 회귀    | 핵심 사용자 흐름 전체 성공                                  | Playwright 7개 테스트 통과     |
 | 프로덕션 빌드    | Next.js 빌드 성공                                           | 통과                           |
 | 독립 검증기      | Kotlin 테스트와 마감 패키지 재계산 성공                     | 10개 테스트 통과               |
-| 실제 HTTP 흐름   | 세션부터 확정·내보내기까지 20단계 성공                      | 통과, 0.68초                   |
+| 실제 HTTP 흐름   | 세션 생성부터 확정과 내보내기까지 20단계 성공               | 통과, 0.68초                   |
 | 보안 의존성      | high 이상 취약점 0건                                        | 통과                           |
 
-커버리지는 `vitest.config.mts`에 명시한 `src/domain/**`, `src/application/**`, `src/infrastructure/http.ts`, `src/infrastructure/repository.ts`를 대상으로 한다. UI 컴포넌트, Next.js Route Handler와 외부 모델 어댑터는 이 수치에 포함하지 않으며 각각 Playwright, HTTP smoke, 구조화 출력·fallback 테스트로 검증한다.
+커버리지는 `vitest.config.mts`에 명시한 `src/domain/**`, `src/application/**`, `src/infrastructure/http.ts`, `src/infrastructure/repository.ts`를 대상으로 한다. UI 컴포넌트, Next.js Route Handler와 외부 모델 어댑터는 이 수치에 포함하지 않으며 각각 Playwright, HTTP smoke, 구조화 출력과 규칙 기반 전환 테스트로 검증한다.
 
 브라우저 회귀 테스트는 다음 흐름을 고정한다.
 
@@ -51,7 +51,7 @@ cd verifier
 bash gradlew test run --args='../fixtures/closed-package.json' --console=plain
 ```
 
-CI는 [GitHub Actions](https://github.com/kwakhyun/closepilot/actions/workflows/verify.yml)에서 Node.js 24·PostgreSQL 17 검증과 JDK 21 Kotlin 검증을 병렬로 실행한다. 브라우저 실패 시 추적·스크린샷·동영상을, 단위 테스트 실행 시 커버리지 요약을 아티팩트로 남긴다.
+CI는 [GitHub Actions](https://github.com/kwakhyun/closepilot/actions/workflows/verify.yml)에서 Node.js 24와 PostgreSQL 17 검증, JDK 21 Kotlin 검증을 병렬로 실행한다. 브라우저 테스트가 실패하면 추적 파일, 스크린샷, 동영상을 남기고 단위 테스트 실행 시에는 커버리지 요약을 아티팩트로 남긴다.
 
 ## 배포 검증
 
@@ -59,11 +59,11 @@ CI는 [GitHub Actions](https://github.com/kwakhyun/closepilot/actions/workflows/
 
 1. `/api/health`, 홈, 제품 가이드가 HTTP 200을 반환한다.
 2. 새 세션 생성부터 CSV 반영, 대사, 예외 검토, 마감, 내보내기까지 HTTP smoke 흐름이 성공한다.
-3. AI 검토 초안이 저장된 합성 근거 ID만 인용하며 실패·시간 초과 시 규칙 기반 초안으로 전환한다.
+3. AI 검토 초안이 저장된 합성 근거 ID만 인용하며, 호출에 실패하거나 시간이 초과되면 규칙 기반 초안으로 전환한다.
 4. 데스크톱과 390px 모바일 화면에서 핵심 흐름과 키보드 동작을 확인한다.
 
 현재 런타임 커밋 `993bcc7`은 Vercel 배포 `dpl_6xrht6CHG6dX6uhKicwrBzVYfr8g`에서 `READY` 상태다. [GitHub Actions #33833005110](https://github.com/kwakhyun/closepilot/actions/runs/33833005110)의 PostgreSQL 17 Web 작업과 JDK 21 Kotlin 작업이 모두 성공했다. 공개 배포의 [HTTP smoke 보고서](evidence/api-smoke-production-20260904.json)는 20단계 통과를 기록하며, 실제 AI 응답을 요구한 5개 합성 평가도 모두 `ai` 모드로 근거 검증을 통과했다.
 
 ## 검증 범위의 한계
 
-현재 검증은 합성 거래, 로컬 PGlite, CI PostgreSQL, 관리형 PostgreSQL 배포 환경을 대상으로 한다. 실제 PG 연동, 회계 시스템 연동, 대량·장시간 부하, 장애 주입, Kubernetes 운영, 실사용자 접근성 평가는 포함하지 않는다. 성능 측정값은 개발 환경의 회귀 탐지 자료이며 처리량이나 SLA 약속으로 사용하지 않는다.
+현재 검증은 합성 거래, 로컬 PGlite, CI PostgreSQL, 관리형 PostgreSQL 배포 환경을 대상으로 한다. 실제 PG 연동, 회계 시스템 연동, 대규모 또는 장시간 부하, 장애 주입, Kubernetes 운영, 실사용자 접근성 평가는 포함하지 않는다. 성능 측정값은 개발 환경의 회귀 탐지 자료이며 처리량이나 SLA 약속으로 사용하지 않는다.

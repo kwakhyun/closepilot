@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ClosePilot · 근거를 남기는 매출 마감",
     description:
-      "주문과 정산 자료를 비교하고, 차이를 확인해 마감하세요. Commerce Ops 직무 지원을 위한 포트폴리오 프로젝트입니다.",
+      "주문 자료와 판매 채널의 정산 자료를 비교하고, 예외 거래의 검토 근거와 마감 결과를 남기는 포트폴리오 프로젝트입니다.",
     type: "website",
     locale: "ko_KR",
     url: "/",
