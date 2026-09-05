@@ -231,14 +231,13 @@ await check("evidence-backed reviews preserve original money and match counts", 
   assert.equal(view.summary.delta, beforeReview.delta);
 });
 let closeKey, closeCommand;
-await check("close freezes a checksum-verifiable snapshot", async () => {
+await check("close returns evidence metadata without duplicating the package", async () => {
   closeCommand = { action: "close", expectedVersion: view.version };
   const result = await command(closeCommand);
   closeKey = result.key;
   assert.equal(view.status, "closed");
-  const { hash: expectedHash, ...snapshot } = view.close;
-  assert.equal(hash(snapshot), expectedHash);
-  assert.equal(snapshot.inputs.orders.length, 131);
+  assert.deepEqual(Object.keys(view.close).sort(), ["closedAt", "closedBy", "hash"]);
+  assert.match(view.close.hash, /^[a-f0-9]{64}$/);
 });
 await check("closed writes are denied while identical close retries succeed", async () => {
   const version = view.version;
@@ -256,10 +255,13 @@ await check("CSV export neutralizes formula injection", async () => {
   assert(csv.includes("expected_net_krw"));
 });
 let closePackage;
-await check("exported package has an intact audit chain", async () => {
+await check("exported package has intact snapshot and audit checksums", async () => {
   const response = await request("/api/export?format=json");
   assert.equal(response.status, 200);
   closePackage = await response.json();
+  const { hash: expectedHash, ...snapshot } = closePackage.snapshot;
+  assert.equal(hash(snapshot), expectedHash);
+  assert.equal(snapshot.inputs.orders.length, 131);
   let previous = "GENESIS";
   for (const { hash: eventHash, ...event } of closePackage.audit) {
     assert.equal(event.previousHash, previous);

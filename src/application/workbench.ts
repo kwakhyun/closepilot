@@ -68,7 +68,26 @@ export function workspaceView(workspace: Workspace) {
   const rows = reviewedRows(workspace);
   const issues = rows.filter((row) => row.kind !== "matched");
   return {
-    ...workspace,
+    version: workspace.version,
+    period: workspace.period,
+    asOf: workspace.asOf,
+    status: workspace.status,
+    orders: workspace.orders,
+    settlements: workspace.settlements,
+    sources: workspace.sources,
+    resolutions: workspace.resolutions,
+    events: workspace.events,
+    lastRunAt: workspace.lastRunAt,
+    createdAt: workspace.createdAt,
+    demoMode: workspace.demoMode,
+    // Full evidence stays in storage and is served only by the package export.
+    close: workspace.close
+      ? {
+          hash: workspace.close.hash,
+          closedAt: workspace.close.closedAt,
+          closedBy: workspace.close.closedBy,
+        }
+      : null,
     profile,
     availableProfiles: profileCatalog(),
     rows,
@@ -144,7 +163,8 @@ export function applyCommand(
       );
     workspace.orders.push(...parsed.orders);
     workspace.settlements.push(...parsed.settlements);
-    reconcileWorkspace(workspace);
+    // Validate the same bounded totals used by reads before the transaction commits.
+    workspaceView(workspace);
     workspace.sources.push({
       id: sourceId,
       name: command.filename,

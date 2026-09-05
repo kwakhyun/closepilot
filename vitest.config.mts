@@ -7,6 +7,8 @@ export default defineConfig({
     environment: "node",
     include: ["tests/**/*.test.ts"],
     testTimeout: 30000,
+    // Serialize database runtimes; concurrency is still exercised inside the tests.
+    maxWorkers: 1,
     coverage: {
       provider: "v8",
       reporter: ["text", "json-summary", "html"],
@@ -16,6 +18,7 @@ export default defineConfig({
         "src/application/**/*.ts",
         "src/infrastructure/http.ts",
         "src/infrastructure/repository.ts",
+        "src/infrastructure/review-draft-store.ts",
       ],
       thresholds: {
         statements: 80,

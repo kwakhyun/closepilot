@@ -37,6 +37,10 @@ paths:
     post:
       operationId: createSession
       summary: 6시간 동안 사용할 별도의 데모 작업 공간 생성
+      description: |
+        cloneCurrent=true이면 현재 세션 쿠키와 expectedVersion, brandName이 필요합니다.
+        서버에 저장된 현재 프로필을 복제하며 templateId 또는 showcase와 함께 사용할 수 없습니다.
+        profile 객체 등 클라이언트가 보낸 임의의 설정은 받지 않습니다.
       security: []
       parameters:
         - $ref: "#/components/parameters/Origin"
@@ -50,6 +54,8 @@ paths:
               properties:
                 templateId: { enum: [lumiere-beauty-v1, morrow-food-v1] }
                 brandName: { type: string, minLength: 2, maxLength: 40 }
+                cloneCurrent: { const: true }
+                expectedVersion: { type: integer, minimum: 1 }
                 showcase:
                   {
                     const: completed,
@@ -63,6 +69,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/WorkspaceView" }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "409": { $ref: "#/components/responses/Error" }
         "403": { $ref: "#/components/responses/Error" }
         "429": { $ref: "#/components/responses/Error" }
         "500": { $ref: "#/components/responses/Error" }
@@ -189,6 +198,8 @@ paths:
       description: |
         읽기 전용 근거 도구와 구조화 출력 스키마를 사용합니다. 허용된 근거 ID 밖의 인용이나 승인 완료 단정은 폐기합니다.
         AI 호출을 완료하지 못하면 같은 근거로 만든 규칙 기반 초안을 반환합니다. 어떤 모드에서도 작업 상태는 바뀌지 않습니다.
+        생성 시도는 UTC 기준 세션당 시간별 10회, 전체 일별 100회이며 동시 생성은 세션당 1건, 전체 4건입니다.
+        한도 초과와 실행 중 중복 요청은 HTTP 200, mode=rules로 반환합니다. 동일한 근거, 모델, 프롬프트 버전의 성공한 초안은 같은 세션에서 재사용합니다.
       parameters:
         - $ref: "#/components/parameters/Origin"
       requestBody:
@@ -205,6 +216,10 @@ paths:
       responses:
         "200":
           description: AI 또는 규칙 기반 초안과 근거 ID, 실행 모드를 반환합니다.
+          headers:
+            X-Review-Draft-Cache:
+              description: 저장된 AI 초안을 재사용한 경우 hit입니다. generatedAt은 최초 생성 시각입니다.
+              schema: { const: hit }
           content:
             application/json:
               schema: { $ref: "#/components/schemas/ReviewDraftResponse" }
@@ -348,7 +363,7 @@ components:
             citations: { type: array, minItems: 1, maxItems: 8, items: { type: string } }
     WorkspaceView:
       type: object
-      description: 전체 타입은 src/application/workbench.ts의 WorkspaceView를 참고하세요. 세션의 가상 데이터만 포함합니다.
+      description: 화면용 조회 응답입니다. 전체 타입은 src/application/workbench.ts의 WorkspaceView를 참고하세요. close는 요약 메타데이터만 포함하며 전체 마감 증빙은 /api/export?format=json으로 제공합니다.
       required:
         [
           version,
@@ -366,12 +381,23 @@ components:
           sandbox,
           profile,
           availableProfiles,
+          close,
         ]
       properties:
         version: { type: integer, minimum: 1 }
         period: { const: "2026-08" }
         asOf: { type: string, format: date }
         status: { enum: [open, review, closed] }
+        close:
+          oneOf:
+            - type: "null"
+            - type: object
+              additionalProperties: false
+              required: [hash, closedAt, closedBy]
+              properties:
+                hash: { type: string, pattern: "^[a-f0-9]{64}$" }
+                closedAt: { type: string, format: date-time }
+                closedBy: { type: string }
         orders: { type: array, items: { type: object } }
         settlements: { type: array, items: { type: object } }
         sources: { type: array, items: { type: object } }

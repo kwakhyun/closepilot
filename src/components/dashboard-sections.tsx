@@ -52,7 +52,7 @@ export function DashboardOverview({
     .reduce((sum, row) => sum + Math.abs(row.delta), 0);
 
   return (
-    <>
+    <div className="dashboard-overview">
       <div className="metrics-grid">
         <Metric
           label="주문 총액"
@@ -138,7 +138,7 @@ export function DashboardOverview({
           <ArrowRight size={14} />
         </button>
       </div>
-    </>
+    </div>
   );
 }
 

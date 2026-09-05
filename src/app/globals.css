@@ -714,11 +714,11 @@ a svg {
   font-size: 27px;
   line-height: 1.2;
   font-weight: 640;
-  letter-spacing: -0.045em;
+  letter-spacing: 0;
   font-variant-numeric: tabular-nums;
   margin-top: 13px;
   color: #2a3b32;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 .metric-value small {
   font-size: 16px;
@@ -3605,6 +3605,25 @@ a svg {
   }
 }
 @media (max-width: 800px) {
+  .dashboard-overview {
+    display: flex;
+    flex-direction: column;
+  }
+  .dashboard-overview > .insight-banner {
+    order: 0;
+  }
+  .dashboard-overview > .transactions-card {
+    order: 1;
+  }
+  .dashboard-overview > .metrics-grid {
+    order: 2;
+  }
+  .dashboard-overview > .overview-analytics {
+    order: 3;
+  }
+  .dashboard-overview > .overview-bottom {
+    order: 4;
+  }
   .sidebar {
     transform: translateX(-100%);
     transition: transform 0.2s;
@@ -3833,6 +3852,16 @@ a svg {
   }
 }
 @media (max-width: 540px) {
+  .transactions-card > .card-heading > a {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+  .transactions-card > .card-heading > a > span {
+    display: none;
+  }
   .main-content {
     padding: 22px 15px 0;
   }
@@ -3899,7 +3928,7 @@ a svg {
     height: 15px;
   }
   .metric-value {
-    font-size: 23px;
+    font-size: 16px;
     margin-top: 11px;
   }
   .metric-value small {

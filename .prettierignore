@@ -3,6 +3,9 @@ node_modules
 .vercel
 .tools
 .data
+coverage
+test-results
+playwright-report
 .agents/skills/neon
 .agents/skills/neon-postgres
 verifier/.gradle

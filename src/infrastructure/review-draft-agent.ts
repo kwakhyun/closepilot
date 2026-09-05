@@ -9,11 +9,15 @@ import {
 } from "@/domain/review-draft";
 
 export const DEFAULT_REVIEW_MODEL = "gpt-5.6-luna";
+export const REVIEW_DRAFT_PROMPT_VERSION = "grounded-review-v1";
+export function reviewModel() {
+  return process.env.OPENAI_REVIEW_MODEL?.trim() || DEFAULT_REVIEW_MODEL;
+}
 
 export async function generateGroundedReviewDraft(
   packet: ReviewEvidencePacket,
 ): Promise<{ draft: ReviewDraftContent; model: string; totalTokens: number | undefined }> {
-  const model = process.env.OPENAI_REVIEW_MODEL?.trim() || DEFAULT_REVIEW_MODEL;
+  const model = reviewModel();
   const readEvidence = tool({
     description:
       "현재 거래에 저장된 합성 주문·정산 근거를 읽습니다. 자료를 수정하거나 검토·마감을 승인하지 않습니다.",
@@ -40,6 +44,7 @@ export async function generateGroundedReviewDraft(
     output: Output.object({ schema: reviewDraftContentSchema }),
     stopWhen: isStepCount(3),
     maxOutputTokens: 700,
+    maxRetries: 0,
     prepareStep: ({ stepNumber }) =>
       stepNumber === 0
         ? { toolChoice: { type: "tool", toolName: "readEvidence" } }

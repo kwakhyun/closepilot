@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { seedWorkspace } from "../src/domain/seed";
 import { applyCommand, reviewedRows, workspaceView } from "../src/application/workbench";
-import { SCHEMA, JSONB_GUARDS } from "../src/infrastructure/schema";
+import { SCHEMA, JSONB_GUARDS, REVIEW_DRAFT_STORAGE } from "../src/infrastructure/schema";
 import { RULE_VERSION } from "../src/domain/model";
 import { reconcile } from "../src/domain/reconcile";
 
@@ -120,4 +120,8 @@ console.log(
     exceptions: baseline.issues,
     hash: workspace.close!.hash,
   }),
+);
+writeFileSync(
+  "migrations/003_review_drafts.sql",
+  `-- Generated from src/infrastructure/schema.ts by npm run fixtures.\n${REVIEW_DRAFT_STORAGE.trim()}\n`,
 );

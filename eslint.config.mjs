@@ -11,6 +11,8 @@ export default defineConfig([
     "next-env.d.ts",
     ".data/**",
     "coverage/**",
+    "test-results/**",
+    "playwright-report/**",
     ".tools/**",
     "verifier/build/**",
     ".agents/skills/neon/**",

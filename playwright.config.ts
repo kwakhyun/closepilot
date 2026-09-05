@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const baseURL = "http://localhost:3000";
+const port = process.env.PLAYWRIGHT_PORT || "3000";
+const baseURL = `http://localhost:${port}`;
 const localDatabasePath = `.data/playwright-${process.pid}`;
 
 export default defineConfig({
@@ -19,13 +20,15 @@ export default defineConfig({
     video: "retain-on-failure",
   },
   webServer: {
-    command: process.env.CI ? "npm start" : "npm run dev",
+    command: process.env.CI ? `npm start -- --port ${port}` : `npm run dev -- --port ${port}`,
     url: `${baseURL}/api/health`,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120_000,
     env: {
       APP_ORIGIN: baseURL,
       PGLITE_PATH: localDatabasePath,
+      DATABASE_URL: process.env.PLAYWRIGHT_DATABASE_URL || "",
+      OPENAI_API_KEY: "",
     },
   },
 });

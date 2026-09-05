@@ -102,7 +102,13 @@ export function TransactionTable({
             {expanded ? "주문별 금액과 검토 근거를 확인하세요" : "차액과 원본 자료를 확인하세요"}
           </p>
         </div>
-        <a className="button ghost small" href="/api/export?format=csv" download>
+        <a
+          className="button ghost small"
+          href="/api/export?format=csv"
+          download
+          aria-label="전체 CSV 다운로드"
+          title="전체 CSV 다운로드"
+        >
           <Download size={15} />
           <span>전체 CSV 다운로드</span>
         </a>

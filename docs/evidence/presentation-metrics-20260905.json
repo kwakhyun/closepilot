@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-05",
+  "runtime": "Node.js 24.19.0",
+  "fixture": "createDemoWorkspace('2026-08-31T09:00:00.000Z', { showcase: 'completed' })",
+  "rows": 128,
+  "comparison": "JSON.stringify of the current read DTO versus the same DTO with the full stored close snapshot restored",
+  "beforeBytes": 216063,
+  "afterBytes": 115653,
+  "reductionPercent": 46.472556615431614,
+  "beforeNodeGzipBytes": 21901,
+  "afterNodeGzipBytes": 12125,
+  "limitations": "Local serialization and gzip only. No network transfer, latency, throughput or user impact measurement. Stored close evidence is unchanged."
+}

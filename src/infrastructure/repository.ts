@@ -2,6 +2,7 @@ import { DomainError, type Workspace } from "@/domain/model";
 import { digest } from "@/domain/canonical";
 import { applyCommand, type Command } from "@/application/workbench";
 import { createDemoWorkspace, type DemoSessionOptions } from "@/application/showcase";
+import { cloneWorkspaceProfile } from "@/application/onboarding";
 import type { Database, DbSession } from "./database";
 
 const TTL_MS = 6 * 60 * 60 * 1000;
@@ -43,8 +44,8 @@ export class WorkspaceRepository {
     clientBucket: string,
     now = new Date(),
     seedOptions: DemoSessionOptions = {},
+    clone?: { session: string; expectedVersion: number; brandName: string },
   ): Promise<Workspace> {
-    const workspace = createDemoWorkspace(now.toISOString(), seedOptions);
     return this.database.transaction(async (transaction) => {
       await transaction.query("DELETE FROM closepilot_workspaces WHERE expires_at < $1", [
         now.toISOString(),
@@ -62,6 +63,27 @@ export class WorkspaceRepository {
         250,
         new Date(now.getTime() + 86_400_000).toISOString(),
       );
+      let options = seedOptions;
+      if (clone) {
+        const [source] = await transaction.query<{ state: Workspace }>(
+          "SELECT state FROM closepilot_workspaces WHERE session_hash = $1 AND expires_at > now() FOR SHARE",
+          [clone.session],
+        );
+        if (!source)
+          throw new DomainError(
+            "SESSION_EXPIRED",
+            "복제할 세션이 만료되었습니다. 새 데모를 시작하세요.",
+            401,
+          );
+        if (source.state.version !== clone.expectedVersion)
+          throw new DomainError(
+            "VERSION_CONFLICT",
+            "현재 설정이 변경되었습니다. 새로고침한 뒤 다시 복제하세요.",
+            409,
+          );
+        options = { profile: cloneWorkspaceProfile(source.state, clone.brandName) };
+      }
+      const workspace = createDemoWorkspace(now.toISOString(), options);
       await transaction.query(
         "INSERT INTO closepilot_workspaces(session_hash, state, version, status, expires_at) VALUES ($1, $2::jsonb, $3, $4, $5)",
         [session, workspace, workspace.version, workspace.status, expiry],

@@ -7,6 +7,8 @@ export interface SessionSelection {
   templateId?: "lumiere-beauty-v1" | "morrow-food-v1";
   brandName?: string;
   showcase?: "completed";
+  cloneCurrent?: true;
+  expectedVersion?: number;
 }
 
 export type CommandResult = "success" | "expired" | "failed";
@@ -55,12 +57,14 @@ async function createSession(
 
 export function useWorkspaceSession() {
   const [workspace, setWorkspace] = useState<WorkspaceView | null>(null);
+  const [sessionRevision, setSessionRevision] = useState(0);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [analysisLoading, setAnalysisLoading] = useState(false);
   const [toast, setToast] = useState<{ message: string; error: boolean } | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const analysisRequest = useRef<AbortController | null>(null);
 
   const showToast = useCallback((message: string, isError = false) => {
     if (toastTimer.current) clearTimeout(toastTimer.current);
@@ -100,6 +104,7 @@ export function useWorkspaceSession() {
   useEffect(
     () => () => {
       if (toastTimer.current) clearTimeout(toastTimer.current);
+      analysisRequest.current?.abort();
     },
     [],
   );
@@ -166,6 +171,10 @@ export function useWorkspaceSession() {
     try {
       const view = await createSession(selection);
       setWorkspace(view);
+      setSessionRevision((revision) => revision + 1);
+      analysisRequest.current?.abort();
+      setAnalysis(null);
+      setAnalysisLoading(false);
       setError("");
       showToast(
         selection?.showcase === "completed"
@@ -194,22 +203,30 @@ export function useWorkspaceSession() {
   }
 
   async function analyze() {
+    analysisRequest.current?.abort();
+    const controller = new AbortController();
+    analysisRequest.current = controller;
     setAnalysisLoading(true);
     try {
-      setAnalysis(await responseData<Analysis>(await fetch("/api/analysis")));
+      const result = await responseData<Analysis>(
+        await fetch("/api/analysis", { signal: controller.signal }),
+      );
+      if (!controller.signal.aborted) setAnalysis(result);
     } catch (failure) {
+      if (controller.signal.aborted) return;
       if (failure instanceof ApiRequestError && failure.status === 401) {
         await recoverExpiredSession();
         return;
       }
       showToast((failure as Error).message, true);
     } finally {
-      setAnalysisLoading(false);
+      if (!controller.signal.aborted) setAnalysisLoading(false);
     }
   }
 
   return {
     workspace,
+    sessionRevision,
     error,
     busy,
     analysis,

@@ -1,0 +1,90 @@
+{
+  "target": "http://localhost:3127",
+  "testedAt": "2026-09-05T05:08:04.988Z",
+  "durationMs": 978,
+  "checks": 20,
+  "results": [
+    {
+      "name": "database readiness",
+      "status": "passed"
+    },
+    {
+      "name": "unauthenticated read is denied",
+      "status": "passed"
+    },
+    {
+      "name": "cross-origin session creation is denied",
+      "status": "passed"
+    },
+    {
+      "name": "isolated HttpOnly session with a real baseline",
+      "status": "passed"
+    },
+    {
+      "name": "missing idempotency key is rejected",
+      "status": "passed"
+    },
+    {
+      "name": "malformed JSON and unexpected tenant fields are rejected",
+      "status": "passed"
+    },
+    {
+      "name": "unresolved close rolls back",
+      "status": "passed"
+    },
+    {
+      "name": "two concurrent identical requests have one effect",
+      "status": "passed"
+    },
+    {
+      "name": "same key with changed content conflicts",
+      "status": "passed"
+    },
+    {
+      "name": "two concurrent stale revisions cannot both commit",
+      "status": "passed"
+    },
+    {
+      "name": "CSV mapping preview and invalid money checks",
+      "status": "passed"
+    },
+    {
+      "name": "atomic import, content deduplication and fresh-run requirement",
+      "status": "passed"
+    },
+    {
+      "name": "deterministic analysis is explicitly labelled",
+      "status": "passed"
+    },
+    {
+      "name": "evidence-backed reviews preserve original money and match counts",
+      "status": "passed"
+    },
+    {
+      "name": "close returns evidence metadata without duplicating the package",
+      "status": "passed"
+    },
+    {
+      "name": "closed writes are denied while identical close retries succeed",
+      "status": "passed"
+    },
+    {
+      "name": "CSV export neutralizes formula injection",
+      "status": "passed"
+    },
+    {
+      "name": "exported package has intact snapshot and audit checksums",
+      "status": "passed"
+    },
+    {
+      "name": "a second visitor remains unchanged",
+      "status": "passed"
+    },
+    {
+      "name": "a forged session token reveals no workspace",
+      "status": "passed"
+    }
+  ],
+  "finalRows": 131,
+  "snapshotHash": "c8db9e460934ca38acccf9f87468268758b2e10d14a23bc92cad4175401e77b9"
+}

@@ -1,35 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { WorkspaceView } from "@/application/workbench";
-import { CHANNELS, CHANNEL_LABELS } from "@/domain/model";
 import { money, shortMoney } from "./format";
+import { aggregateTrend, createTrendScale, trendBar, trendY } from "./trend-data";
 
 export function TrendChart({ workspace }: { workspace: WorkspaceView }) {
   const [mode, setMode] = useState<"daily" | "channel">("daily");
   const [hovered, setHovered] = useState<number | null>(null);
-  const daily = Array.from({ length: 31 }, (_, index) => {
-    const date = `2026-08-${String(index + 1).padStart(2, "0")}`;
-    const rows = workspace.rows.filter((row) => row.date === date);
-    return {
-      label: `${index + 1}일`,
-      expected: rows.reduce((sum, row) => sum + row.expectedNet, 0),
-      actual: rows.reduce((sum, row) => sum + row.actualNet, 0),
-    };
-  });
-  const values =
-    mode === "daily"
-      ? daily
-      : CHANNELS.map((channel) => ({
-          label: CHANNEL_LABELS[channel],
-          expected: workspace.rows
-            .filter((row) => row.channel === channel)
-            .reduce((sum, row) => sum + row.expectedNet, 0),
-          actual: workspace.rows
-            .filter((row) => row.channel === channel)
-            .reduce((sum, row) => sum + row.actualNet, 0),
-        }));
-  const maximum = Math.max(1, ...values.flatMap((value) => [value.actual, value.expected])) * 1.2;
+  const aggregates = useMemo(
+    () =>
+      aggregateTrend(workspace.rows, workspace.period, workspace.profile.policy.enabledChannels),
+    [workspace.rows, workspace.period, workspace.profile.policy.enabledChannels],
+  );
+  const values = aggregates[mode];
+  const scale = useMemo(() => createTrendScale(values), [values]);
   const width = 650,
     height = 164,
     left = 46,
@@ -87,21 +72,21 @@ export function TrendChart({ workspace }: { workspace: WorkspaceView }) {
           role="img"
           aria-label={`${mode === "daily" ? "일별" : "채널별"} 예상 정산액과 자료상 정산액 비교 막대 차트`}
         >
-          {[0, 1, 2, 3].map((tick) => {
-            const value = (maximum * tick) / 3,
-              y = top + height - (height * tick) / 3;
+          {scale.ticks.map((value) => {
+            const y = trendY(value, scale, height, top);
             return (
-              <g key={tick}>
+              <g key={value}>
                 <line
                   x1={left}
                   y1={y}
                   x2={width - 10}
                   y2={y}
-                  stroke="#e9edeb"
-                  strokeDasharray={tick === 0 ? undefined : "3 4"}
+                  data-zero-baseline={value === 0 ? "true" : undefined}
+                  stroke={value === 0 ? "#819087" : "#e9edeb"}
+                  strokeDasharray={value === 0 ? undefined : "3 4"}
                 />
                 <text x={left - 10} y={y + 4} textAnchor="end" fill="#8a9792" fontSize="10">
-                  {tick === 0 ? "0" : shortMoney(value)}
+                  {value === 0 ? "0" : shortMoney(value)}
                 </text>
               </g>
             );
@@ -109,8 +94,8 @@ export function TrendChart({ workspace }: { workspace: WorkspaceView }) {
           {values.map((value, index) => {
             const barWidth = Math.min(mode === "daily" ? 7 : 32, slot * 0.35);
             const x = left + slot * index + slot / 2;
-            const actualHeight = Math.max(0, (value.actual / maximum) * height),
-              expectedHeight = Math.max(0, (value.expected / maximum) * height);
+            const actual = trendBar(value.actual, scale, height, top);
+            const expected = trendBar(value.expected, scale, height, top);
             return (
               <g
                 key={value.label}
@@ -125,22 +110,29 @@ export function TrendChart({ workspace }: { workspace: WorkspaceView }) {
                   fill={hovered === index ? "#f0f5f2" : "transparent"}
                 />
                 <rect
+                  data-series="expected"
+                  data-value={value.expected}
                   x={x - barWidth - 1}
-                  y={top + height - expectedHeight}
+                  y={expected.y}
                   width={barWidth}
-                  height={expectedHeight}
+                  height={expected.height}
                   rx="2"
                   fill="#c2d8ce"
                 />
                 <rect
+                  data-series="actual"
+                  data-value={value.actual}
                   x={x + 1}
-                  y={top + height - actualHeight}
+                  y={actual.y}
                   width={barWidth}
-                  height={actualHeight}
+                  height={actual.height}
                   rx="2"
                   fill={hovered === index ? "#145f46" : "#34896b"}
                 />
-                {(mode === "channel" || index === 0 || index === 30 || index % 7 === 0) && (
+                {(mode === "channel" ||
+                  index === 0 ||
+                  index === values.length - 1 ||
+                  index % 7 === 0) && (
                   <text x={x} y="204" fill="#819087" fontSize="10" textAnchor="middle">
                     {value.label}
                   </text>

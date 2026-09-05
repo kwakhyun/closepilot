@@ -153,7 +153,8 @@ export function OnboardingPanel({
             disabled={busy || brandName.trim().length < 2}
             onClick={() =>
               onPrepareSession({
-                templateId: profile.templateId as SessionSelection["templateId"],
+                cloneCurrent: true,
+                expectedVersion: workspace.version,
                 brandName: brandName.trim(),
               })
             }

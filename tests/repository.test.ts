@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { createDatabase, type Database } from "@/infrastructure/database";
 import { WorkspaceRepository } from "@/infrastructure/repository";
 import { digest } from "@/domain/canonical";
-import { applyCommand, reviewedRows } from "@/application/workbench";
+import { applyCommand, reviewedRows, workspaceView } from "@/application/workbench";
 
 // TEST_DATABASE_URL must point to a dedicated disposable test database.
 // Without it, real PostgreSQL semantics run in PGlite (no Docker required).
@@ -102,6 +102,98 @@ describe("PostgreSQL transaction boundary", () => {
     expect(
       await database.query("SELECT * FROM closepilot_audit_events WHERE session_hash = $1", [id]),
     ).toHaveLength(2);
+  });
+  it.each([
+    [
+      "orders",
+      "order_id,channel,date,gross,refund\nBIG-A,d2c,2026-08-01,600000000000,0\nBIG-B,d2c,2026-08-01,600000000000,0",
+    ],
+    [
+      "settlements",
+      "settlement_id,order_id,channel,gross,refund,fee,net,due_date,paid_date\nBIG-A,ORPHAN-A,d2c,600000000000,0,0,600000000000,2026-08-31,2026-08-31\nBIG-B,ORPHAN-B,d2c,600000000000,0,0,600000000000,2026-08-31,2026-08-31",
+    ],
+    [
+      "settlements",
+      "settlement_id,order_id,channel,gross,refund,fee,net,due_date,paid_date\nBIG-A,ORPHAN-A,d2c,600000000000,0,0,600000000000,2026-08-31,2026-08-31\nBIG-B,ORPHAN-B,d2c,0,0,600000000000,-600000000000,2026-08-31,2026-08-31",
+    ],
+  ] as const)(
+    "rolls back overflowing %s totals, including cancelling deltas",
+    async (kind, csv) => {
+      const id = await create();
+      const before = await repository.get(id);
+      await expect(
+        repository.execute(id, randomUUID(), {
+          action: "import",
+          expectedVersion: 1,
+          kind,
+          filename: "overflow.csv",
+          csv,
+        }),
+      ).rejects.toMatchObject({ code: "INVALID_MONEY" });
+      const after = await repository.get(id);
+      expect(after).toEqual(before);
+      expect(workspaceView(after).summary.gross).toBe(17_072_000);
+      expect(
+        await database.query("SELECT * FROM closepilot_receipts WHERE session_hash = $1", [id]),
+      ).toHaveLength(0);
+      expect(
+        await database.query("SELECT * FROM closepilot_audit_events WHERE session_hash = $1", [id]),
+      ).toHaveLength(2);
+    },
+  );
+
+  it("clones the current saved mappings into independent fresh data and rejects stale clones", async () => {
+    const id = await create();
+    const mapping = {
+      order_id: "custom_order_id",
+      channel: "channel",
+      date: "date",
+      gross: "gross",
+      refund: "refund",
+    };
+    const { workspace: source } = await repository.execute(id, randomUUID(), {
+      action: "import",
+      expectedVersion: 1,
+      kind: "orders",
+      filename: "mapping.csv",
+      saveMapping: true,
+      mapping,
+      csv: "custom_order_id,channel,date,gross,refund\nCUSTOM-1,d2c,2026-08-01,10000,0",
+    });
+    const copied = await repository.create(
+      session(),
+      session(),
+      new Date(),
+      {},
+      { session: id, expectedVersion: source.version, brandName: "COPY" },
+    );
+    expect(copied.profile?.mappings).toEqual(source.profile?.mappings);
+    expect(copied.profile?.policy).toEqual(source.profile?.policy);
+    expect(copied.profile?.clonedFrom).toBe(source.profile?.id);
+    expect(copied.orders).toHaveLength(128);
+    expect(copied.version).toBe(1);
+    expect(copied.resolutions).toEqual({});
+    expect(await repository.get(id)).toEqual(source);
+    copied.profile!.mappings.orders.order_id = "changed";
+    expect((await repository.get(id)).profile?.mappings.orders.order_id).toBe("custom_order_id");
+    await expect(
+      repository.create(
+        session(),
+        session(),
+        new Date(),
+        {},
+        { session: id, expectedVersion: 1, brandName: "STALE" },
+      ),
+    ).rejects.toMatchObject({ code: "VERSION_CONFLICT" });
+    await expect(
+      repository.create(
+        session(),
+        session(),
+        new Date(),
+        {},
+        { session: session(), expectedVersion: 1, brandName: "MISSING" },
+      ),
+    ).rejects.toMatchObject({ code: "SESSION_EXPIRED" });
   });
   it("enforces closed immutability and append-only audit updates in the database", async () => {
     const id = await create();

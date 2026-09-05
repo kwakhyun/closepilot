@@ -1,4 +1,4 @@
-import { SCHEMA, JSONB_GUARDS } from "./schema";
+import { SCHEMA, JSONB_GUARDS, REVIEW_DRAFT_STORAGE } from "./schema";
 
 export interface DbSession {
   query<T extends Record<string, unknown> = Record<string, unknown>>(
@@ -50,7 +50,7 @@ export async function createDatabase(
         "CREATE TABLE IF NOT EXISTS closepilot_schema_migrations (version INTEGER PRIMARY KEY, applied_at TIMESTAMPTZ NOT NULL DEFAULT now())",
       );
       const migrations = await transaction.unsafe(
-        "SELECT version FROM closepilot_schema_migrations WHERE version IN (1, 2)",
+        "SELECT version FROM closepilot_schema_migrations WHERE version IN (1, 2, 3)",
       );
       if (!migrations.some((migration) => migration.version === 1)) {
         await transaction.unsafe(SCHEMA);
@@ -59,6 +59,10 @@ export async function createDatabase(
       if (!migrations.some((migration) => migration.version === 2)) {
         await transaction.unsafe(JSONB_GUARDS);
         await transaction.unsafe("INSERT INTO closepilot_schema_migrations(version) VALUES (2)");
+      }
+      if (!migrations.some((migration) => migration.version === 3)) {
+        await transaction.unsafe(REVIEW_DRAFT_STORAGE);
+        await transaction.unsafe("INSERT INTO closepilot_schema_migrations(version) VALUES (3)");
       }
     });
   } else {
@@ -75,6 +79,7 @@ export async function createDatabase(
     const client = new PGlite(localPath);
     await client.exec(SCHEMA);
     await client.exec(JSONB_GUARDS);
+    await client.exec(REVIEW_DRAFT_STORAGE);
     database = {
       async query<T extends Record<string, unknown>>(query: string, params: unknown[] = []) {
         return (await client.query<T>(query, params)).rows;

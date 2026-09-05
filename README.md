@@ -41,8 +41,14 @@
 - 정산 누락, 주문 미확인, 중복, 환불액, 수수료, 금액, 입금 시점의 7가지 예외를 분류하되 모든 원본 행을 보존합니다.
 - `import → reconcile → resolve → close`를 명령으로 처리합니다. 새 자료는 재대사 전에 승인할 수 없고, 결과 식별값(fingerprint)이 바뀌면 이전 승인도 무효가 됩니다.
 - 상태와 감사 이벤트, 요청 처리 기록(receipt)은 한 트랜잭션에 저장합니다. 확정 후 변경은 애플리케이션과 DB 트리거가 함께 거부합니다.
+- CSV 반영 전에는 전체 합계와 차액의 절댓값 합계도 검사합니다. 1조 원 한도를 넘으면 자료, 열 연결, 감사 기록과 요청 처리 기록을 모두 저장하지 않습니다.
+- 설정 복제는 현재 세션에 저장한 열 연결과 정책을 서버에서 읽어 새 작업공간으로 복사합니다. 원본 버전이 바뀌거나 세션이 만료되면 복제를 거부합니다.
+- 새 데모로 전환하면 CSV 미리보기와 모달 상태를 초기화하고 이전 검증 요청을 취소합니다. 모바일 대시보드는 미검토 거래를 요약 지표보다 먼저 배치합니다.
+- 차트는 음수 정산액을 영점 아래에 표시합니다. 일별과 채널별 집계를 한 번의 순회로 만들고, 행 데이터가 같으면 화면 내 상호작용에서 재사용합니다.
+- 화면 조회의 `close`는 해시, 마감 시각과 처리자만 반환합니다. 원본 입력과 검토 근거를 포함한 전체 마감 증빙은 JSON 다운로드에서 제공합니다.
 - Kotlin `/reconcile` 응답은 TypeScript가 만든 행별 계약 검증 데이터와 비교하고, `/verify`는 마감 패키지의 계산값과 감사 해시를 다시 검사합니다.
 - AI 검토 초안은 서버가 만든 근거 묶음(evidence packet)만 읽습니다. 허용되지 않은 인용, 금액, 날짜 또는 완료 단정이 있으면 결과를 폐기하고 규칙 기반 초안으로 전환합니다.
+- AI 생성 시도는 세션당 시간별 10회, 전체 일별 100회로 제한합니다(UTC). 세션당 1건, 전체 4건까지 동시에 생성하며, 동일한 근거와 모델의 성공한 초안은 세션 내에서 재사용합니다. 제한에 도달해도 규칙 기반 초안으로 검토를 계속할 수 있습니다.
 
 ```mermaid
 flowchart LR
@@ -50,9 +56,10 @@ flowchart LR
   UI --> API[REST · Zod · 세션 / Origin]
   API --> App[Application commands]
   App --> Domain[Domain · KRW / 대사 / 감사]
-  App --> Repo[Repository · 잠금 / 멱등성]
+  API --> Repo[Repository · 잠금 / 멱등성]
+  Repo --> App
   Repo --> DB[(PostgreSQL)]
-  UI --> Agent[읽기 전용 AI 초안]
+  API --> Agent[읽기 전용 AI 초안]
   Agent --> Evidence[서버 근거 패킷]
   App -. 행별 계약 .-> Kotlin[Kotlin /reconcile]
   App --> Package[마감 증빙 JSON]
@@ -81,9 +88,9 @@ flowchart LR
 | 주문 총액 / 예상 정산액 | ₩17,072,000 / ₩16,072,966 |
 | 예외 차액 절댓값 합계   |                  ₩358,281 |
 
-- Vitest 12개 파일, TypeScript 테스트 121개
-- 지정한 domain/application/http/repository 범위의 커버리지: statements 91.56%, branches 84.86%, functions 92.96%, lines 91.95%
-- Playwright 7개: 모바일, 접근 가능한 대화상자, AI 승인 경계, 자료 반영부터 마감 다운로드까지 전체 흐름, 완료형 예시
+- Vitest 16개 파일, TypeScript 테스트 156개
+- 지정한 domain/application/http/repository/AI 저장소 범위의 커버리지: statements 92.5%, branches 86.04%, functions 93.33%, lines 92.92%
+- Playwright 7개: 320px과 390px 모바일, 대화상자, AI 승인 경계, 음수 정산을 포함한 전체 마감 흐름, 완료형 예시, 프로필 전환 시 이전 CSV 상태 제거와 저장 설정 복제
 - Kotlin 테스트 10개: `/reconcile`, TypeScript 행별 계약 비교, `/verify`, 패키지·체크섬·감사 변조 거부
 - 실행 중인 서버를 대상으로 한 HTTP smoke 20단계와 PostgreSQL 17 CI
 
@@ -109,6 +116,8 @@ npm run fixtures
 npm run smoke -- http://localhost:3000
 ```
 
+3000번 포트를 사용 중이라면 `PLAYWRIGHT_PORT=3107 npm run test:e2e`로 별도 포트에서 검증합니다. 브라우저 테스트는 기존 서버를 재사용하지 않으며 실제 AI 호출을 끕니다. 기본 저장소는 실행별 PGlite입니다. PostgreSQL로 브라우저 흐름을 검증하려면 다른 검사와 공유하지 않는 전용 DB를 `PLAYWRIGHT_DATABASE_URL`로 지정합니다. 저장소 통합 테스트의 `TEST_DATABASE_URL`이나 앱의 `DATABASE_URL`은 브라우저 테스트에 자동 전달하지 않습니다.
+
 Kotlin 검증에는 JDK 21이 필요합니다.
 
 ```bash
@@ -117,7 +126,7 @@ bash gradlew test run --args='../fixtures/closed-package.json'
 bash gradlew run --args='--server 8081'
 ```
 
-Windows에서는 루트의 `scripts/verify-kotlin.ps1`을 사용합니다. Docker 설정도 제공하지만 이 작업 환경에서 Docker 실행은 검증하지 않았습니다.
+Windows에서는 루트의 `scripts/verify-kotlin.ps1`을 사용합니다. Docker 설정도 제공하지만 웹 앱의 컨테이너 빌드와 Compose 실행은 검증하지 않았습니다. 테스트용 PostgreSQL 컨테이너 실행과는 구분합니다.
 
 ## 범위와 남은 위험
 

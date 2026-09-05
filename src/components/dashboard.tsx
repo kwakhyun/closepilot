@@ -46,6 +46,7 @@ function sectionFromUrl(): WorkspaceSection {
 export function Dashboard() {
   const {
     workspace,
+    sessionRevision,
     error,
     busy,
     analysis,
@@ -198,6 +199,8 @@ export function Dashboard() {
     setPendingSession(null);
     setSelectedKey(null);
     navigate("overview");
+    setImportOpen(false);
+    setCloseOpen(false);
     setSearch("");
     setFilter("issues");
   }
@@ -451,7 +454,7 @@ export function Dashboard() {
       {workspace && (
         <>
           <ReviewDrawer
-            key={selectedKey ?? "none"}
+            key={`${sessionRevision}:${selectedKey ?? "none"}`}
             row={selectedRow}
             workspace={workspace}
             onClose={() => setSelectedKey(null)}
@@ -461,6 +464,7 @@ export function Dashboard() {
             busy={busy}
           />
           <ImportModal
+            key={`import:${sessionRevision}`}
             open={importOpen}
             onClose={() => setImportOpen(false)}
             onCommand={onCommand}
@@ -472,6 +476,7 @@ export function Dashboard() {
             onSessionExpired={recoverExpiredSession}
           />
           <CloseModal
+            key={`close:${sessionRevision}`}
             open={closeOpen}
             onClose={() => setCloseOpen(false)}
             workspace={workspace}

@@ -59,6 +59,7 @@ export function ImportModal({
   const input = useRef<HTMLInputElement>(null);
   const mappingSection = useRef<HTMLElement>(null);
   const requestVersion = useRef(0);
+  const previewRequest = useRef<AbortController | null>(null);
   const currentStep = preview?.valid ? 3 : csv ? 2 : 1;
   const savedMapping = savedMappings[kind];
   const savedMappingCompatible =
@@ -73,6 +74,13 @@ export function ImportModal({
     policy.enabledChannels,
     policy.feeBps,
   );
+  useEffect(
+    () => () => {
+      requestVersion.current++;
+      previewRequest.current?.abort();
+    },
+    [],
+  );
   useEffect(() => {
     if (!open || !preview?.valid) return;
     requestAnimationFrame(() =>
@@ -81,11 +89,15 @@ export function ImportModal({
   }, [open, preview?.valid]);
   async function validate(text: string, mapping?: Record<string, string>, importKind = kind) {
     const version = ++requestVersion.current;
+    previewRequest.current?.abort();
+    const controller = new AbortController();
+    previewRequest.current = controller;
     setValidating(true);
     setError("");
     try {
       const response = await fetch("/api/imports/preview", {
         method: "POST",
+        signal: controller.signal,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ kind: importKind, csv: text, mapping }),
       });
@@ -117,15 +129,25 @@ export function ImportModal({
   }
   async function selectFile(file: File | undefined) {
     if (!file) return;
+    const version = ++requestVersion.current;
+    previewRequest.current?.abort();
+    setPreview(null);
+    setCsv("");
+    setFilename("");
+    setValidating(false);
     if (!file.name.toLowerCase().endsWith(".csv") || file.size > 256_000) {
       setError("250KB 이하의 CSV 파일을 선택하세요.");
       return;
     }
-    const text = await file.text();
-    setCsv(text);
-    setFilename(file.name);
-    setPreview(null);
-    await validate(text);
+    try {
+      const text = await file.text();
+      if (version !== requestVersion.current) return;
+      setCsv(text);
+      setFilename(file.name);
+      await validate(text);
+    } catch (failure) {
+      if (version === requestVersion.current) setError((failure as Error).message);
+    }
   }
   return (
     <Modal open={open} onClose={onClose} title="CSV 자료 가져오기" wide className="import-modal">

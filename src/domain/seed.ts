@@ -1,4 +1,11 @@
-import { RULE_VERSION, feeFor, type Order, type Settlement, type Workspace } from "./model";
+import {
+  RULE_VERSION,
+  feeFor,
+  type Order,
+  type Settlement,
+  type Workspace,
+  type OnboardingProfileSnapshot,
+} from "./model";
 import { digest } from "./canonical";
 import { appendEvent } from "./audit";
 import { createProfileSnapshot, DEFAULT_PROFILE_ID, onboardingTemplate } from "./onboarding";
@@ -6,17 +13,23 @@ import { createProfileSnapshot, DEFAULT_PROFILE_ID, onboardingTemplate } from ".
 export interface SeedOptions {
   templateId?: string;
   brandName?: string;
+  /** Trusted server snapshot; never accepted from an HTTP request body. */
+  profile?: OnboardingProfileSnapshot;
 }
 
 export function seedWorkspace(
   now = new Date().toISOString(),
   options: SeedOptions = {},
 ): Workspace {
-  const template = onboardingTemplate(options.templateId ?? DEFAULT_PROFILE_ID);
-  const profile = createProfileSnapshot(template.templateId, options.brandName);
+  const template = onboardingTemplate(
+    options.profile?.templateId ?? options.templateId ?? DEFAULT_PROFILE_ID,
+  );
+  const profile = options.profile
+    ? structuredClone(options.profile)
+    : createProfileSnapshot(template.templateId, options.brandName);
   const orders: Order[] = [];
   const settlements: Settlement[] = [];
-  const channels = template.seed.enabledChannels;
+  const channels = profile.policy.enabledChannels;
   const count = template.seed.orderCount;
   for (let i = 1; i <= count; i++) {
     const channel = channels[(i - 1) % channels.length];
