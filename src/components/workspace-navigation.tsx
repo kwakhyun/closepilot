@@ -7,7 +7,6 @@ import {
   ArrowUpRight,
   BookOpen,
   CircleHelp,
-  Command as CommandIcon,
   Database,
   FolderSync,
   LayoutDashboard,
@@ -106,7 +105,7 @@ export function WorkspaceSidebar({
           </span>
         </div>
       </div>
-      <span className="nav-caption">WORKSPACE</span>
+      <span className="nav-caption">매출 관리</span>
       <nav>
         {WORKSPACE_NAV_ITEMS.map(({ section: itemSection, label, icon: Icon }) => (
           <button
@@ -124,7 +123,7 @@ export function WorkspaceSidebar({
         ))}
       </nav>
       <div className="sidebar-divider" />
-      <span className="nav-caption">RESOURCES</span>
+      <span className="nav-caption">도움말</span>
       <nav>
         <Link href="/guide">
           <BookOpen size={18} />
@@ -141,9 +140,9 @@ export function WorkspaceSidebar({
       <div className="sidebar-close-card">
         <div>
           <span className="live-dot" />
-          <span>8월 마감 현황</span>
+          <span>{workspace?.period ?? "2026-08"} 마감 현황</span>
         </div>
-        <h3>{workspace?.close ? "8월 마감을 완료했습니다." : "마감 조건을 확인하세요."}</h3>
+        <h3>{workspace?.close ? "마감을 완료했습니다." : "마감 조건을 확인하세요."}</h3>
         <div className="sidebar-progress">
           <span style={{ width: `${progress}%` }} />
         </div>
@@ -223,9 +222,6 @@ export function WorkspaceTopbar({
             onFocus={onSearchFocus}
             onChange={(event) => onSearch(event.target.value)}
           />
-          <kbd>
-            <CommandIcon size={10} /> K
-          </kbd>
         </label>
         <span className="demo-badge">
           <span />

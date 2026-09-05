@@ -11,6 +11,7 @@ playwright-report
 verifier/.gradle
 verifier/build
 fixtures/closed-package.json
+fixtures/monthly-closed-package.json
 fixtures/baseline.json
 fixtures/reconciliation-contract.json
 migrations/001_initial.sql

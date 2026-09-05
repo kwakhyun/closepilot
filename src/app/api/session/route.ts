@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { workspaceView } from "@/application/workbench";
+import { periodSchema } from "@/domain/period";
 import {
   COOKIE_NAME,
   assertSameOrigin,
@@ -20,6 +21,7 @@ const sessionOptionsSchema = z
     showcase: z.literal("completed").optional(),
     cloneCurrent: z.literal(true).optional(),
     expectedVersion: z.number().int().positive().optional(),
+    period: periodSchema.optional(),
   })
   .strict()
   .refine(

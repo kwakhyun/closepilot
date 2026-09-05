@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "./console.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://closepilot-delta.vercel.app"),
@@ -19,9 +20,9 @@ export const metadata: Metadata = {
     siteName: "ClosePilot",
     images: [
       {
-        url: "/og-closepilot.jpg",
-        width: 1200,
-        height: 630,
+        url: "/console-preview.png",
+        width: 1440,
+        height: 900,
         alt: "ClosePilot 매출 마감 대시보드",
       },
     ],
@@ -30,10 +31,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "ClosePilot · 근거를 남기는 매출 마감",
     description: "주문·정산 자료 비교부터 예외 검토와 마감 증빙까지 연결하는 포트폴리오 데모",
-    images: ["/og-closepilot.jpg"],
+    images: ["/console-preview.png"],
   },
 };
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#173f35" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#ffffff" };
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ko">

@@ -34,6 +34,11 @@ import {
   WorkspaceTopbar,
 } from "./workspace-navigation";
 import { type SessionSelection, useWorkspaceSession } from "./use-workspace-session";
+import { PolicySimulator } from "./policy-simulator";
+import { PackageInspector } from "./package-inspector";
+import { MonthWorkspace } from "./month-workspace";
+import { periodLabel } from "@/domain/period";
+import "./workbench-tools.css";
 
 function sectionFromUrl(): WorkspaceSection {
   if (typeof window === "undefined") return "overview";
@@ -44,6 +49,7 @@ function sectionFromUrl(): WorkspaceSection {
 }
 
 export function Dashboard() {
+  const [settingsView, setSettingsView] = useState<"brand" | "month" | "policy">("brand");
   const {
     workspace,
     sessionRevision,
@@ -283,9 +289,9 @@ export function Dashboard() {
           <div className="page-header">
             <div>
               <div className="page-eyebrow">
-                <span>COMMERCE OPERATIONS</span>
+                <span>매출 관리</span>
                 <i />
-                <span>2026년 8월</span>
+                <span>{periodLabel(workspace?.period ?? "2026-08")}</span>
               </div>
               <div className="page-title-row">
                 <h1 ref={pageHeading} tabIndex={-1}>
@@ -307,15 +313,24 @@ export function Dashboard() {
                         ? "마감에 사용한 CSV 자료와 원본 정보를 확인하세요."
                         : "채널별 CSV를 같은 형식으로 정리하고 원본 자료를 관리하세요."
                       : section === "onboarding"
-                        ? "고객 문제를 버전형 설정과 재사용 가능한 제품 기능으로 전환한 과정을 확인하세요."
+                        ? "브랜드 설정, 마감 월과 수수료 정책을 관리하세요."
                         : "자료 반영부터 검토 승인과 마감까지 변경 이력을 확인하세요."}
               </p>
             </div>
             <div className="page-actions">
-              <div className="period-picker" title="이 데모는 2026년 8월 마감 시나리오입니다">
+              <button
+                className="period-picker"
+                title="월별 작업공간"
+                onClick={() => {
+                  setSettingsView("month");
+                  navigate("onboarding");
+                }}
+              >
                 <CalendarDays size={16} />
-                <span>2026. 08. 01 — 08. 31</span>
-              </div>
+                <span>
+                  {workspace?.period ?? "2026-08"}-01 ~ {workspace?.asOf ?? "2026-08-31"}
+                </span>
+              </button>
               <button
                 className="button secondary"
                 onClick={() => setImportOpen(true)}
@@ -392,6 +407,10 @@ export function Dashboard() {
                   onAnalyze={() => void analyze()}
                   onReviewIssues={reviewIssues}
                   onOpenSources={() => navigate("sources")}
+                  onViewResults={() => {
+                    navigate("transactions");
+                    setFilter("all");
+                  }}
                 />
               )}
               {section === "transactions" && (
@@ -413,27 +432,62 @@ export function Dashboard() {
                 />
               )}
               {section === "onboarding" && (
-                <OnboardingPanel
-                  workspace={workspace}
-                  busy={busy}
-                  onPrepareSession={prepareSession}
-                />
+                <>
+                  <div className="settings-navigation" role="group" aria-label="설정 보기">
+                    {(
+                      [
+                        ["brand", "브랜드 설정"],
+                        ["month", "월별 작업"],
+                        ["policy", "정책 비교"],
+                      ] as const
+                    ).map(([value, label]) => (
+                      <button
+                        key={value}
+                        aria-pressed={settingsView === value}
+                        onClick={() => setSettingsView(value)}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  {settingsView === "month" && (
+                    <MonthWorkspace
+                      key={`month:${sessionRevision}`}
+                      workspace={workspace}
+                      busy={busy}
+                      onPrepareSession={prepareSession}
+                    />
+                  )}
+                  {settingsView === "brand" && (
+                    <OnboardingPanel
+                      workspace={workspace}
+                      busy={busy}
+                      onPrepareSession={prepareSession}
+                    />
+                  )}
+                  {settingsView === "policy" && (
+                    <PolicySimulator key={`policy:${sessionRevision}`} workspace={workspace} />
+                  )}
+                </>
               )}
               {section === "audit" && (
-                <AuditPanel
-                  workspace={workspace}
-                  onVerify={() =>
-                    void refresh().then((view) => {
-                      if (view)
-                        showToast(
-                          view.auditValid
-                            ? `감사 기록 ${view.events.length}건의 해시 연결을 확인했습니다. 이상이 없습니다.`
-                            : "감사 기록의 해시가 일치하지 않습니다. 기록을 확인해 주세요.",
-                          !view.auditValid,
-                        );
-                    })
-                  }
-                />
+                <>
+                  <PackageInspector key={`package:${sessionRevision}`} workspace={workspace} />
+                  <AuditPanel
+                    workspace={workspace}
+                    onVerify={() =>
+                      void refresh().then((view) => {
+                        if (view)
+                          showToast(
+                            view.auditValid
+                              ? `감사 기록 ${view.events.length}건의 해시 연결을 확인했습니다. 이상이 없습니다.`
+                              : "감사 기록의 해시가 일치하지 않습니다. 기록을 확인해 주세요.",
+                            !view.auditValid,
+                          );
+                      })
+                    }
+                  />
+                </>
               )}
             </>
           )}
@@ -469,6 +523,7 @@ export function Dashboard() {
             onClose={() => setImportOpen(false)}
             onCommand={onCommand}
             version={workspace.version}
+            period={workspace.period}
             busy={busy}
             profileName={workspace.profile.brandName}
             policy={workspace.profile.policy}
@@ -530,20 +585,34 @@ export function Dashboard() {
           setResetOpen(false);
           setPendingSession(null);
         }}
-        title={pendingSession?.brandName ? "현재 설정을 복제할까요?" : "새 데모를 시작할까요?"}
+        title={
+          pendingSession?.period
+            ? "새 월의 작업을 시작할까요?"
+            : pendingSession?.brandName
+              ? "현재 설정을 복제할까요?"
+              : "새 데모를 시작할까요?"
+        }
       >
         <div className="reset-body">
           <p>
-            {pendingSession?.brandName
-              ? `${workspace?.profile.brandName ?? "현재 브랜드"} 설정을 ${pendingSession.brandName} 작업공간으로 복제합니다. 거래 자료와 검토 기록은 새 가상 데이터로 시작합니다.`
-              : pendingTemplate && pendingTemplate.templateId !== workspace?.profile.templateId
-                ? `${pendingTemplate.brandName} 온보딩 설정으로 새 작업공간을 만듭니다. 현재 자료와 검토 기록에는 다시 접근할 수 없습니다.`
-                : "새 데모를 시작하면 현재 자료와 검토 기록에 다시 접근할 수 없습니다. 필요한 결과를 먼저 CSV로 내려받으세요. 마감을 확정했다면 마감 증빙 파일도 저장해 주세요."}
+            {pendingSession?.period
+              ? `${pendingSession.period} 합성 자료로 별도 작업공간을 만듭니다. 현재 세션으로 돌아오는 기능은 없으므로 아래 파일을 먼저 내려받으세요. 기존 마감의 금액과 승인 기록은 변경하지 않습니다.`
+              : pendingSession?.brandName
+                ? `${workspace?.profile.brandName ?? "현재 브랜드"} 설정을 ${pendingSession.brandName} 작업공간으로 복제합니다. 거래 자료와 검토 기록은 새 가상 데이터로 시작합니다.`
+                : pendingTemplate && pendingTemplate.templateId !== workspace?.profile.templateId
+                  ? `${pendingTemplate.brandName} 온보딩 설정으로 새 작업공간을 만듭니다. 현재 자료와 검토 기록에는 다시 접근할 수 없습니다.`
+                  : "새 데모를 시작하면 현재 자료와 검토 기록에 다시 접근할 수 없습니다. 필요한 결과를 먼저 CSV로 내려받으세요. 마감을 확정했다면 마감 증빙 파일도 저장해 주세요."}
           </p>
           {workspace && (
             <a href="/api/export?format=csv" download className="text-button">
               <Download size={16} />
               현재 대사 결과 다운로드
+            </a>
+          )}
+          {workspace?.close && (
+            <a href="/api/export?format=json" download className="text-button">
+              <Download size={16} />
+              현재 마감 증빙 다운로드
             </a>
           )}
           <div className="modal-footer">
@@ -558,7 +627,13 @@ export function Dashboard() {
             </button>
             <button className="button primary" disabled={busy} onClick={() => void reset()}>
               <RotateCcw size={16} />
-              {busy ? "준비 중…" : pendingSession?.brandName ? "설정 복제 후 시작" : "새 데모 시작"}
+              {busy
+                ? "준비 중…"
+                : pendingSession?.period
+                  ? "새 월 작업 시작"
+                  : pendingSession?.brandName
+                    ? "설정 복제 후 시작"
+                    : "새 데모 시작"}
             </button>
           </div>
         </div>

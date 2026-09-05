@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: ClosePilot 데모 REST API
-  version: 1.1.0
+  version: 1.2.0
   description: |
     가상 데이터를 사용하는 포트폴리오 데모입니다. 실제 결제, 송금, 회계 전표 생성은 수행하지 않습니다.
     AI 검토 메모 초안은 현재 거래에 저장된 합성 근거만 읽으며 금액을 바꾸거나 거래를 승인하고 마감할 권한이 없습니다.
@@ -56,6 +56,12 @@ paths:
                 brandName: { type: string, minLength: 2, maxLength: 40 }
                 cloneCurrent: { const: true }
                 expectedVersion: { type: integer, minimum: 1 }
+                period:
+                  {
+                    type: string,
+                    pattern: "^(202[0-9]|203[0-5])-(0[1-9]|1[0-2])$",
+                    description: "새 합성 작업의 월입니다. 생략하면 기본 프로필 기간을 사용합니다.",
+                  }
                 showcase:
                   {
                     const: completed,
@@ -136,7 +142,7 @@ paths:
   /api/imports/preview:
     post:
       operationId: previewImport
-      summary: 작업 상태를 바꾸지 않고 CSV 열 연결과 내용 미리보기
+      summary: 작업 상태를 바꾸지 않고 CSV 검증과 반영 영향 미리보기
       parameters:
         - $ref: "#/components/parameters/Origin"
       requestBody:
@@ -151,6 +157,12 @@ paths:
                 kind: { enum: [orders, settlements] }
                 csv: { type: string, maxLength: 256000 }
                 mapping: { $ref: "#/components/schemas/Mapping" }
+                expectedVersion:
+                  {
+                    type: integer,
+                    minimum: 1,
+                    description: "생략하면 조회 시점의 버전을 사용합니다. 실제 반영에는 응답 impact.expectedVersion을 사용하세요.",
+                  }
       responses:
         "200":
           description: 항목 검증에 실패하면 valid=false로 반환합니다. CSV 형식 자체가 잘못되면 HTTP 422를 반환할 수 있습니다.
@@ -158,7 +170,7 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [valid, headers, mapping, count, preview, errors]
+                required: [valid, headers, mapping, count, preview, errors, issues, impact]
                 properties:
                   valid: { type: boolean }
                   headers: { type: array, items: { type: string } }
@@ -166,12 +178,129 @@ paths:
                   count: { type: integer, minimum: 0 }
                   preview: { type: array, items: { type: object } }
                   errors: { type: array, items: { type: string } }
+                  issues:
+                    type: array
+                    description: 잘못된 행마다 첫 오류를 반환합니다. 파일 전체 오류는 row=0과 errors로 반환합니다.
+                    items:
+                      type: object
+                      required: [row, field, message]
+                      properties:
+                        row: { type: integer, minimum: 0 }
+                        field: { type: string }
+                        message: { type: string }
+                  impact:
+                    type: [object, "null"]
+                    properties:
+                      expectedVersion: { type: integer }
+                      before: { type: object, description: 반영 전 요약 }
+                      after: { type: object, description: 반영 후 예상 요약 }
+                      invalidatedReviews:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            rowKey: { type: string }
+                            orderId: { type: string }
         "400": { $ref: "#/components/responses/Error" }
         "401": { $ref: "#/components/responses/Error" }
         "403": { $ref: "#/components/responses/Error" }
         "413": { $ref: "#/components/responses/Error" }
         "415": { $ref: "#/components/responses/Error" }
         "422": { $ref: "#/components/responses/Error" }
+        "409": { $ref: "#/components/responses/Error" }
+  /api/policy/simulate:
+    post:
+      operationId: simulatePolicy
+      summary: 현재 자료에 비교용 수수료율을 적용해 영향 계산
+      description: 상태, 정책과 마감은 변경하지 않습니다. 마감된 작업에서도 비교할 수 있습니다.
+      parameters:
+        - $ref: "#/components/parameters/Origin"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [expectedVersion, feeBps]
+              properties:
+                expectedVersion: { type: integer, minimum: 1 }
+                feeBps:
+                  type: object
+                  additionalProperties: false
+                  required: [d2c, naver, coupang]
+                  properties:
+                    d2c: { type: integer, minimum: 0, maximum: 10000 }
+                    naver: { type: integer, minimum: 0, maximum: 10000 }
+                    coupang: { type: integer, minimum: 0, maximum: 10000 }
+      responses:
+        "200":
+          description: 전후 요약과 수수료 또는 대표 분류가 바뀌는 거래를 반환합니다.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [expectedVersion, feeBps, before, after, changes]
+                properties:
+                  expectedVersion: { type: integer }
+                  feeBps: { type: object }
+                  before: { type: object }
+                  after: { type: object }
+                  changes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        rowKey: { type: string }
+                        orderId: { type: string }
+                        beforeFee: { type: integer }
+                        afterFee: { type: integer }
+                        beforeKind: { type: string }
+                        afterKind: { type: string }
+                        needsReview: { type: boolean }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "403": { $ref: "#/components/responses/Error" }
+        "409": { $ref: "#/components/responses/Error" }
+        "413": { $ref: "#/components/responses/Error" }
+        "415": { $ref: "#/components/responses/Error" }
+        "422": { $ref: "#/components/responses/Error" }
+  /api/packages/inspect:
+    post:
+      operationId: inspectClosePackage
+      summary: 업로드한 마감 증빙의 구조와 무결성을 읽기 전용으로 검사
+      description: 최대 5,000,000바이트이며 서버에 저장하지 않습니다. TypeScript 재계산 검사로 서명이나 독립 Kotlin 검증을 대체하지 않습니다.
+      parameters:
+        - $ref: "#/components/parameters/Origin"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, description: /api/export?format=json에서 내려받은 원본 패키지 }
+      responses:
+        "200":
+          description: 패키지 검사 실패는 valid=false와 package=null로 반환합니다.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [valid, checks, package]
+                properties:
+                  valid: { type: boolean }
+                  checks:
+                    type: array
+                    items:
+                      type: object
+                      required: [name, passed]
+                      properties:
+                        name: { type: string }
+                        passed: { type: boolean }
+                  package: { type: [object, "null"] }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "403": { $ref: "#/components/responses/Error" }
+        "413": { $ref: "#/components/responses/Error" }
+        "415": { $ref: "#/components/responses/Error" }
   /api/analysis:
     get:
       operationId: deterministicGuide
@@ -385,7 +514,13 @@ components:
         ]
       properties:
         version: { type: integer, minimum: 1 }
-        period: { const: "2026-08" }
+        period: { type: string, pattern: "^(202[0-9]|203[0-5])-(0[1-9]|1[0-2])$" }
+        draftScope:
+          { type: string, description: "탭별 임시 메모의 세션 구분용 값이며 인증 수단이 아닙니다." }
+        reviewFingerprints:
+          type: object
+          additionalProperties: { type: string, pattern: "^[a-f0-9]{64}$" }
+          description: 예외 거래 키에 대응하는 현재 승인 식별값입니다.
         asOf: { type: string, format: date }
         status: { enum: [open, review, closed] }
         close:

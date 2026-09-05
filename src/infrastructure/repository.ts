@@ -81,9 +81,16 @@ export class WorkspaceRepository {
             "현재 설정이 변경되었습니다. 새로고침한 뒤 다시 복제하세요.",
             409,
           );
-        options = { profile: cloneWorkspaceProfile(source.state, clone.brandName) };
+        options = {
+          period: seedOptions.period,
+          profile:
+            seedOptions.period && source.state.profile?.brandName === clone.brandName
+              ? structuredClone(source.state.profile)
+              : cloneWorkspaceProfile(source.state, clone.brandName),
+        };
       }
       const workspace = createDemoWorkspace(now.toISOString(), options);
+      workspace.draftScope = digest({ session, purpose: "browser-review-draft" });
       await transaction.query(
         "INSERT INTO closepilot_workspaces(session_hash, state, version, status, expires_at) VALUES ($1, $2::jsonb, $3, $4, $5)",
         [session, workspace, workspace.version, workspace.status, expiry],

@@ -9,6 +9,7 @@ export interface SessionSelection {
   showcase?: "completed";
   cloneCurrent?: true;
   expectedVersion?: number;
+  period?: string;
 }
 
 export type CommandResult = "success" | "expired" | "failed";
@@ -146,7 +147,7 @@ export function useWorkspaceSession() {
         command.action === "resolve"
           ? "검토 사유와 증빙 참조 정보를 기록했습니다."
           : command.action === "close"
-            ? "8월 마감을 확정했습니다. 마감 증빙 파일을 내려받을 수 있습니다."
+            ? `${view.period} 마감을 확정했습니다. 마감 증빙 파일을 내려받을 수 있습니다.`
             : command.action === "import"
               ? "자료를 반영했습니다. 대사를 다시 실행해 주세요."
               : "대사를 완료했습니다. 최신 자료로 결과를 갱신했습니다.",
@@ -192,7 +193,10 @@ export function useWorkspaceSession() {
 
   async function recoverExpiredSession(): Promise<boolean> {
     const selection = workspace
-      ? { templateId: workspace.profile.templateId as SessionSelection["templateId"] }
+      ? {
+          templateId: workspace.profile.templateId as SessionSelection["templateId"],
+          period: workspace.period,
+        }
       : undefined;
     const view = await reset(selection);
     if (!view) return false;

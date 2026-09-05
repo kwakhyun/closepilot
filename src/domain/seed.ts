@@ -9,10 +9,12 @@ import {
 import { digest } from "./canonical";
 import { appendEvent } from "./audit";
 import { createProfileSnapshot, DEFAULT_PROFILE_ID, onboardingTemplate } from "./onboarding";
+import { monthEnd } from "./period";
 
 export interface SeedOptions {
   templateId?: string;
   brandName?: string;
+  period?: string;
   /** Trusted server snapshot; never accepted from an HTTP request body. */
   profile?: OnboardingProfileSnapshot;
 }
@@ -28,32 +30,42 @@ export function seedWorkspace(
     ? structuredClone(options.profile)
     : createProfileSnapshot(template.templateId, options.brandName);
   const orders: Order[] = [];
+  if (options.period) {
+    profile.period = options.period;
+    profile.asOf = monthEnd(options.period);
+  }
+  const [year, month] = profile.period.split("-").map(Number);
+  const days = Number(profile.asOf.slice(-2));
+  const datePrefix = profile.period.slice(2).replace("-", "");
   const settlements: Settlement[] = [];
   const channels = profile.policy.enabledChannels;
   const count = template.seed.orderCount;
   for (let i = 1; i <= count; i++) {
     const channel = channels[(i - 1) % channels.length];
-    const date = `${profile.period}-${String(1 + Math.floor(((i - 1) * 30) / count)).padStart(2, "0")}`;
+    const date = `${profile.period}-${String(1 + Math.floor(((i - 1) * Math.min(30, days)) / count)).padStart(2, "0")}`;
     const gross =
       template.templateId === DEFAULT_PROFILE_ID
         ? 39_000 + ((i * 137) % 31) * 6_000 + (i % 5) * 2_000
         : 24_000 + ((i * 113) % 29) * 4_500 + (i % 4) * 1_500;
     const refund = i % 17 === 0 ? 15_000 : 0;
-    const id = `${template.seed.orderPrefix}-${String(2608000 + i)}`;
+    const id = `${template.seed.orderPrefix}-${datePrefix}${String(i).padStart(3, "0")}`;
     orders.push({ id, channel, date, gross, refund, sourceId: "SRC-ORD-01" });
     if (i === 12 || i === 63) continue;
     const settledRefund = i === 34 ? 0 : refund;
     let fee: number = feeFor(gross - settledRefund, profile.policy.feeBps[channel]);
     if (i === 22 || i === 80) fee += i === 22 ? 2_400 : 1_200;
     const settlement: Settlement = {
-      id: `ST-${String(2608000 + i)}`,
+      id: `ST-${datePrefix}${String(i).padStart(3, "0")}`,
       orderId: id,
       channel,
       gross,
       refund: settledRefund,
       fee,
       net: gross - settledRefund - fee,
-      dueDate: i >= count - 1 ? "2026-09-02" : profile.asOf,
+      dueDate:
+        i >= count - 1
+          ? new Date(Date.UTC(year, month, 2)).toISOString().slice(0, 10)
+          : profile.asOf,
       paidDate: i >= count - 1 ? null : profile.asOf,
       sourceId: `SRC-SET-${channel.toUpperCase()}`,
     };
@@ -63,7 +75,7 @@ export function seedWorkspace(
   const sources = [
     {
       id: "SRC-ORD-01",
-      name: `${template.seed.sourcePrefix}_orders_202608.csv`,
+      name: `${template.seed.sourcePrefix}_orders_${profile.period.replace("-", "")}.csv`,
       kind: "orders" as const,
       rows: orders.length,
       digest: digest(orders),
@@ -73,7 +85,7 @@ export function seedWorkspace(
       const entries = settlements.filter((settlement) => settlement.channel === channel);
       return {
         id: `SRC-SET-${channel.toUpperCase()}`,
-        name: `${template.seed.sourcePrefix}_${channel}_settlements_202608.csv`,
+        name: `${template.seed.sourcePrefix}_${channel}_settlements_${profile.period.replace("-", "")}.csv`,
         kind: "settlements" as const,
         rows: entries.length,
         digest: digest(entries),

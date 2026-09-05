@@ -16,6 +16,7 @@ import { money } from "./format";
 import { TransactionTable, type RowFilter } from "./transaction-table";
 import { TrendChart } from "./trend-chart";
 import { ChannelPanel } from "./workspace-panels";
+import { WorkspaceProgress } from "./workspace-progress";
 
 interface SharedSectionProps {
   workspace: WorkspaceView;
@@ -32,6 +33,7 @@ interface OverviewProps extends SharedSectionProps {
   onAnalyze: () => void;
   onReviewIssues: () => void;
   onOpenSources: () => void;
+  onViewResults: () => void;
 }
 
 export function DashboardOverview({
@@ -46,6 +48,7 @@ export function DashboardOverview({
   onAnalyze,
   onReviewIssues,
   onOpenSources,
+  onViewResults,
 }: OverviewProps) {
   const unresolvedDelta = workspace.rows
     .filter((row) => row.kind !== "matched" && !row.resolution)
@@ -53,6 +56,13 @@ export function DashboardOverview({
 
   return (
     <div className="dashboard-overview">
+      <WorkspaceProgress
+        workspace={workspace}
+        onSources={onOpenSources}
+        onResults={onViewResults}
+        onReview={onReviewIssues}
+        onClose={onOpenClose}
+      />
       <div className="metrics-grid">
         <Metric
           label="주문 총액"
@@ -91,7 +101,7 @@ export function DashboardOverview({
             {workspace.summary.unresolved
               ? `마감 전에 검토할 거래가 ${workspace.summary.unresolved}건 남아 있습니다.`
               : workspace.close
-                ? "8월 마감 결과와 검토 근거를 저장했습니다."
+                ? "마감 결과와 검토 근거를 저장했습니다."
                 : "예외 거래 검토를 완료했습니다. 마감 전 점검을 진행하세요."}
           </h2>
           <p>

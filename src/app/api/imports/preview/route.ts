@@ -1,5 +1,7 @@
 import { z } from "zod";
-import { importCsv, parseCsv, suggestMapping } from "@/domain/csv";
+import { CsvValidationError, importCsv, parseCsv, suggestMapping } from "@/domain/csv";
+import { DomainError } from "@/domain/model";
+import { previewImport } from "@/application/import-preview";
 import { workspaceProfile } from "@/application/workbench";
 import {
   assertSameOrigin,
@@ -15,6 +17,7 @@ const schema = z
     kind: z.enum(["orders", "settlements"]),
     csv: z.string().max(256_000),
     mapping: z.record(z.string().max(50), z.string().max(100)).optional(),
+    expectedVersion: z.number().int().positive().optional(),
   })
   .strict();
 export const runtime = "nodejs";
@@ -34,6 +37,14 @@ export async function POST(request: Request) {
         workspace.period,
         workspaceProfile(workspace).policy.enabledChannels,
       );
+      const impact = previewImport(workspace, {
+        action: "import",
+        kind: body.kind,
+        csv: body.csv,
+        mapping,
+        expectedVersion: body.expectedVersion ?? workspace.version,
+        filename: "preview.csv",
+      });
       return json({
         valid: true,
         headers,
@@ -41,8 +52,12 @@ export async function POST(request: Request) {
         count: parsed.count,
         preview: parsed.preview,
         errors: [],
+        issues: [],
+        impact,
       });
     } catch (error) {
+      if (!(error instanceof DomainError)) throw error;
+      if (error.code === "VERSION_CONFLICT") throw error;
       return json({
         valid: false,
         headers,
@@ -50,6 +65,11 @@ export async function POST(request: Request) {
         count: 0,
         preview: [],
         errors: [(error as Error).message],
+        issues:
+          error instanceof CsvValidationError
+            ? error.issues
+            : [{ row: 0, field: "파일", message: error.message }],
+        impact: null,
       });
     }
   });

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import consolePreview from "../../../public/console-preview.png";
 import {
   ArrowLeft,
   ArrowRight,
@@ -26,7 +28,7 @@ export default function Guide() {
           <Brand />
         </Link>
         <div>
-          <span>PORTFOLIO PROJECT</span>
+          <span>제품 가이드</span>
           <a href="https://github.com/kwakhyun/closepilot" target="_blank" rel="noreferrer">
             GitHub
             <ArrowUpRight size={14} />
@@ -45,17 +47,12 @@ export default function Guide() {
         <section className="guide-hero">
           <div className="guide-kicker">
             <span />
-            B2B COMMERCE · PRODUCT ENGINEERING
+            매출 관리 / 제품 가이드
           </div>
-          <h1>
-            마감 전에 남은 <em>{view.summary.issues}건,</em>
-            <br />
-            근거를 확인하세요.
-          </h1>
+          <h1>ClosePilot 제품 가이드</h1>
           <p>
-            채널마다 다른 자료를 모아 차이와 검토 근거를 확인하세요.
-            <br /> ClosePilot은 주문·정산 대사부터 마감 증빙까지 이어지는
-            <br className="desktop-break" /> 커머스 매출 마감 도구입니다.
+            주문과 정산 자료를 비교하고, 예외 거래의 검토 근거와 마감 증빙을 관리합니다. 합성
+            데이터로 자료 반영부터 마감 확정까지 확인할 수 있습니다.
           </p>
           <div className="guide-hero-actions">
             <Link href="/?view=transactions" className="button primary">
@@ -80,6 +77,12 @@ export default function Guide() {
             개인 포트폴리오 · 가상 브랜드와 거래 사용 · 실제 결제 없음
           </div>
         </section>
+        <Image
+          className="guide-product-image"
+          src={consolePreview}
+          alt="ClosePilot의 매출 마감 단계, 거래 지표와 대사 목록"
+          sizes="(max-width: 800px) 100vw, 1008px"
+        />
         <section className="guide-numbers">
           <div>
             <strong>
@@ -264,6 +267,8 @@ export default function Guide() {
                   <li>검토 사유·증빙 참조 정보·이월 판단 기록</li>
                   <li>세션별 자료 저장, 감사 기록, 마감 후 수정 차단</li>
                   <li>대사 결과 CSV와 마감 증빙 JSON 다운로드</li>
+                  <li>CSV 영향 분석, 검토 메모 임시 저장과 항목별 진단</li>
+                  <li>읽기 전용 증빙 검사, 수수료 비교와 월별 합성 작업</li>
                 </ul>
               </article>
               <article>

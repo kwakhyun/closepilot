@@ -1,26 +1,26 @@
 .guide-page {
-  background: #f7f8f3;
+  background: #fff;
   min-height: 100vh;
-  --guide-muted: #5b6d52;
-  --guide-strong-muted: #526447;
+  --guide-muted: #414957;
+  --guide-strong-muted: #414957;
 }
 .guide-header {
-  height: 88px;
+  height: 64px;
   padding: 0 6%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  border-bottom: 1px solid #e0e6d9;
+  border-bottom: 1px solid #e5e7eb;
   background: #fff;
 }
 .guide-header .brand {
-  color: #173f35;
+  color: #20242c;
   font-size: 25px;
 }
 .guide-header .brand-mark,
 .guide-header .brand-dot {
-  color: #507e50;
+  color: var(--accent);
 }
 .guide-header > div {
   display: flex;
@@ -29,12 +29,12 @@
 }
 .guide-header > div > span {
   font-size: 12px;
-  letter-spacing: 0.16em;
+  letter-spacing: 0;
   color: var(--guide-muted);
 }
 .guide-header > div > a:not(.button) {
   font-size: 12px;
-  color: #617256;
+  color: #414957;
   display: flex;
   gap: 5px;
   align-items: center;
@@ -56,13 +56,13 @@
   color: var(--guide-strong-muted);
 }
 .guide-hero {
-  padding: 70px 0 60px;
+  padding: 36px 0;
 }
 .guide-kicker {
   display: flex;
   gap: 8px;
   align-items: center;
-  letter-spacing: 0.12em;
+  letter-spacing: 0;
   font-size: 12px;
   font-weight: 500;
   color: var(--guide-strong-muted);
@@ -70,20 +70,20 @@
 .guide-kicker > span {
   width: 6px;
   height: 6px;
-  background: #8dad6c;
+  background: #626b79;
   border-radius: 50%;
 }
 .guide-hero h1 {
-  font-size: 64px;
+  font-size: 38px;
   font-weight: 680;
-  letter-spacing: -0.065em;
+  letter-spacing: 0;
   line-height: 1.22;
-  color: #244933;
+  color: #20242c;
   margin-top: 24px;
 }
 .guide-hero h1 em {
   font-style: normal;
-  color: #769550;
+  color: #626b79;
   position: relative;
 }
 .guide-hero h1 em:after {
@@ -93,7 +93,7 @@
   bottom: 4px;
   right: 0;
   height: 11px;
-  background: #c9daa644;
+  background: #cbd0d944;
   z-index: 0;
 }
 .guide-hero > p {
@@ -101,7 +101,7 @@
   line-height: 1.95;
   color: var(--guide-muted);
   margin-top: 26px;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
 }
 .guide-hero-actions {
   display: flex;
@@ -120,17 +120,17 @@
   margin-top: 23px;
 }
 .guide-numbers {
-  background: #173f35;
-  color: #f4f5e7;
+  background: #f6f7f9;
+  color: var(--ink);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   padding: 33px 20px;
-  border-radius: 13px;
+  border-radius: 0;
   margin-bottom: 84px;
 }
 .guide-numbers > div {
   padding: 0 25px;
-  border-right: 1px solid #ffffff16;
+  border-right: 1px solid var(--line);
 }
 .guide-numbers > div:last-child {
   border: 0;
@@ -140,8 +140,8 @@
   font-size: 37px;
   font-weight: 550;
   line-height: 1.1;
-  color: #d4e5b8;
-  letter-spacing: -0.03em;
+  color: var(--ink);
+  letter-spacing: 0;
 }
 .guide-numbers small {
   font-size: 14px;
@@ -150,7 +150,7 @@
 }
 .guide-numbers span {
   font-size: 12px;
-  color: #b2c9b4;
+  color: var(--muted);
   display: block;
   margin-top: 14px;
 }
@@ -162,7 +162,7 @@
 }
 .guide-section-index {
   font-size: 12px;
-  letter-spacing: 0.06em;
+  letter-spacing: 0;
   color: var(--guide-muted);
   padding-top: 8px;
   display: block;
@@ -170,9 +170,9 @@
 .guide-section-content h2 {
   font-size: 30px;
   line-height: 1.4;
-  color: #315739;
+  color: #414957;
   font-weight: 600;
-  letter-spacing: -0.045em;
+  letter-spacing: 0;
   margin-bottom: 22px;
 }
 .guide-section-content > p {
@@ -183,13 +183,13 @@
 }
 .guide-section-content > p b {
   font-weight: 600;
-  color: #567b46;
+  color: #414957;
 }
 .guide-question {
   margin-top: 24px;
-  border-left: 3px solid #9ab875;
+  border-left: 3px solid #939ba9;
   padding: 13px 18px;
-  background: #eff4e5;
+  background: #f5f6f8;
 }
 .guide-question > span {
   font-size: 12px;
@@ -198,7 +198,7 @@
 .guide-question blockquote {
   font-size: 17px;
   line-height: 1.6;
-  color: #597944;
+  color: #414957;
   font-weight: 500;
   margin: 7px 0 0;
 }
@@ -211,9 +211,9 @@
 }
 .guide-flow > div {
   padding: 20px 15px;
-  border: 1px solid #dde6ce;
+  border: 1px solid #e5e7eb;
   background: #fff;
-  border-radius: 9px;
+  border-radius: 8px;
   position: relative;
 }
 .guide-flow > div > span {
@@ -224,13 +224,13 @@
   color: var(--guide-muted);
 }
 .guide-flow svg {
-  color: #8baa69;
+  color: #626b79;
   margin-bottom: 16px;
 }
 .guide-flow h3 {
   font-size: 16px;
   font-weight: 600;
-  color: #658450;
+  color: #626b79;
   margin-bottom: 8px;
 }
 .guide-flow p {
@@ -251,7 +251,7 @@
 }
 .guide-instructions b {
   font-weight: 550;
-  color: #547b43;
+  color: #414957;
 }
 .guide-principles {
   display: grid;
@@ -259,15 +259,15 @@
   gap: 24px 32px;
 }
 .guide-principles article {
-  border-top: 1px solid #dfe8d0;
+  border-top: 1px solid #e5e7eb;
   padding-top: 21px;
 }
 .guide-principles svg {
-  color: #83a862;
+  color: #626b79;
 }
 .guide-principles h3 {
   font-size: 15px;
-  color: #587b40;
+  color: #414957;
   font-weight: 600;
   margin-top: 10px;
 }
@@ -281,8 +281,8 @@
   display: flex;
   gap: 8px;
   align-items: center;
-  background: #eaf2de;
-  border: 1px solid #dde9ce;
+  background: #f5f6f8;
+  border: 1px solid #e5e7eb;
   border-radius: 7px;
   color: var(--guide-strong-muted);
   font-size: 12px;
@@ -296,9 +296,9 @@
   margin-top: 27px;
 }
 .scope-grid article {
-  border: 1px solid #dfe8d2;
+  border: 1px solid #e5e7eb;
   background: #fff;
-  border-radius: 9px;
+  border-radius: 8px;
   padding: 20px;
 }
 .scope-grid h3 {
@@ -310,7 +310,7 @@
   font-weight: 600;
 }
 .scope-grid article:last-child {
-  background: #f2f5eb;
+  background: #f5f6f8;
 }
 .scope-grid ul {
   padding-left: 16px;
@@ -333,16 +333,16 @@
   align-items: center;
   justify-content: space-between;
   gap: 30px;
-  border-top: 1px solid #d9e3c8;
+  border-top: 1px solid #e5e7eb;
   padding-top: 43px;
   padding-bottom: 43px;
   margin-top: 15px;
 }
 .guide-cta h2 {
-  color: #4c7337;
+  color: #414957;
   font-size: 26px;
   font-weight: 580;
-  letter-spacing: -0.04em;
+  letter-spacing: 0;
   margin-top: 11px;
 }
 .guide-cta p {
@@ -356,7 +356,7 @@
   padding: 0 16px;
 }
 .guide-footer {
-  border-top: 1px solid #dfe8d2;
+  border-top: 1px solid #e5e7eb;
   padding: 26px 0;
   display: flex;
   align-items: center;
@@ -391,7 +391,7 @@
     padding: 50px 0;
   }
   .guide-hero h1 {
-    font-size: 52px;
+    font-size: 32px;
   }
   .guide-hero > p {
     font-size: 14px;
@@ -471,10 +471,10 @@
   }
   .guide-kicker {
     font-size: 11px;
-    letter-spacing: 0.09em;
+    letter-spacing: 0;
   }
   .guide-hero h1 {
-    font-size: 43px;
+    font-size: 28px;
     margin-top: 21px;
   }
   .guide-hero > p {

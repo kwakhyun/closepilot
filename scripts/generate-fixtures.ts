@@ -4,6 +4,7 @@ import { applyCommand, reviewedRows, workspaceView } from "../src/application/wo
 import { SCHEMA, JSONB_GUARDS, REVIEW_DRAFT_STORAGE } from "../src/infrastructure/schema";
 import { RULE_VERSION } from "../src/domain/model";
 import { reconcile } from "../src/domain/reconcile";
+import { createDemoWorkspace } from "../src/application/showcase";
 
 const at = "2026-08-31T09:00:00.000Z";
 let workspace = seedWorkspace(at);
@@ -73,6 +74,22 @@ for (const row of reviewedRows(workspace).filter((row) => row.kind !== "matched"
 workspace = applyCommand(workspace, { action: "close", expectedVersion: workspace.version }, at);
 mkdirSync("fixtures", { recursive: true });
 mkdirSync("migrations", { recursive: true });
+const monthlyWorkspace = createDemoWorkspace("2024-02-29T09:00:00.000Z", {
+  period: "2024-02",
+  showcase: "completed",
+});
+writeFileSync(
+  "fixtures/monthly-closed-package.json",
+  JSON.stringify(
+    {
+      snapshot: monthlyWorkspace.close,
+      audit: monthlyWorkspace.events,
+      notice: "Deterministic leap-month synthetic fixture. Not a real financial close.",
+    },
+    null,
+    2,
+  ) + "\n",
+);
 writeFileSync(
   "fixtures/closed-package.json",
   JSON.stringify(

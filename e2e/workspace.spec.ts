@@ -36,6 +36,11 @@ test("선택한 온보딩 프로필을 마감 점검에 일관되게 표시하�
   await page.getByRole("button", { name: "마감 점검" }).first().click();
   const closeDialog = page.getByRole("dialog", { name: "마감 전 최종 확인" });
   await expect(closeDialog).toContainText("2026년 8월 · MORROW FOODS");
+  await page.screenshot({
+    path: "test-results/console-close.png",
+    fullPage: false,
+    animations: "disabled",
+  });
   await page.keyboard.press("Escape");
   await expect(closeDialog).toBeHidden();
 });
@@ -43,12 +48,31 @@ test("선택한 온보딩 프로필을 마감 점검에 일관되게 표시하�
 test("거래 검토 서랍을 열고 Escape로 닫는다", async ({ page }) => {
   await openFirstIssue(page);
   const drawer = page.getByRole("dialog", { name: "거래 검토" });
+  await expect(drawer.getByRole("heading", { name: "항목별 진단" })).toBeVisible();
+  await expect(drawer.locator(".diagnostic-checks")).toContainText("정산번호 중복");
+  await page.screenshot({
+    path: "test-results/console-review.png",
+    fullPage: false,
+    animations: "disabled",
+  });
+  await drawer
+    .getByRole("textbox", { name: /검토 사유/ })
+    .fill("이 탭에서 저장한 합성 검토 메모입니다.");
+  await drawer.getByRole("textbox", { name: /증빙 참조 정보/ }).fill("SYNTHETIC-DRAFT-1");
+  await drawer.getByRole("button", { name: "임시 저장", exact: true }).click();
+  await page.reload();
+  await page.locator(".row-arrow").first().click();
+  await drawer.getByRole("button", { name: "임시 메모 불러오기" }).click();
+  await expect(drawer.getByRole("textbox", { name: /검토 사유/ })).toHaveValue(
+    "이 탭에서 저장한 합성 검토 메모입니다.",
+  );
+  await expect(drawer.getByRole("checkbox", { name: /원본 자료와 검토 사유/ })).not.toBeChecked();
   await page.keyboard.press("Escape");
   await expect(drawer).toBeHidden();
   await verifyProfileClone(page, 1440);
 });
 
-test("AI 초안을 입력란에 적용해도 사용자 확인 전에는 검토를 승인할 수 없다", async ({ page }) => {
+test("AI 초안은 확인 전 승인할 수 없고 느린 요청은 취소하고 재시도할 수 있다", async ({ page }) => {
   await page.route("**/api/review-draft", async (route) => {
     await route.fulfill({
       status: 200,
@@ -80,9 +104,7 @@ test("AI 초안을 입력란에 적용해도 사용자 확인 전에는 검토�
     "SRC-ORD-01 / SET-E2E-01",
   );
   await expect(drawer.locator('button[type="submit"].primary')).toBeDisabled();
-});
-
-test("느린 AI 초안 생성을 취소하고 다시 시도할 수 있다", async ({ page }) => {
+  await page.unroute("**/api/review-draft");
   await page.route("**/api/review-draft", async (route) => {
     await new Promise((resolve) => setTimeout(resolve, 2_000));
     await route.abort().catch(() => undefined);
@@ -117,7 +139,11 @@ test("모바일에서는 거래 핵심 정보가 카드로 보이고 상세 검�
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );
-    await page.screenshot({ path: `test-results/overview-${width}.png`, fullPage: false });
+    await page.screenshot({
+      path: `test-results/overview-${width}.png`,
+      fullPage: false,
+      animations: "disabled",
+    });
   }
   await page.goto("/?view=transactions");
 
@@ -140,10 +166,35 @@ test("주문·정산 자료 반영부터 재대사, 전건 검토, 마감 증빙
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
 
+  await expect(page.getByLabel("마감 작업 단계")).toBeVisible();
+  await expect(page.locator(".transaction-table tbody tr").first()).toBeVisible();
+  await expect
+    .poll(async () => {
+      const track = await page.locator(".sidebar-progress").boundingBox();
+      const fill = await page.locator(".sidebar-progress span").boundingBox();
+      return fill!.width / track!.width;
+    })
+    .toBeGreaterThan(0.9);
+  await expect(page.locator("body")).not.toContainText(/포트원|portone/i);
+  await page.screenshot({
+    path: "test-results/console-overview-1440.png",
+    fullPage: false,
+    animations: "disabled",
+  });
+  await page.getByRole("button", { name: /자료 확인.*자료/ }).click();
+  await expect(page.locator(".page-header h1")).toHaveText("자료 관리");
+  await page.screenshot({
+    path: "test-results/console-sources-1440.png",
+    fullPage: false,
+    animations: "disabled",
+  });
+  await page.getByRole("button", { name: "마감 대시보드", exact: true }).click();
+
   await page.getByRole("button", { name: "자료 가져오기" }).click();
   let importDialog = page.getByRole("dialog", { name: "자료 가져오기" });
   await importDialog.getByRole("button", { name: "샘플 주문 불러오기" }).click();
   await expect(importDialog.locator(".validation-success")).toContainText("3행 검증 완료");
+  await expect(importDialog.getByLabel("반영 전 영향 분석")).toContainText("128 → 131건");
   await importDialog.getByRole("button", { name: "자료 반영" }).click();
   await expect(importDialog).toBeHidden();
 
@@ -173,7 +224,11 @@ test("주문·정산 자료 반영부터 재대사, 전건 검토, 마감 증빙
   expect(Number(await negativeBar.getAttribute("y"))).toBeCloseTo(baseline);
   expect(Number(await negativeBar.getAttribute("height"))).toBeGreaterThan(0);
   await page.locator(".chart-card").scrollIntoViewIfNeeded();
-  await page.screenshot({ path: "test-results/negative-chart-1440.png", fullPage: false });
+  await page.screenshot({
+    path: "test-results/negative-chart-1440.png",
+    fullPage: false,
+    animations: "disabled",
+  });
   await page.locator(".chart-data summary").click();
   await expect(page.locator(".chart-data")).toContainText("₩-1,886,000");
   await page.locator(".chart-data summary").click();
@@ -190,7 +245,11 @@ test("주문·정산 자료 반영부터 재대사, 전건 검토, 마감 증빙
     .toBeLessThanOrEqual(0);
   await page.locator(".chart-card").scrollIntoViewIfNeeded();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.screenshot({ path: "test-results/negative-chart-390.png", fullPage: false });
+  await page.screenshot({
+    path: "test-results/negative-chart-390.png",
+    fullPage: false,
+    animations: "disabled",
+  });
   await page.setViewportSize({ width: 1440, height: 900 });
 
   await page.getByRole("button", { name: "대사 실행" }).click();
@@ -235,6 +294,60 @@ test("주문·정산 자료 반영부터 재대사, 전건 검토, 마감 증빙
   expect(evidence.snapshot.rows).toHaveLength(view.rows.length);
   await expect(page.getByRole("button", { name: "자료 가져오기" })).toBeDisabled();
   await expect(page.getByRole("button", { name: "대사 실행" })).toBeDisabled();
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "감사 기록", exact: true }).click();
+  await page.getByLabel("마감 증빙 JSON 선택").setInputFiles({
+    name: "close.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(evidence)),
+  });
+  await expect(page.getByLabel("증빙 검증 결과")).toContainText("통과: 감사 연결과 마감 기록");
+  await page.getByText(`거래와 검토 근거 ${view.rows.length}건`, { exact: true }).click();
+  await page.getByLabel("증빙 거래 검색").fill("ORPHAN-NEGATIVE");
+  await expect(page.locator(".feature-section")).toContainText("₩-2,000,000");
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await settleToolViewport(page, width);
+    await expect
+      .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+      .toBe(true);
+    await page.locator("#package-title").scrollIntoViewIfNeeded();
+    await page.screenshot({
+      path: `test-results/package-inspection-${width}.png`,
+      fullPage: false,
+      animations: "disabled",
+    });
+  }
+  const corrupt = structuredClone(evidence);
+  corrupt.snapshot.gross++;
+  await page.getByLabel("마감 증빙 JSON 선택").setInputFiles({
+    name: "corrupt.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(corrupt)),
+  });
+  await expect(page.getByLabel("증빙 검증 결과")).toContainText("실패: 마감 체크섬");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.getByRole("button", { name: "온보딩 설계", exact: true }).click();
+  await page.getByRole("button", { name: "정책 비교", exact: true }).click();
+  await page.getByLabel("자사몰 수수료율 (%)", { exact: true }).fill("4");
+  await page.getByRole("button", { name: "현재 정책과 비교" }).click();
+  await expect(page.locator(".impact-summary")).toContainText("재검토 대상");
+  expect((await (await page.request.get("/api/export?format=json")).json()).snapshot.hash).toBe(
+    evidence.snapshot.hash,
+  );
+  for (const width of [1440, 320, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await settleToolViewport(page, width);
+    await expect
+      .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+      .toBe(true);
+    await page.locator("#simulation-title").scrollIntoViewIfNeeded();
+    await page.screenshot({
+      path: `test-results/policy-simulation-${width}.png`,
+      fullPage: false,
+      animations: "disabled",
+    });
+  }
 });
 
 test("완료된 합성 예시는 명확히 표시되고 처음부터 읽기 전용이다", async ({ page }) => {
@@ -244,7 +357,71 @@ test("완료된 합성 예시는 명확히 표시되고 처음부터 읽기 전�
   await expect(page.getByRole("button", { name: "자료 가져오기" })).toBeDisabled();
   await expect(page.getByRole("button", { name: "대사 실행" })).toBeDisabled();
   await expect(page.getByRole("link", { name: "마감 증빙 내려받기" })).toBeVisible();
+  const before = await (await page.request.get("/api/workspace")).json();
+  await page.getByRole("button", { name: "온보딩 설계", exact: true }).click();
+  await page.getByRole("button", { name: "월별 작업", exact: true }).click();
+  await page.getByLabel("마감 월", { exact: true }).fill("2024-02");
+  await page.getByRole("button", { name: "이 월로 새 작업 시작" }).click();
+  const dialog = page.getByRole("dialog", { name: "새 월의 작업을 시작할까요?" });
+  await expect(dialog.getByRole("link", { name: "현재 마감 증빙 다운로드" })).toBeVisible();
+  await dialog.getByRole("button", { name: "새 월 작업 시작" }).click();
+  await expect(page.locator(".page-header")).toContainText("2024년 2월");
+  const current = await (await page.request.get("/api/workspace")).json();
+  expect(current.period).toBe("2024-02");
+  expect(current.asOf).toBe("2024-02-29");
+  expect(current.profile.id).toBe(before.profile.id);
+  expect(current.close).toBeNull();
+  expect(current.draftScope).not.toBe(before.draftScope);
+  await page.getByRole("button", { name: "자료 가져오기" }).click();
+  await page.getByRole("button", { name: "샘플 주문 불러오기" }).click();
+  await expect(page.locator(".validation-success")).toContainText("3행 검증 완료");
+  await expect(page.locator(".preview-table")).toContainText("2024-02-29");
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.locator(".preview-table").scrollIntoViewIfNeeded();
+  await page.screenshot({
+    path: "test-results/monthly-import.png",
+    fullPage: false,
+    animations: "disabled",
+  });
+  await page.keyboard.press("Escape");
+  await page.goto("/guide");
+  await expect(
+    page.getByRole("heading", { name: "ClosePilot 제품 가이드", exact: true }),
+  ).toBeVisible();
+  await expect
+    .poll(() =>
+      page
+        .locator(".guide-product-image")
+        .evaluate((element) => (element as HTMLImageElement).naturalWidth),
+    )
+    .toBeGreaterThan(0);
+  for (const width of [1440, 390, 320]) {
+    await page.setViewportSize({ width, height: 900 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+    await page.screenshot({
+      path: `test-results/console-guide-${width}.png`,
+      fullPage: false,
+      animations: "disabled",
+    });
+  }
+  await expect(page.locator("body")).not.toContainText(/포트원|portone/i);
 });
+
+async function settleToolViewport(page: Page, width: number) {
+  const dismiss = page.getByRole("button", { name: "알림 닫기" });
+  if (await dismiss.isVisible()) await dismiss.click();
+  if (width <= 800) {
+    await expect(page.locator("#workspace-navigation")).toHaveAttribute("aria-hidden", "true");
+    await expect
+      .poll(async () => {
+        const bounds = await page.locator("#workspace-navigation").boundingBox();
+        return bounds!.x + bounds!.width;
+      })
+      .toBeLessThanOrEqual(0);
+  }
+}
 
 async function verifyProfileClone(page: Page, width: number) {
   await page.setViewportSize({ width, height: 900 });
@@ -322,5 +499,9 @@ async function verifyProfileClone(page: Page, width: number) {
   expect(
     await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
   ).toBeTruthy();
-  await page.screenshot({ path: `test-results/profile-clone-${width}.png`, fullPage: true });
+  await page.screenshot({
+    path: `test-results/profile-clone-${width}.png`,
+    fullPage: true,
+    animations: "disabled",
+  });
 }

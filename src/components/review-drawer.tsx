@@ -21,6 +21,9 @@ import { Modal } from "./modal";
 import { deltaMoney, money, timestamp } from "./format";
 import { unresolvedReviewQueue } from "./review-queue";
 import "./evidence.css";
+import { ReviewDraftControls } from "./review-draft-controls";
+import { reviewDraftKey } from "./review-draft-storage";
+import { diagnoseRow } from "@/domain/diagnostics";
 
 const DRAFT_STAGES = [
   "원본 근거 묶음을 확인하고 있습니다",
@@ -265,6 +268,22 @@ export function ReviewDrawer({
             </p>
             <SettlementEvidence row={row} workspace={workspace} />
           </section>
+          <section className="detail-section diagnostic-checks">
+            <h4>항목별 진단</h4>
+            <ul>
+              {diagnoseRow(row, workspace.orders, workspace.settlements, workspace.asOf).map(
+                (check) => (
+                  <li key={check.code}>
+                    <strong>{check.label}</strong>
+                    <span className={check.problem ? "form-error" : "muted"}>
+                      {check.problem ? "확인 필요" : "확인됨"}
+                    </span>
+                    <small>{check.detail}</small>
+                  </li>
+                ),
+              )}
+            </ul>
+          </section>
           {row.resolution ? (
             <section className="resolution-receipt">
               <ShieldCheck size={21} />
@@ -293,6 +312,13 @@ export function ReviewDrawer({
                   note,
                   evidence,
                 });
+                if (succeeded) {
+                  try {
+                    sessionStorage.removeItem(reviewDraftKey(workspace.draftScope, row.key));
+                  } catch {
+                    /* Approval is already committed. */
+                  }
+                }
                 if (succeeded && moveToNext) {
                   if (nextRow) onSelect(nextRow.key);
                   else onClose();
@@ -438,6 +464,20 @@ export function ReviewDrawer({
                   required
                 />
               </label>
+              <ReviewDraftControls
+                scope={workspace.draftScope}
+                rowKey={row.key}
+                fingerprint={workspace.reviewFingerprints[row.key]}
+                createdAt={workspace.createdAt}
+                note={note}
+                evidence={evidence}
+                disabled={busy}
+                onRestore={(savedNote, savedEvidence) => {
+                  setNote(savedNote);
+                  setEvidence(savedEvidence);
+                  setConfirmed(false);
+                }}
+              />
               <label className="checkbox-label">
                 <input
                   type="checkbox"

@@ -175,6 +175,8 @@ export interface CloseSnapshot {
   hash: string;
 }
 export interface Workspace {
+  /** Non-authenticating namespace for browser-local review drafts. */
+  draftScope?: string;
   version: number;
   period: string;
   asOf: string;

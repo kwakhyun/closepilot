@@ -79,6 +79,14 @@ export function workspaceView(workspace: Workspace) {
     events: workspace.events,
     lastRunAt: workspace.lastRunAt,
     createdAt: workspace.createdAt,
+    draftScope:
+      workspace.draftScope ?? digest({ createdAt: workspace.createdAt, profile: profile.id }),
+    reviewFingerprints: Object.fromEntries(
+      issues.map(({ resolution, ...row }) => {
+        void resolution;
+        return [row.key, digest(row)];
+      }),
+    ),
     demoMode: workspace.demoMode,
     // Full evidence stays in storage and is served only by the package export.
     close: workspace.close

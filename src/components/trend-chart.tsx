@@ -82,10 +82,10 @@ export function TrendChart({ workspace }: { workspace: WorkspaceView }) {
                   x2={width - 10}
                   y2={y}
                   data-zero-baseline={value === 0 ? "true" : undefined}
-                  stroke={value === 0 ? "#819087" : "#e9edeb"}
+                  stroke={value === 0 ? "#939ba9" : "#e5e7eb"}
                   strokeDasharray={value === 0 ? undefined : "3 4"}
                 />
-                <text x={left - 10} y={y + 4} textAnchor="end" fill="#8a9792" fontSize="10">
+                <text x={left - 10} y={y + 4} textAnchor="end" fill="#626b79" fontSize="10">
                   {value === 0 ? "0" : shortMoney(value)}
                 </text>
               </g>
@@ -107,7 +107,7 @@ export function TrendChart({ workspace }: { workspace: WorkspaceView }) {
                   y={top}
                   width={slot}
                   height={height}
-                  fill={hovered === index ? "#f0f5f2" : "transparent"}
+                  fill={hovered === index ? "#f0f4ff" : "transparent"}
                 />
                 <rect
                   data-series="expected"
@@ -117,7 +117,7 @@ export function TrendChart({ workspace }: { workspace: WorkspaceView }) {
                   width={barWidth}
                   height={expected.height}
                   rx="2"
-                  fill="#c2d8ce"
+                  fill="#b8caf7"
                 />
                 <rect
                   data-series="actual"
@@ -127,13 +127,13 @@ export function TrendChart({ workspace }: { workspace: WorkspaceView }) {
                   width={barWidth}
                   height={actual.height}
                   rx="2"
-                  fill={hovered === index ? "#145f46" : "#34896b"}
+                  fill={hovered === index ? "#244cc5" : "#3563e9"}
                 />
                 {(mode === "channel" ||
                   index === 0 ||
                   index === values.length - 1 ||
                   index % 7 === 0) && (
-                  <text x={x} y="204" fill="#819087" fontSize="10" textAnchor="middle">
+                  <text x={x} y="204" fill="#626b79" fontSize="10" textAnchor="middle">
                     {value.label}
                   </text>
                 )}

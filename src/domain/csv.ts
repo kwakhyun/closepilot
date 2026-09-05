@@ -116,6 +116,23 @@ export function suggestMapping(headers: string[], kind: ImportKind): Record<stri
     ]),
   );
 }
+export interface CsvIssue {
+  row: number;
+  field: string;
+  message: string;
+}
+export class CsvValidationError extends DomainError {
+  constructor(public issues: CsvIssue[]) {
+    super(
+      "INVALID_ROWS",
+      issues
+        .slice(0, 5)
+        .map((issue) => `${issue.row}행: ${issue.message}`)
+        .join("\n") +
+        (issues.length > 5 ? `\n이 외에 오류 ${issues.length - 5}개가 더 있습니다.` : ""),
+    );
+  }
+}
 export function importCsv(
   text: string,
   kind: ImportKind,
@@ -136,11 +153,15 @@ export function importCsv(
   const mappedHeaders = IMPORT_FIELDS[kind].map((field) => selected[field]).filter(Boolean);
   if (new Set(mappedHeaders).size !== mappedHeaders.length)
     throw new DomainError("DUPLICATE_MAPPING", "각 항목에는 서로 다른 원본 열을 연결하세요.");
-  const errors: string[] = [];
+  const errors: CsvIssue[] = [];
   const orders: Order[] = [],
     settlements: Settlement[] = [];
   for (const [index, row] of rows.entries()) {
-    const get = (field: ImportField) => row[headers.indexOf(selected[field])] ?? "";
+    let currentField: ImportField = "channel";
+    const get = (field: ImportField) => {
+      currentField = field;
+      return row[headers.indexOf(selected[field])] ?? "";
+    };
     try {
       const id = (field: ImportField) => {
         const value = get(field);
@@ -208,15 +229,14 @@ export function importCsv(
         });
       }
     } catch (error) {
-      errors.push(`${index + 2}행: ${(error as Error).message}`);
+      errors.push({
+        row: index + 2,
+        field: IMPORT_FIELD_LABELS[currentField],
+        message: (error as Error).message,
+      });
     }
   }
-  if (errors.length)
-    throw new DomainError(
-      "INVALID_ROWS",
-      errors.slice(0, 5).join("\n") +
-        (errors.length > 5 ? `\n이 외에 오류 ${errors.length - 5}개가 더 있습니다.` : ""),
-    );
+  if (errors.length) throw new CsvValidationError(errors);
   return {
     headers,
     mapping: selected,
@@ -238,27 +258,31 @@ export function buildProfileSampleCsv(
   mapping: Record<string, string>,
   enabledChannels: readonly Channel[],
   feeBps: Record<Channel, number>,
+  period = "2026-08",
 ) {
+  const [year, month] = period.split("-").map(Number);
+  const lastDate = new Date(Date.UTC(year, month, 0)).toISOString().slice(0, 10);
+  const previousDate = new Date(Date.UTC(year, month, -1)).toISOString().slice(0, 10);
   const channels = enabledChannels.length ? enabledChannels : ["d2c" as const];
   const orders = [
     {
       order_id: "DEMO-NEW-001",
       channel: channels[0],
-      date: "2026-08-30",
+      date: previousDate,
       gross: 100000,
       refund: 0,
     },
     {
       order_id: "DEMO-NEW-002",
       channel: channels[1 % channels.length],
-      date: "2026-08-30",
+      date: previousDate,
       gross: 80000,
       refund: 10000,
     },
     {
       order_id: "DEMO-NEW-003",
       channel: channels[2 % channels.length],
-      date: "2026-08-31",
+      date: lastDate,
       gross: 125000,
       refund: 0,
     },
@@ -278,8 +302,8 @@ export function buildProfileSampleCsv(
             refund: order.refund,
             fee,
             net: order.gross - order.refund - fee,
-            due_date: "2026-08-31",
-            paid_date: "2026-08-31",
+            due_date: lastDate,
+            paid_date: lastDate,
           };
         });
   return [

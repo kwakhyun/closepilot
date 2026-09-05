@@ -53,6 +53,16 @@ class VerifierTest {
     @Test fun `changing an export breaks its checksum`() {
         assertFailsWith<IllegalArgumentException> { verifyClosePackage(fixture.replaceFirst("\"rowCount\": 128", "\"rowCount\": 127")) }
     }
+    @Test fun `independently replays a leap-month package without changing the rule version`() {
+        val text = Files.readString(Path.of("../fixtures/monthly-closed-package.json"))
+        val snapshot = Json.parseToJsonElement(text).jsonObject.getValue("snapshot").jsonObject
+        assertEquals("2024-02", snapshot.getValue("period").jsonPrimitive.content)
+        assertEquals("2024-02-29", snapshot.getValue("inputs").jsonObject.getValue("asOf").jsonPrimitive.content)
+        val result = verifyClosePackage(text)
+        assertEquals(128, result.rows)
+        assertEquals(120, result.matched)
+        assertEquals(8, result.reviewed)
+    }
     @Test fun `a recomputed checksum cannot conceal wrong arithmetic`() {
         val root = Json.parseToJsonElement(fixture).jsonObject
         val snapshot = root.getValue("snapshot").jsonObject

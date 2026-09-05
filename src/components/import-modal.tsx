@@ -16,7 +16,11 @@ import {
   IMPORT_FIELDS,
   IMPORT_FIELD_LABELS,
   type ImportKind,
+  csvCell,
+  type CsvIssue,
 } from "@/domain/csv";
+import type { ImportImpact } from "@/application/import-preview";
+import { money } from "./format";
 import type { Command, WorkspaceView } from "@/application/workbench";
 import { Modal } from "./modal";
 
@@ -27,12 +31,15 @@ interface Preview {
   count: number;
   preview: Record<string, string>[];
   errors: string[];
+  issues: CsvIssue[];
+  impact: ImportImpact | null;
 }
 export function ImportModal({
   open,
   onClose,
   onCommand,
   version,
+  period,
   busy,
   profileName,
   policy,
@@ -43,6 +50,7 @@ export function ImportModal({
   onClose: () => void;
   onCommand: (command: Command) => Promise<boolean>;
   version: number;
+  period: string;
   busy: boolean;
   profileName: string;
   policy: WorkspaceView["profile"]["policy"];
@@ -73,6 +81,7 @@ export function ImportModal({
     savedMapping,
     policy.enabledChannels,
     policy.feeBps,
+    period,
   );
   useEffect(
     () => () => {
@@ -88,7 +97,7 @@ export function ImportModal({
     );
   }, [open, preview?.valid]);
   async function validate(text: string, mapping?: Record<string, string>, importKind = kind) {
-    const version = ++requestVersion.current;
+    const requestId = ++requestVersion.current;
     previewRequest.current?.abort();
     const controller = new AbortController();
     previewRequest.current = controller;
@@ -99,10 +108,10 @@ export function ImportModal({
         method: "POST",
         signal: controller.signal,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ kind: importKind, csv: text, mapping }),
+        body: JSON.stringify({ kind: importKind, csv: text, mapping, expectedVersion: version }),
       });
       const result = await response.json();
-      if (version !== requestVersion.current) return;
+      if (requestId !== requestVersion.current) return;
       if (response.status === 401) {
         await onSessionExpired();
         return;
@@ -110,9 +119,12 @@ export function ImportModal({
       if (!response.ok) throw new Error(result.error?.message || "파일을 검증하지 못했습니다.");
       setPreview(result);
     } catch (failure) {
-      if (version === requestVersion.current) setError((failure as Error).message);
+      if (requestId === requestVersion.current) {
+        setPreview(null);
+        setError((failure as Error).message);
+      }
     } finally {
-      if (version === requestVersion.current) setValidating(false);
+      if (requestId === requestVersion.current) setValidating(false);
     }
   }
   async function sample() {
@@ -194,6 +206,8 @@ export function ImportModal({
                   setPreview(null);
                   setError("");
                   requestVersion.current++;
+                  previewRequest.current?.abort();
+                  setValidating(false);
                 }}
               >
                 파일 또는 자료 유형 바꾸기
@@ -330,13 +344,16 @@ export function ImportModal({
                     </span>
                     <select
                       value={preview.mapping[field] || ""}
-                      onChange={(event) =>
+                      onChange={(event) => {
+                        requestVersion.current++;
+                        previewRequest.current?.abort();
+                        setValidating(false);
                         setPreview({
                           ...preview,
                           valid: false,
                           mapping: { ...preview.mapping, [field]: event.target.value },
-                        })
-                      }
+                        });
+                      }}
                     >
                       <option value="">원본 열 선택</option>
                       {preview.headers.map((header) => (
@@ -362,11 +379,62 @@ export function ImportModal({
                     {preview.errors.map((message) => (
                       <p key={message}>{message}</p>
                     ))}
+                    {!!preview.issues?.length && (
+                      <a
+                        className="text-button"
+                        download="import-errors.csv"
+                        href={`data:text/csv;charset=utf-8,${encodeURIComponent("\uFEFF" + [["행", "항목", "오류"], ...preview.issues.map((issue) => [issue.row || "파일", issue.field, issue.message])].map((row) => row.map(csvCell).join(",")).join("\r\n"))}`}
+                      >
+                        <Download size={14} /> 오류 목록 다운로드
+                      </a>
+                    )}
                   </div>
                 </div>
               )}
               {preview.valid && (
                 <>
+                  {preview.impact && (
+                    <div className="impact-summary" aria-label="반영 전 영향 분석">
+                      <h3>반영 전 영향 분석</h3>
+                      <dl>
+                        <div>
+                          <dt>대사 거래</dt>
+                          <dd>
+                            {preview.impact.before.total} → {preview.impact.after.total}건
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>예외 거래</dt>
+                          <dd>
+                            {preview.impact.before.issues} → {preview.impact.after.issues}건
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>예상 정산액</dt>
+                          <dd>
+                            {money(preview.impact.before.expectedNet)} →{" "}
+                            {money(preview.impact.after.expectedNet)}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>자료상 정산액</dt>
+                          <dd>
+                            {money(preview.impact.before.actualNet)} →{" "}
+                            {money(preview.impact.after.actualNet)}
+                          </dd>
+                        </div>
+                      </dl>
+                      <p>재검토 필요 {preview.impact.invalidatedReviews.length}건</p>
+                      {preview.impact.invalidatedReviews.map((row) => (
+                        <span key={row.rowKey}>{row.orderId} </span>
+                      ))}
+                      {preview.impact.expectedVersion !== version && (
+                        <p className="form-error">
+                          자료가 변경되었습니다. 열 연결을 다시 확인하세요.
+                        </p>
+                      )}
+                    </div>
+                  )}
                   <div className="validation-success" role="status">
                     <CheckCircle2 size={17} />
                     {preview.count}행 검증 완료 · 자료 반영을 누르면 전체 내용을 한 번에 저장합니다.
@@ -410,20 +478,22 @@ export function ImportModal({
             {validating
               ? "열 연결과 금액·날짜 형식을 확인하고 있습니다."
               : preview?.valid
-                ? `${preview.count}행 검증 완료 · 반영하면 대사를 다시 실행합니다.`
+                ? `${preview.count}행 검증 완료 · 반영 후 대사를 다시 실행하세요.`
                 : preview?.errors.length
                   ? `오류 ${preview.errors.length}건을 수정한 뒤 다시 검증하세요.`
                   : "CSV 파일을 선택하고 열 연결을 확인하세요."}
           </p>
           <button
             className="button primary"
-            disabled={!preview?.valid || validating || busy}
+            disabled={
+              !preview?.valid || preview.impact?.expectedVersion !== version || validating || busy
+            }
             onClick={async () => {
               if (
                 preview &&
                 (await onCommand({
                   action: "import",
-                  expectedVersion: version,
+                  expectedVersion: preview.impact!.expectedVersion,
                   kind,
                   csv,
                   filename,

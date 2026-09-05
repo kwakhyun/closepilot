@@ -30,7 +30,7 @@ export function assertSameOrigin(request: Request) {
 }
 export async function readJson(
   request: Request,
-  { allowEmpty = false }: { allowEmpty?: boolean } = {},
+  { allowEmpty = false, maxBytes = 300_000 }: { allowEmpty?: boolean; maxBytes?: number } = {},
 ): Promise<unknown> {
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json"))
     throw new DomainError(
@@ -38,7 +38,7 @@ export async function readJson(
       "Content-Type을 application/json으로 지정하고 JSON 형식으로 요청하세요.",
       415,
     );
-  if (Number(request.headers.get("content-length") || 0) > 300_000)
+  if (Number(request.headers.get("content-length") || 0) > maxBytes)
     throw new DomainError(
       "BODY_TOO_LARGE",
       "요청에 포함된 데이터가 너무 큽니다. 크기를 줄인 뒤 다시 시도하세요.",
@@ -57,7 +57,7 @@ export async function readJson(
       const { done, value } = await reader.read();
       if (done) break;
       bytes += value.byteLength;
-      if (bytes > 300_000) {
+      if (bytes > maxBytes) {
         await reader.cancel();
         throw new DomainError(
           "BODY_TOO_LARGE",
