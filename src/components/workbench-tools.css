@@ -151,3 +151,123 @@
     gap: 12px;
   }
 }
+.workspace-library {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+.workspace-library li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+.workspace-library li > div {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+  overflow-wrap: anywhere;
+}
+.workspace-library span {
+  color: #667085;
+  font-size: 12px;
+}
+.workspace-library button {
+  flex-shrink: 0;
+}
+@media (max-width: 480px) {
+  .workspace-library li {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+.mapping-template-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+  margin: 16px 0;
+}
+.mapping-template-picker label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+}
+.mapping-template-picker select {
+  max-width: 100%;
+  min-height: 36px;
+}
+.mapping-template-picker p {
+  flex-basis: 100%;
+}
+.table-filters {
+  flex-wrap: wrap;
+}
+.table-filters > select {
+  min-height: 36px;
+  max-width: 100%;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  background: white;
+  padding: 6px;
+}
+.minimum-delta-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+.minimum-delta-filter input {
+  width: 110px;
+  min-height: 36px;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  padding: 6px;
+}
+.policy-apply-form,
+.followup-item fieldset {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+}
+.policy-apply-form > label:not(.checkbox-label),
+.followup-item fieldset > label:not(.checkbox-label) {
+  display: grid;
+  gap: 6px;
+}
+.policy-apply-form textarea,
+.policy-apply-form input:not([type="checkbox"]),
+.followup-item textarea,
+.followup-item input:not([type="checkbox"]),
+.followup-item select {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  padding: 8px;
+  background: white;
+}
+.policy-apply-form textarea,
+.followup-item textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+.policy-history,
+.followup-source {
+  margin-top: 24px;
+}
+.followup-item {
+  padding: 16px 0;
+  border-bottom: 1px solid #e5e7eb;
+  overflow-wrap: anywhere;
+}
+.followup-item summary {
+  cursor: pointer;
+  line-height: 1.7;
+}

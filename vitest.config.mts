@@ -19,6 +19,7 @@ export default defineConfig({
         "src/infrastructure/http.ts",
         "src/infrastructure/repository.ts",
         "src/infrastructure/review-draft-store.ts",
+        "src/infrastructure/workspace-library.ts",
       ],
       thresholds: {
         statements: 80,

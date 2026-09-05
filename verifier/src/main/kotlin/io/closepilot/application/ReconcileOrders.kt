@@ -25,7 +25,8 @@ import kotlinx.serialization.json.put
 import java.time.LocalDate
 import kotlin.math.abs
 
-const val RULE_VERSION = "krw-net-v1.1.0"
+const val RULE_VERSION = "krw-net-v1.2.0"
+val SUPPORTED_RULE_VERSIONS = setOf("krw-net-v1.1.0", RULE_VERSION)
 
 private fun JsonObject.requiredString(key: String): String {
     val value = getValue(key).jsonPrimitive
@@ -51,7 +52,8 @@ private fun JsonObject.orderKey(idField: String): OrderKey =
 fun reconcileRequest(text: String): JsonObject {
     require(text.toByteArray(Charsets.UTF_8).size <= 5_000_000) { "Request exceeds 5 MB" }
     val root = Json.parseToJsonElement(text).jsonObject
-    require(root.requiredString("ruleVersion") == RULE_VERSION) { "Unsupported rule version" }
+    val ruleVersion = root.requiredString("ruleVersion")
+    require(ruleVersion in SUPPORTED_RULE_VERSIONS) { "Unsupported rule version" }
     val ordersJson = root.requiredArray("orders")
     val settlementsJson = root.requiredArray("settlements")
     require(ordersJson.size <= 500 && settlementsJson.size <= 1_000) { "Invalid input size" }
@@ -92,7 +94,7 @@ fun reconcileRequest(text: String): JsonObject {
             .thenBy { it.evidence.key.wireName },
     )
     return buildJsonObject {
-        put("ruleVersion", RULE_VERSION)
+        put("ruleVersion", ruleVersion)
         put("engine", "kotlin-jvm")
         put("rows", buildJsonArray {
             rows.forEach { result ->

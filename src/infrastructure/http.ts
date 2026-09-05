@@ -5,8 +5,14 @@ import { ZodError } from "zod";
 import { DomainError } from "@/domain/model";
 import { getDatabase } from "./database";
 import { WorkspaceRepository } from "./repository";
+import { WorkspaceLibrary } from "./workspace-library";
 
 export const COOKIE_NAME = "closepilot_session";
+export const LIBRARY_COOKIE = "closepilot_library";
+export async function libraryToken() {
+  const token = (await cookies()).get(LIBRARY_COOKIE)?.value;
+  return token && /^[a-f0-9]{64}$/.test(token) ? token : undefined;
+}
 export const hashToken = (token: string) => createHash("sha256").update(token).digest("hex");
 export async function repository() {
   return new WorkspaceRepository(await getDatabase());
@@ -15,7 +21,7 @@ export async function sessionHash(): Promise<string> {
   const token = (await cookies()).get(COOKIE_NAME)?.value;
   if (!token || !/^[a-f0-9]{64}$/.test(token))
     throw new DomainError("NO_SESSION", "데모 세션을 시작하세요.", 401);
-  return hashToken(token);
+  return new WorkspaceLibrary(await getDatabase()).resolve(hashToken(token));
 }
 export function assertSameOrigin(request: Request) {
   const origin = request.headers.get("origin");

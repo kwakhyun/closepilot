@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Command, WorkspaceView, explainIssues } from "@/application/workbench";
 
 export interface SessionSelection {
+  workspaceId?: string;
   templateId?: "lumiere-beauty-v1" | "morrow-food-v1";
   brandName?: string;
   showcase?: "completed";
@@ -43,13 +44,13 @@ async function createSession(
   signal?: AbortSignal,
 ): Promise<WorkspaceView> {
   return responseData(
-    await fetch("/api/session", {
+    await fetch(selection?.workspaceId ? "/api/workspaces" : "/api/session", {
       method: "POST",
       signal,
       ...(selection
         ? {
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(selection),
+            body: JSON.stringify(selection.workspaceId ? { id: selection.workspaceId } : selection),
           }
         : {}),
     }),
@@ -89,10 +90,16 @@ export function useWorkspaceSession() {
             `${url.pathname}${url.search}${url.hash}`,
           );
         } else {
-          let response = await fetch("/api/workspace", { signal: controller.signal });
-          if (response.status === 401)
-            response = await fetch("/api/session", { method: "POST", signal: controller.signal });
-          view = await responseData<WorkspaceView>(response);
+          const response = await fetch("/api/workspace", { signal: controller.signal });
+          if (response.status === 401) {
+            const library = await responseData<{ workspaces: Array<{ id: string }> }>(
+              await fetch("/api/workspaces", { signal: controller.signal }),
+            );
+            view = await createSession(
+              library.workspaces[0] ? { workspaceId: library.workspaces[0].id } : undefined,
+              controller.signal,
+            );
+          } else view = await responseData<WorkspaceView>(response);
         }
         if (!controller.signal.aborted) setWorkspace(view);
       } catch (failure) {
@@ -131,7 +138,11 @@ export function useWorkspaceSession() {
     try {
       const request = {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() },
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": crypto.randomUUID(),
+          "X-Workspace-Scope": workspace?.draftScope || "",
+        },
         body: JSON.stringify(command),
       };
       let response: Response;
@@ -144,20 +155,27 @@ export function useWorkspaceSession() {
       const view = await responseData<WorkspaceView>(response);
       setWorkspace(view);
       showToast(
-        command.action === "resolve"
-          ? "검토 사유와 증빙 참조 정보를 기록했습니다."
-          : command.action === "close"
-            ? `${view.period} 마감을 확정했습니다. 마감 증빙 파일을 내려받을 수 있습니다.`
-            : command.action === "import"
-              ? "자료를 반영했습니다. 대사를 다시 실행해 주세요."
-              : "대사를 완료했습니다. 최신 자료로 결과를 갱신했습니다.",
+        command.action === "apply_policy"
+          ? "월별 정책을 적용했습니다. 대사를 다시 실행한 뒤 변경된 거래를 검토하세요."
+          : command.action === "record_followup"
+            ? "이월 근거 검토를 기록했습니다. 입금 확정이나 거래 승인은 수행하지 않았습니다."
+            : command.action === "resolve"
+              ? "검토 사유와 증빙 참조 정보를 기록했습니다."
+              : command.action === "close"
+                ? `${view.period} 마감을 확정했습니다. 마감 증빙 파일을 내려받을 수 있습니다.`
+                : command.action === "import"
+                  ? "자료를 반영했습니다. 대사를 다시 실행해 주세요."
+                  : "대사를 완료했습니다. 최신 자료로 결과를 갱신했습니다.",
       );
       return "success";
     } catch (failure) {
       if (failure instanceof ApiRequestError && failure.status === 401) return "expired";
       showToast((failure as Error).message, true);
       try {
-        setWorkspace(await responseData<WorkspaceView>(await fetch("/api/workspace")));
+        const current = await responseData<WorkspaceView>(await fetch("/api/workspace"));
+        if (current.draftScope !== workspace?.draftScope)
+          setSessionRevision((revision) => revision + 1);
+        setWorkspace(current);
       } catch {
         // Keep the original error visible.
       }
@@ -178,9 +196,11 @@ export function useWorkspaceSession() {
       setAnalysisLoading(false);
       setError("");
       showToast(
-        selection?.showcase === "completed"
-          ? "미리 완료된 합성 마감 예시를 열었습니다."
-          : `${view.profile.brandName} 프로필로 새 데모를 시작했습니다.`,
+        selection?.workspaceId
+          ? `${view.period} ${view.profile.brandName} 작업을 다시 열었습니다.`
+          : selection?.showcase === "completed"
+            ? "미리 완료된 합성 마감 예시를 열었습니다."
+            : `${view.profile.brandName} 프로필로 새 데모를 시작했습니다.`,
       );
       return view;
     } catch (failure) {
@@ -192,6 +212,21 @@ export function useWorkspaceSession() {
   }
 
   async function recoverExpiredSession(): Promise<boolean> {
+    try {
+      const library = await responseData<{ workspaces: Array<{ id: string; scope: string }> }>(
+        await fetch("/api/workspaces"),
+      );
+      const previous = library.workspaces.find((entry) => entry.scope === workspace?.draftScope);
+      if (previous) {
+        const restored = await reset({ workspaceId: previous.id });
+        if (!restored) return false;
+        showToast("보관된 작업을 다시 열었습니다. 직전 요청은 다시 실행하지 않았습니다.");
+        return true;
+      }
+    } catch (failure) {
+      showToast((failure as Error).message, true);
+      return false;
+    }
     const selection = workspace
       ? {
           templateId: workspace.profile.templateId as SessionSelection["templateId"],

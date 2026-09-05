@@ -23,6 +23,7 @@ import type { ImportImpact } from "@/application/import-preview";
 import { money } from "./format";
 import type { Command, WorkspaceView } from "@/application/workbench";
 import { Modal } from "./modal";
+import { MappingTemplates } from "./mapping-templates";
 
 interface Preview {
   valid: boolean;
@@ -218,7 +219,8 @@ export function ImportModal({
             <AlertCircle size={18} />
             <p>
               <b>가상 데이터만 업로드하세요.</b> 실제 고객 정보나 결제 내역은 올리지 마세요. 연결한
-              열만 저장하며, 데모를 시작한 시점부터 6시간 동안 자료에 접근할 수 있습니다.
+              열만 저장합니다. 새 작업은 이 브라우저의 보관함에서 생성일로부터 30일간 접근할 수
+              있습니다.
             </p>
           </div>
           <fieldset className="import-kind">
@@ -335,6 +337,12 @@ export function ImportModal({
                   {savedMappingApplied ? "저장 설정 적용됨" : "저장 설정 불러오기"}
                 </button>
               </div>
+              <MappingTemplates
+                kind={kind}
+                headers={preview.headers}
+                disabled={validating || busy}
+                onApply={(mapping) => void validate(csv, mapping)}
+              />
               <div className="mapping-grid">
                 {IMPORT_FIELDS[kind].map((field) => (
                   <label key={field}>

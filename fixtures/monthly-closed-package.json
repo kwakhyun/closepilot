@@ -1,7 +1,7 @@
 {
   "snapshot": {
     "period": "2024-02",
-    "ruleVersion": "krw-net-v1.1.0",
+    "ruleVersion": "krw-net-v1.2.0",
     "closedAt": "2024-02-29T09:00:00.000Z",
     "closedBy": "데모 검토자",
     "gross": 17072000,
@@ -5818,7 +5818,7 @@
         "fingerprint": "5e0f8fa7c1a1b5a23df8e5551558df263a872a048e74974bf369d988b683ddeb"
       }
     ],
-    "hash": "f2726f9559afe11f15146b777194084822d29d3e499577f9aa05e55efdfac9ca"
+    "hash": "06553e03569ccb4b704e88e1b1dfe16d1395923203f0187855cb8a906d069abf"
   },
   "audit": [
     {
@@ -5834,10 +5834,10 @@
       "type": "reconciled",
       "actor": "규칙 엔진",
       "at": "2024-02-29T09:00:00.000Z",
-      "detail": "krw-net-v1.1.0 규칙으로 최초 대사를 실행했습니다. 금액은 원 단위 정수로 계산합니다.",
+      "detail": "krw-net-v1.2.0 규칙으로 최초 대사를 실행했습니다. 금액은 원 단위 정수로 계산합니다.",
       "id": "EVT-0002",
       "previousHash": "dae58d13102b1e6f122185cb22e7f9fde51be0b651061a93d295ae4707dadff2",
-      "hash": "e3741d6051ca23b604ba8c595f8871d226603d2fd33beb0e9fd65f1de40293f3"
+      "hash": "a0f649d518aa4e6b15b283ab8f7bbcb30207bcdadc7fbacb1764bacd9c94372b"
     },
     {
       "type": "resolved",
@@ -5845,8 +5845,8 @@
       "at": "2024-02-29T09:00:00.000Z",
       "detail": "LM-2402045 · exclude_duplicate · 완료 화면 확인용 합성 기록입니다. 'duplicate' 예외의 원본 자료를 확인한 예시이며 실제 고객 승인이 아닙니다. · 근거: SHOWCASE-SRC-ORD-01",
       "id": "EVT-0003",
-      "previousHash": "e3741d6051ca23b604ba8c595f8871d226603d2fd33beb0e9fd65f1de40293f3",
-      "hash": "e9b722f1e5c6dce0728f9d6fc062512633bc7f942f3ae23900cd4f1d46093691"
+      "previousHash": "a0f649d518aa4e6b15b283ab8f7bbcb30207bcdadc7fbacb1764bacd9c94372b",
+      "hash": "4cb3a62b49f04f5b8f6c21b734fe9b53a5ab92bc4d9b1868be5050da12c814a7"
     },
     {
       "type": "resolved",
@@ -5854,8 +5854,8 @@
       "at": "2024-02-29T09:00:00.000Z",
       "detail": "LM-2402063 · accepted_variance · 완료 화면 확인용 합성 기록입니다. 'missing' 예외의 원본 자료를 확인한 예시이며 실제 고객 승인이 아닙니다. · 근거: SHOWCASE-SRC-ORD-01",
       "id": "EVT-0004",
-      "previousHash": "e9b722f1e5c6dce0728f9d6fc062512633bc7f942f3ae23900cd4f1d46093691",
-      "hash": "d8c9659f1e0fd2da4fab735b9e45972320c21047fbb1c231e93425c94417a374"
+      "previousHash": "4cb3a62b49f04f5b8f6c21b734fe9b53a5ab92bc4d9b1868be5050da12c814a7",
+      "hash": "8c853a355e24b0b7c78f6823110d8d5af3f11f09eb24dc2b9bff3d54ecdb37e2"
     },
     {
       "type": "resolved",
@@ -5863,8 +5863,8 @@
       "at": "2024-02-29T09:00:00.000Z",
       "detail": "LM-2402012 · accepted_variance · 완료 화면 확인용 합성 기록입니다. 'missing' 예외의 원본 자료를 확인한 예시이며 실제 고객 승인이 아닙니다. · 근거: SHOWCASE-SRC-ORD-01",
       "id": "EVT-0005",
-      "previousHash": "d8c9659f1e0fd2da4fab735b9e45972320c21047fbb1c231e93425c94417a374",
-      "hash": "152621ae94b8779fe230fa86e5519770a191d2360b5656a95c244fbf6a17825f"
+      "previousHash": "8c853a355e24b0b7c78f6823110d8d5af3f11f09eb24dc2b9bff3d54ecdb37e2",
+      "hash": "abc51b5be10c8d779ae3a1c9b99bc725ed36ca73806dbbfe1923a4bf401e1826"
     },
     {
       "type": "resolved",
@@ -5872,8 +5872,8 @@
       "at": "2024-02-29T09:00:00.000Z",
       "detail": "LM-2402034 · accepted_variance · 완료 화면 확인용 합성 기록입니다. 'refund' 예외의 원본 자료를 확인한 예시이며 실제 고객 승인이 아닙니다. · 근거: SHOWCASE-SRC-ORD-01",
       "id": "EVT-0006",
-      "previousHash": "152621ae94b8779fe230fa86e5519770a191d2360b5656a95c244fbf6a17825f",
-      "hash": "dda1dcc605352237c3cb46af8c892dfb6cc08a9c65ef0470f02524b2af4ec42e"
+      "previousHash": "abc51b5be10c8d779ae3a1c9b99bc725ed36ca73806dbbfe1923a4bf401e1826",
+      "hash": "e15aea075cacdfee4c5cce24b7d2a2177b549e0723ae44a1639ea53d7868f92a"
     },
     {
       "type": "resolved",
@@ -5881,8 +5881,8 @@
       "at": "2024-02-29T09:00:00.000Z",
       "detail": "LM-2402022 · accepted_variance · 완료 화면 확인용 합성 기록입니다. 'fee' 예외의 원본 자료를 확인한 예시이며 실제 고객 승인이 아닙니다. · 근거: SHOWCASE-SRC-ORD-01",
       "id": "EVT-0007",
-      "previousHash": "dda1dcc605352237c3cb46af8c892dfb6cc08a9c65ef0470f02524b2af4ec42e",
-      "hash": "8db259d0452be6e11868f4beeefb69816f1e647f2f2c607f0fd3f5a31dbc0a34"
+      "previousHash": "e15aea075cacdfee4c5cce24b7d2a2177b549e0723ae44a1639ea53d7868f92a",
+      "hash": "cfa57abcb490a6392c3e77409fd46809a5b34a9cbcdf01d915f043f2d00e508a"
     },
     {
       "type": "resolved",
@@ -5890,8 +5890,8 @@
       "at": "2024-02-29T09:00:00.000Z",
       "detail": "LM-2402080 · accepted_variance · 완료 화면 확인용 합성 기록입니다. 'fee' 예외의 원본 자료를 확인한 예시이며 실제 고객 승인이 아닙니다. · 근거: SHOWCASE-SRC-ORD-01",
       "id": "EVT-0008",
-      "previousHash": "8db259d0452be6e11868f4beeefb69816f1e647f2f2c607f0fd3f5a31dbc0a34",
-      "hash": "e8efe3bdecbf1339df1ebf13f4ba2abd24e50c507af59abfb5b0b4077f375959"
+      "previousHash": "cfa57abcb490a6392c3e77409fd46809a5b34a9cbcdf01d915f043f2d00e508a",
+      "hash": "f3b4a364621132bed3f842485e7a557395d0022d487a2bffe7cb5810b913d0ec"
     },
     {
       "type": "resolved",
@@ -5899,8 +5899,8 @@
       "at": "2024-02-29T09:00:00.000Z",
       "detail": "LM-2402127 · carry_forward · 완료 화면 확인용 합성 기록입니다. 'timing' 예외의 원본 자료를 확인한 예시이며 실제 고객 승인이 아닙니다. · 근거: SHOWCASE-SRC-ORD-01",
       "id": "EVT-0009",
-      "previousHash": "e8efe3bdecbf1339df1ebf13f4ba2abd24e50c507af59abfb5b0b4077f375959",
-      "hash": "2f9a49ee12795fe15ef4bb58e73918d8158ab05c479ec8e17dc4d4f584cb4b70"
+      "previousHash": "f3b4a364621132bed3f842485e7a557395d0022d487a2bffe7cb5810b913d0ec",
+      "hash": "118253a20ff545ca6e0388b9541d3111a6e3045304b94eed192e0b7a9f6de410"
     },
     {
       "type": "resolved",
@@ -5908,17 +5908,17 @@
       "at": "2024-02-29T09:00:00.000Z",
       "detail": "LM-2402128 · carry_forward · 완료 화면 확인용 합성 기록입니다. 'timing' 예외의 원본 자료를 확인한 예시이며 실제 고객 승인이 아닙니다. · 근거: SHOWCASE-SRC-ORD-01",
       "id": "EVT-0010",
-      "previousHash": "2f9a49ee12795fe15ef4bb58e73918d8158ab05c479ec8e17dc4d4f584cb4b70",
-      "hash": "9e4c93c69722bc5e5c0c8d18e771946d55a001eebdb4846f6a2e2975173df880"
+      "previousHash": "118253a20ff545ca6e0388b9541d3111a6e3045304b94eed192e0b7a9f6de410",
+      "hash": "2de8867f57d6e3dcd50c9b94b5c52ffe6dd83500c43b3ca4ff4deff2dd0ba22f"
     },
     {
       "type": "closed",
       "actor": "데모 검토자",
       "at": "2024-02-29T09:00:00.000Z",
-      "detail": "2024-02 마감 확정 · 8건의 승인 근거 포함 · 스냅샷 f2726f9559afe11f…",
+      "detail": "2024-02 마감 확정 · 8건의 승인 근거 포함 · 스냅샷 06553e03569ccb4b…",
       "id": "EVT-0011",
-      "previousHash": "9e4c93c69722bc5e5c0c8d18e771946d55a001eebdb4846f6a2e2975173df880",
-      "hash": "de52b0687cad045a271d6cef2b5355dfff6c6210d376c088868a6c4e9e2cc8cd"
+      "previousHash": "2de8867f57d6e3dcd50c9b94b5c52ffe6dd83500c43b3ca4ff4deff2dd0ba22f",
+      "hash": "4b5ac27dd4274ac34112058b2b8f9d143fbd86bb1c5ce999c25a62bd71e22dda"
     }
   ],
   "notice": "Deterministic leap-month synthetic fixture. Not a real financial close."

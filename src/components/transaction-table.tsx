@@ -12,7 +12,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import type { ReviewedRow, WorkspaceView } from "@/application/workbench";
-import { CHANNEL_LABELS, ISSUE_LABELS, type Channel } from "@/domain/model";
+import { CHANNEL_LABELS, ISSUE_LABELS, type Channel, type IssueKind } from "@/domain/model";
 import { deltaMoney, money } from "./format";
 import { compareReviewRows } from "./review-queue";
 
@@ -47,6 +47,8 @@ export function TransactionTable({
   const [channel, setChannel] = useState<string>("all");
   const [page, setPage] = useState(0);
   const [ascending, setAscending] = useState(false);
+  const [issueKind, setIssueKind] = useState("all");
+  const [minimumDelta, setMinimumDelta] = useState("");
   const enabledChannels = workspace.profile.policy.enabledChannels;
   const effectiveChannel = enabledChannels.includes(channel as Channel) ? channel : "all";
   const tabSetId = useId();
@@ -82,6 +84,8 @@ export function TransactionTable({
         (filter === "issues" ? row.kind !== "matched" && !row.resolution : !!row.resolution);
       return (
         matchFilter &&
+        (issueKind === "all" || row.kind === issueKind) &&
+        Math.abs(row.delta) >= Number(minimumDelta || 0) &&
         (effectiveChannel === "all" || row.channel === effectiveChannel) &&
         (!search || row.orderId.toLowerCase().includes(search.trim().toLowerCase()))
       );
@@ -136,6 +140,41 @@ export function TransactionTable({
           ))}
         </div>
         <div className="table-filters">
+          {expanded && (
+            <>
+              <select
+                aria-label="예외 유형 필터"
+                value={issueKind}
+                onChange={(event) => {
+                  setIssueKind(event.target.value);
+                  setPage(0);
+                }}
+              >
+                <option value="all">전체 유형</option>
+                {(Object.keys(ISSUE_LABELS) as IssueKind[]).map((kind) => (
+                  <option key={kind} value={kind}>
+                    {ISSUE_LABELS[kind]}
+                  </option>
+                ))}
+              </select>
+              <label className="minimum-delta-filter">
+                <span>최소 차이 금액</span>
+                <input
+                  aria-label="최소 차이 금액"
+                  type="number"
+                  min="0"
+                  max="1000000000000"
+                  step="1"
+                  value={minimumDelta}
+                  placeholder="0"
+                  onChange={(event) => {
+                    setMinimumDelta(event.target.value);
+                    setPage(0);
+                  }}
+                />
+              </label>
+            </>
+          )}
           <div className="select-with-icon">
             <ListFilter size={14} />
             <select
@@ -309,12 +348,20 @@ export function TransactionTable({
           <div className="empty-state">
             <CheckCircle2 size={30} />
             <h3>
-              {filter === "issues" && !search && effectiveChannel === "all"
+              {filter === "issues" &&
+              !search &&
+              effectiveChannel === "all" &&
+              issueKind === "all" &&
+              !Number(minimumDelta)
                 ? "모든 예외 거래를 검토했습니다"
                 : "조건에 맞는 거래가 없습니다"}
             </h3>
             <p>
-              {filter === "issues" && !search && effectiveChannel === "all"
+              {filter === "issues" &&
+              !search &&
+              effectiveChannel === "all" &&
+              issueKind === "all" &&
+              !Number(minimumDelta)
                 ? workspace.close
                   ? "마감 증빙 보기에서 확정한 결과를 내려받을 수 있습니다."
                   : "마감 점검에서 남은 조건을 확인하고 마감을 확정하세요."
@@ -322,12 +369,15 @@ export function TransactionTable({
                   ? "거래 상세에서 검토를 승인하면 이 목록에 표시됩니다."
                   : "검색어나 판매 채널, 검토 상태를 바꿔 다시 확인하세요."}
             </p>
-            {(search || effectiveChannel !== "all") && (
+            {(search || effectiveChannel !== "all" || issueKind !== "all" || minimumDelta) && (
               <button
                 className="text-button"
                 onClick={() => {
                   setSearch("");
                   setChannel("all");
+                  setIssueKind("all");
+                  setMinimumDelta("");
+                  setPage(0);
                 }}
               >
                 필터 초기화

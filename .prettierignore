@@ -12,6 +12,8 @@ verifier/.gradle
 verifier/build
 fixtures/closed-package.json
 fixtures/monthly-closed-package.json
+fixtures/legacy-v1.1-closed-package.json
+fixtures/policy-closed-package.json
 fixtures/baseline.json
 fixtures/reconciliation-contract.json
 migrations/001_initial.sql

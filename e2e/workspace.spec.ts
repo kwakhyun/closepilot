@@ -69,6 +69,12 @@ test("거래 검토 서랍을 열고 Escape로 닫는다", async ({ page }) => {
   await expect(drawer.getByRole("checkbox", { name: /원본 자료와 검토 사유/ })).not.toBeChecked();
   await page.keyboard.press("Escape");
   await expect(drawer).toBeHidden();
+  await page.getByLabel("예외 유형 필터").selectOption("duplicate");
+  await expect(page.locator(".transaction-table tbody tr")).toHaveCount(1);
+  await page.getByLabel("최소 차이 금액").fill("1000000000000");
+  await expect(page.getByText("조건에 맞는 거래가 없습니다", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "필터 초기화" }).click();
+  await expect(page.locator(".transaction-table tbody tr")).toHaveCount(8);
   await verifyProfileClone(page, 1440);
 });
 
@@ -304,7 +310,9 @@ test("주문·정산 자료 반영부터 재대사, 전건 검토, 마감 증빙
   await expect(page.getByLabel("증빙 검증 결과")).toContainText("통과: 감사 연결과 마감 기록");
   await page.getByText(`거래와 검토 근거 ${view.rows.length}건`, { exact: true }).click();
   await page.getByLabel("증빙 거래 검색").fill("ORPHAN-NEGATIVE");
-  await expect(page.locator(".feature-section")).toContainText("₩-2,000,000");
+  await expect(
+    page.locator(".feature-section").filter({ has: page.locator("#package-title") }),
+  ).toContainText("₩-2,000,000");
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 900 });
     await settleToolViewport(page, width);
@@ -350,8 +358,17 @@ test("주문·정산 자료 반영부터 재대사, 전건 검토, 마감 증빙
   }
 });
 
-test("완료된 합성 예시는 명확히 표시되고 처음부터 읽기 전용이다", async ({ page }) => {
-  await page.goto("/?showcase=completed");
+test("완료된 합성 예시는 읽기 전용이며 다음 월 정책과 이월 근거를 검토할 수 있다", async ({
+  page,
+  baseURL,
+}) => {
+  test.setTimeout(90_000);
+  const prepared = await page.request.post("/api/session", {
+    headers: { Origin: baseURL! },
+    data: { showcase: "completed", period: "2024-01" },
+  });
+  expect(prepared.ok()).toBe(true);
+  await page.goto("/");
   await expect(page.getByText("미리 완료된 합성 마감 예시입니다.")).toBeVisible();
   await expect(page.getByText("마감 완료")).toBeVisible();
   await expect(page.getByRole("button", { name: "자료 가져오기" })).toBeDisabled();
@@ -383,7 +400,144 @@ test("완료된 합성 예시는 명확히 표시되고 처음부터 읽기 전�
     fullPage: false,
     animations: "disabled",
   });
+  await page.getByRole("button", { name: "자료 반영", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "CSV 자료 가져오기" })).toBeHidden();
+  const saved = await (await page.request.get("/api/workspace")).json();
+  expect(saved.orders).toHaveLength(131);
+  await page.getByRole("button", { name: "온보딩 설계", exact: true }).click();
+  await page.getByRole("button", { name: "월별 작업", exact: true }).click();
+  await expect(page.locator(".workspace-library li")).toHaveCount(2);
+  for (const width of [1280, 320]) {
+    await page.setViewportSize({ width, height: 900 });
+    await settleToolViewport(page, width);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+    await page.getByRole("heading", { name: "월별 작업 보관함" }).scrollIntoViewIfNeeded();
+    await page.screenshot({
+      path: `test-results/workspace-library-${width}.png`,
+      animations: "disabled",
+    });
+  }
+  await page
+    .locator(".workspace-library li")
+    .filter({ hasText: "2024-01" })
+    .getByRole("button", { name: "작업 열기" })
+    .click();
+  await expect(page.locator(".page-header")).toContainText("2024년 1월");
+  expect((await (await page.request.get("/api/workspace")).json()).close).toEqual(before.close);
+  await page.context().clearCookies({ name: "closepilot_session" });
+  await page.reload();
+  await expect(page.getByText("미리 완료된 합성 마감 예시입니다.")).toBeVisible();
+  await expect(page.locator(".page-header")).toContainText("2024년 1월");
+  expect((await (await page.request.get("/api/workspace")).json()).close).toEqual(before.close);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.getByRole("button", { name: "온보딩 설계", exact: true }).click();
+  await page.getByRole("button", { name: "월별 작업", exact: true }).click();
+  await page
+    .locator(".workspace-library li")
+    .filter({ hasText: "2024-02" })
+    .getByRole("button", { name: "작업 열기" })
+    .click();
+  await expect(page.locator(".page-header")).toContainText("2024년 2월");
+  const restored = await (await page.request.get("/api/workspace")).json();
+  expect(restored.orders).toEqual(saved.orders);
+  expect(restored.version).toBe(saved.version);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.getByRole("button", { name: "자료 가져오기" }).click();
+  await page.getByLabel("CSV 파일 선택").setInputFiles({
+    name: "changed.csv",
+    mimeType: "text/csv",
+    buffer: Buffer.from(
+      "주문번호,판매채널,주문일자,changed,환불금액\nANOTHER,d2c,2024-02-01,1000,0",
+    ),
+  });
+  const templates = page.getByLabel("저장된 열 연결 선택");
+  await expect(templates.locator("option")).toHaveCount(2);
+  await templates.selectOption({ index: 1 });
+  await expect(page.getByText(/필수 열이 변경되어 적용할 수 없습니다/)).toBeVisible();
+  await expect(page.getByRole("button", { name: "열 연결 적용", exact: true })).toBeDisabled();
+  await page.getByLabel("CSV 파일 선택").setInputFiles({
+    name: "compatible.csv",
+    mimeType: "text/csv",
+    buffer: Buffer.from(
+      "주문번호,판매채널,주문일자,결제금액,환불금액\nANOTHER,d2c,2024-02-01,1000,0",
+    ),
+  });
+  await expect(page.locator(".validation-success")).toBeVisible();
+  await page.getByLabel("저장된 열 연결 선택").selectOption({ index: 1 });
+  await page.getByRole("button", { name: "열 연결 적용", exact: true }).click();
+  await expect(page.locator(".validation-success")).toContainText("1행 검증 완료");
   await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "온보딩 설계", exact: true }).click();
+  await page.getByRole("button", { name: "정책 비교", exact: true }).click();
+  await page.getByLabel("자사몰 수수료율 (%)", { exact: true }).fill("4");
+  await page.getByRole("button", { name: "현재 정책과 비교", exact: true }).click();
+  await expect(page.getByRole("button", { name: "이 월의 정책 적용" })).toBeDisabled();
+  await page
+    .getByLabel("정책 변경 사유", { exact: true })
+    .fill("합성 계약의 월별 요율 변경 영향을 확인했습니다.");
+  await page.getByLabel("정책 근거 참조", { exact: true }).fill("SYNTHETIC-CONTRACT-202402");
+  await page.getByRole("checkbox", { name: /월 전체 적용과 재검토/ }).check();
+  await page.getByRole("button", { name: "이 월의 정책 적용" }).click();
+  await expect(
+    page.getByText("월별 정책을 적용했습니다. 대사를 다시 실행한 뒤 변경된 거래를 검토하세요."),
+  ).toBeVisible();
+  const policyApplied = await (await page.request.get("/api/workspace")).json();
+  expect(policyApplied.profile.policy.feeBps.d2c).toBe(400);
+  expect(policyApplied.lastRunAt).toBeNull();
+  await page.getByText("정책 변경 이력 1건", { exact: true }).click();
+  await page.screenshot({
+    path: "test-results/policy-applied-1280.png",
+    animations: "disabled",
+    fullPage: true,
+  });
+  const prior = before.rows.find((row: { kind: string }) => row.kind === "timing");
+  await page.getByRole("button", { name: "자료 가져오기", exact: true }).click();
+  const followImport = page.getByRole("dialog", { name: "CSV 자료 가져오기" });
+  await followImport.getByRole("button", { name: "파일 또는 자료 유형 바꾸기" }).click();
+  await followImport.getByLabel(/채널 정산 자료/).check();
+  await followImport.getByLabel("CSV 파일 선택").setInputFiles({
+    name: "followup.csv",
+    mimeType: "text/csv",
+    buffer: Buffer.from(
+      `settlement_id,order_id,channel,gross,refund,fee,net,due_date,paid_date\nFOLLOW-E2E,${prior.orderId},${prior.channel},${prior.gross},${prior.refund},${prior.actualFee},${prior.actualNet},2024-02-01,2024-02-01`,
+    ),
+  });
+  await expect(followImport.locator(".validation-success")).toContainText("1행 검증 완료");
+  await followImport.getByRole("button", { name: "자료 반영", exact: true }).click();
+  await expect(followImport).toBeHidden();
+  await page.getByRole("button", { name: "대사 실행", exact: true }).click();
+  await expect(
+    page.getByText("대사를 완료했습니다. 최신 자료로 결과를 갱신했습니다."),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "감사 기록", exact: true }).click();
+  const followup = page.locator(".followup-item").filter({ hasText: prior.orderId });
+  await followup.locator("summary").click();
+  await followup.getByRole("checkbox", { name: /FOLLOW-E2E/ }).check();
+  await followup.getByRole("combobox").selectOption("evidence_reviewed");
+  await followup
+    .getByLabel("후속 검토 사유", { exact: true })
+    .fill("이번 달 합성 정산 자료와 이전 마감 근거를 대조했습니다.");
+  await followup.getByLabel("후속 증빙 참조", { exact: true }).fill("SYNTHETIC-FOLLOWUP-E2E");
+  await expect(followup.getByRole("button", { name: "후속 검토 기록" })).toBeDisabled();
+  await followup.getByRole("checkbox", { name: /선택한 근거와 검토 사유/ }).check();
+  await followup.getByRole("button", { name: "후속 검토 기록" }).click();
+  await expect(followup.locator("summary")).toContainText("근거 검토 기록됨");
+  await followup.locator("summary").click();
+  for (const width of [1280, 390, 320]) {
+    await page.setViewportSize({ width, height: 900 });
+    await settleToolViewport(page, width);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+    await followup.scrollIntoViewIfNeeded();
+    await page.screenshot({
+      path: `test-results/followup-reviewed-${width}.png`,
+      animations: "disabled",
+      fullPage: false,
+    });
+  }
   await page.goto("/guide");
   await expect(
     page.getByRole("heading", { name: "ClosePilot 제품 가이드", exact: true }),

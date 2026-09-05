@@ -1,9 +1,11 @@
-import { randomBytes } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 import { z } from "zod";
 import { workspaceView } from "@/application/workbench";
 import { periodSchema } from "@/domain/period";
 import {
   COOKIE_NAME,
+  LIBRARY_COOKIE,
+  libraryToken,
   assertSameOrigin,
   hashToken,
   json,
@@ -49,6 +51,7 @@ export async function POST(request: Request) {
         }
       : undefined;
     const token = randomBytes(32).toString("hex");
+    const ownerToken = (await libraryToken()) ?? randomBytes(32).toString("hex");
     const address = process.env.VERCEL
       ? request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown"
       : "local";
@@ -60,6 +63,7 @@ export async function POST(request: Request) {
       new Date(),
       options,
       clone,
+      { owner: hashToken(ownerToken), handle: randomUUID() },
     );
     const response = json(workspaceView(workspace), 201);
     response.cookies.set(COOKIE_NAME, token, {
@@ -68,6 +72,13 @@ export async function POST(request: Request) {
       sameSite: "lax",
       path: "/",
       maxAge: 6 * 60 * 60,
+    });
+    response.cookies.set(LIBRARY_COOKIE, ownerToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 30 * 24 * 60 * 60,
     });
     return response;
   });

@@ -5,7 +5,8 @@ export const CHANNEL_LABELS: Record<Channel, string> = {
   naver: "스마트스토어",
   coupang: "쿠팡",
 };
-export const RULE_VERSION = "krw-net-v1.1.0";
+export const RULE_VERSION = "krw-net-v1.2.0";
+export const SUPPORTED_RULE_VERSIONS = ["krw-net-v1.1.0", RULE_VERSION] as const;
 export const PERIOD = "2026-08";
 export const AS_OF = "2026-08-31";
 export const MAX_AMOUNT = 1_000_000_000_000;
@@ -133,6 +134,7 @@ export interface SourceBatch {
   importedAt: string;
 }
 export interface Resolution {
+  invalidatedByPolicy?: boolean;
   rowKey: string;
   disposition: "accepted_variance" | "carry_forward" | "exclude_duplicate";
   note: string;
@@ -143,7 +145,15 @@ export interface Resolution {
 }
 export interface AuditEvent {
   id: string;
-  type: "seeded" | "reconciled" | "imported" | "resolved" | "closed" | "analysis_created";
+  type:
+    | "seeded"
+    | "reconciled"
+    | "imported"
+    | "resolved"
+    | "closed"
+    | "analysis_created"
+    | "policy_updated"
+    | "followup_recorded";
   actor: string;
   at: string;
   detail: string;
@@ -151,6 +161,8 @@ export interface AuditEvent {
   hash: string;
 }
 export interface CloseSnapshot {
+  policyChanges?: Workspace["policyChanges"];
+  followups?: Workspace["followups"];
   period: string;
   ruleVersion: string;
   closedAt: string;
@@ -175,6 +187,29 @@ export interface CloseSnapshot {
   hash: string;
 }
 export interface Workspace {
+  policyChanges?: Array<{
+    version: number;
+    period: string;
+    before: Record<Channel, number>;
+    after: Record<Channel, number>;
+    note: string;
+    evidence: string;
+    at: string;
+  }>;
+  followups?: Record<
+    string,
+    {
+      sourceHash: string;
+      sourcePeriod: string;
+      rowKey: string;
+      settlementIds: string[];
+      status: "waiting" | "evidence_reviewed";
+      note: string;
+      evidence: string;
+      fingerprint: string;
+      at: string;
+    }
+  >;
   /** Non-authenticating namespace for browser-local review drafts. */
   draftScope?: string;
   version: number;

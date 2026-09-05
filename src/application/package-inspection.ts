@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { digest } from "@/domain/canonical";
 import { verifyAudit } from "@/domain/audit";
-import { CHANNELS, RULE_VERSION, MAX_AMOUNT, sumWon } from "@/domain/model";
+import { CHANNELS, SUPPORTED_RULE_VERSIONS, MAX_AMOUNT, sumWon } from "@/domain/model";
 import { reconcile } from "@/domain/reconcile";
 
 const date = z.iso.date();
@@ -39,7 +39,16 @@ const settlement = z
 const event = z
   .object({
     id,
-    type: z.enum(["seeded", "reconciled", "imported", "resolved", "closed", "analysis_created"]),
+    type: z.enum([
+      "seeded",
+      "reconciled",
+      "imported",
+      "resolved",
+      "closed",
+      "analysis_created",
+      "policy_updated",
+      "followup_recorded",
+    ]),
     actor: id,
     at: z.iso.datetime(),
     detail: z.string().max(5000),
@@ -63,7 +72,7 @@ const schema = z
     snapshot: z
       .object({
         period: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/),
-        ruleVersion: z.literal(RULE_VERSION),
+        ruleVersion: z.enum(SUPPORTED_RULE_VERSIONS),
         closedAt: z.iso.datetime(),
         closedBy: id,
         hash,

@@ -6,11 +6,11 @@
     "closedBy": "데모 검토자",
     "gross": 17072000,
     "refunds": 105000,
-    "expectedNet": 16072966,
+    "expectedNet": 16032793,
     "actualNet": 16110319,
-    "delta": 37353,
+    "delta": 77526,
     "rowCount": 128,
-    "reviewedCount": 8,
+    "reviewedCount": 48,
     "sources": [
       {
         "id": "SRC-ORD-01",
@@ -31,7 +31,7 @@
     ],
     "profile": {
       "templateId": "lumiere-beauty-v1",
-      "version": 1,
+      "version": 2,
       "brandName": "LUMIÈRE",
       "monogram": "L",
       "industry": "K-Beauty",
@@ -40,7 +40,7 @@
       "policy": {
         "currency": "KRW",
         "feeBps": {
-          "d2c": 330,
+          "d2c": 400,
           "naver": 385,
           "coupang": 880
         },
@@ -2670,7 +2670,7 @@
       ],
       "asOf": "2026-08-31",
       "feeBps": {
-        "d2c": 330,
+        "d2c": 400,
         "naver": 385,
         "coupang": 880
       }
@@ -2750,11 +2750,11 @@
         "date": "2026-08-08",
         "gross": 95000,
         "refund": 15000,
-        "expectedFee": 2640,
+        "expectedFee": 3200,
         "actualFee": 3135,
-        "expectedNet": 77360,
+        "expectedNet": 76800,
         "actualNet": 91865,
-        "delta": 14505,
+        "delta": 15065,
         "kind": "refund",
         "explanation": "주문 환불액 15,000원과 정산 환불액 0원이 다릅니다. 환불 반영일과 부분 취소를 확인하세요.",
         "sources": [
@@ -2774,19 +2774,355 @@
         "date": "2026-08-05",
         "gross": 85000,
         "refund": 0,
-        "expectedFee": 2805,
+        "expectedFee": 3400,
         "actualFee": 5205,
-        "expectedNet": 82195,
+        "expectedNet": 81600,
         "actualNet": 79795,
-        "delta": -2400,
+        "delta": -1805,
         "kind": "fee",
-        "explanation": "가상 계약 수수료 3.3%를 순매출에 적용한 예상 수수료와 2,400원 차이가 있습니다.",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,805원 차이가 있습니다.",
         "sources": [
           "SRC-ORD-01",
           "SRC-SET-D2C"
         ],
         "settlementIds": [
           "ST-2608022"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608019",
+        "orderId": "LM-2608019",
+        "channel": "d2c",
+        "date": "2026-08-05",
+        "gross": 227000,
+        "refund": 0,
+        "expectedFee": 9080,
+        "actualFee": 7491,
+        "expectedNet": 217920,
+        "actualNet": 219509,
+        "delta": 1589,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,589원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608019"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608112",
+        "orderId": "LM-2608112",
+        "channel": "d2c",
+        "date": "2026-08-27",
+        "gross": 223000,
+        "refund": 0,
+        "expectedFee": 8920,
+        "actualFee": 7359,
+        "expectedNet": 214080,
+        "actualNet": 215641,
+        "delta": 1561,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,561원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608112"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608007",
+        "orderId": "LM-2608007",
+        "channel": "d2c",
+        "date": "2026-08-02",
+        "gross": 217000,
+        "refund": 0,
+        "expectedFee": 8680,
+        "actualFee": 7161,
+        "expectedNet": 208320,
+        "actualNet": 209839,
+        "delta": 1519,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,519원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608007"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608088",
+        "orderId": "LM-2608088",
+        "channel": "d2c",
+        "date": "2026-08-21",
+        "gross": 213000,
+        "refund": 0,
+        "expectedFee": 8520,
+        "actualFee": 7029,
+        "expectedNet": 204480,
+        "actualNet": 205971,
+        "delta": 1491,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,491원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608088"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608100",
+        "orderId": "LM-2608100",
+        "channel": "d2c",
+        "date": "2026-08-24",
+        "gross": 213000,
+        "refund": 0,
+        "expectedFee": 8520,
+        "actualFee": 7029,
+        "expectedNet": 204480,
+        "actualNet": 205971,
+        "delta": 1491,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,491원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608100"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608064",
+        "orderId": "LM-2608064",
+        "channel": "d2c",
+        "date": "2026-08-15",
+        "gross": 203000,
+        "refund": 0,
+        "expectedFee": 8120,
+        "actualFee": 6699,
+        "expectedNet": 194880,
+        "actualNet": 196301,
+        "delta": 1421,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,421원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608064"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608076",
+        "orderId": "LM-2608076",
+        "channel": "d2c",
+        "date": "2026-08-18",
+        "gross": 203000,
+        "refund": 0,
+        "expectedFee": 8120,
+        "actualFee": 6699,
+        "expectedNet": 194880,
+        "actualNet": 196301,
+        "delta": 1421,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,421원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608076"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608052",
+        "orderId": "LM-2608052",
+        "channel": "d2c",
+        "date": "2026-08-12",
+        "gross": 193000,
+        "refund": 0,
+        "expectedFee": 7720,
+        "actualFee": 6369,
+        "expectedNet": 185280,
+        "actualNet": 186631,
+        "delta": 1351,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,351원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608052"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608028",
+        "orderId": "LM-2608028",
+        "channel": "d2c",
+        "date": "2026-08-07",
+        "gross": 183000,
+        "refund": 0,
+        "expectedFee": 7320,
+        "actualFee": 6039,
+        "expectedNet": 175680,
+        "actualNet": 176961,
+        "delta": 1281,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,281원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608028"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608040",
+        "orderId": "LM-2608040",
+        "channel": "d2c",
+        "date": "2026-08-10",
+        "gross": 183000,
+        "refund": 0,
+        "expectedFee": 7320,
+        "actualFee": 6039,
+        "expectedNet": 175680,
+        "actualNet": 176961,
+        "delta": 1281,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,281원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608040"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608109",
+        "orderId": "LM-2608109",
+        "channel": "d2c",
+        "date": "2026-08-26",
+        "gross": 179000,
+        "refund": 0,
+        "expectedFee": 7160,
+        "actualFee": 5907,
+        "expectedNet": 171840,
+        "actualNet": 173093,
+        "delta": 1253,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,253원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608109"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608121",
+        "orderId": "LM-2608121",
+        "channel": "d2c",
+        "date": "2026-08-29",
+        "gross": 179000,
+        "refund": 0,
+        "expectedFee": 7160,
+        "actualFee": 5907,
+        "expectedNet": 171840,
+        "actualNet": 173093,
+        "delta": 1253,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,253원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608121"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608004",
+        "orderId": "LM-2608004",
+        "channel": "d2c",
+        "date": "2026-08-01",
+        "gross": 173000,
+        "refund": 0,
+        "expectedFee": 6920,
+        "actualFee": 5709,
+        "expectedNet": 166080,
+        "actualNet": 167291,
+        "delta": 1211,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,211원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608004"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608016",
+        "orderId": "LM-2608016",
+        "channel": "d2c",
+        "date": "2026-08-04",
+        "gross": 173000,
+        "refund": 0,
+        "expectedFee": 6920,
+        "actualFee": 5709,
+        "expectedNet": 166080,
+        "actualNet": 167291,
+        "delta": 1211,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,211원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608016"
         ],
         "dueDate": "2026-08-31",
         "paidDate": "2026-08-31"
@@ -2816,19 +3152,403 @@
         "paidDate": "2026-08-31"
       },
       {
+        "key": "d2c:LM-2608097",
+        "orderId": "LM-2608097",
+        "channel": "d2c",
+        "date": "2026-08-23",
+        "gross": 169000,
+        "refund": 0,
+        "expectedFee": 6760,
+        "actualFee": 5577,
+        "expectedNet": 162240,
+        "actualNet": 163423,
+        "delta": 1183,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,183원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608097"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608073",
+        "orderId": "LM-2608073",
+        "channel": "d2c",
+        "date": "2026-08-17",
+        "gross": 159000,
+        "refund": 0,
+        "expectedFee": 6360,
+        "actualFee": 5247,
+        "expectedNet": 152640,
+        "actualNet": 153753,
+        "delta": 1113,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,113원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608073"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608049",
+        "orderId": "LM-2608049",
+        "channel": "d2c",
+        "date": "2026-08-12",
+        "gross": 149000,
+        "refund": 0,
+        "expectedFee": 5960,
+        "actualFee": 4917,
+        "expectedNet": 143040,
+        "actualNet": 144083,
+        "delta": 1043,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,043원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608049"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608061",
+        "orderId": "LM-2608061",
+        "channel": "d2c",
+        "date": "2026-08-15",
+        "gross": 149000,
+        "refund": 0,
+        "expectedFee": 5960,
+        "actualFee": 4917,
+        "expectedNet": 143040,
+        "actualNet": 144083,
+        "delta": 1043,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,043원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608061"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608085",
+        "orderId": "LM-2608085",
+        "channel": "d2c",
+        "date": "2026-08-20",
+        "gross": 159000,
+        "refund": 15000,
+        "expectedFee": 5760,
+        "actualFee": 4752,
+        "expectedNet": 138240,
+        "actualNet": 139248,
+        "delta": 1008,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 1,008원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608085"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608037",
+        "orderId": "LM-2608037",
+        "channel": "d2c",
+        "date": "2026-08-09",
+        "gross": 139000,
+        "refund": 0,
+        "expectedFee": 5560,
+        "actualFee": 4587,
+        "expectedNet": 133440,
+        "actualNet": 134413,
+        "delta": 973,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 973원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608037"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608118",
+        "orderId": "LM-2608118",
+        "channel": "d2c",
+        "date": "2026-08-28",
+        "gross": 135000,
+        "refund": 0,
+        "expectedFee": 5400,
+        "actualFee": 4455,
+        "expectedNet": 129600,
+        "actualNet": 130545,
+        "delta": 945,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 945원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608118"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608013",
+        "orderId": "LM-2608013",
+        "channel": "d2c",
+        "date": "2026-08-03",
+        "gross": 129000,
+        "refund": 0,
+        "expectedFee": 5160,
+        "actualFee": 4257,
+        "expectedNet": 123840,
+        "actualNet": 124743,
+        "delta": 903,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 903원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608013"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608025",
+        "orderId": "LM-2608025",
+        "channel": "d2c",
+        "date": "2026-08-06",
+        "gross": 129000,
+        "refund": 0,
+        "expectedFee": 5160,
+        "actualFee": 4257,
+        "expectedNet": 123840,
+        "actualNet": 124743,
+        "delta": 903,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 903원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608025"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608094",
+        "orderId": "LM-2608094",
+        "channel": "d2c",
+        "date": "2026-08-22",
+        "gross": 125000,
+        "refund": 0,
+        "expectedFee": 5000,
+        "actualFee": 4125,
+        "expectedNet": 120000,
+        "actualNet": 120875,
+        "delta": 875,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 875원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608094"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608106",
+        "orderId": "LM-2608106",
+        "channel": "d2c",
+        "date": "2026-08-25",
+        "gross": 125000,
+        "refund": 0,
+        "expectedFee": 5000,
+        "actualFee": 4125,
+        "expectedNet": 120000,
+        "actualNet": 120875,
+        "delta": 875,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 875원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608106"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608001",
+        "orderId": "LM-2608001",
+        "channel": "d2c",
+        "date": "2026-08-01",
+        "gross": 119000,
+        "refund": 0,
+        "expectedFee": 4760,
+        "actualFee": 3927,
+        "expectedNet": 114240,
+        "actualNet": 115073,
+        "delta": 833,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 833원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608001"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608082",
+        "orderId": "LM-2608082",
+        "channel": "d2c",
+        "date": "2026-08-19",
+        "gross": 115000,
+        "refund": 0,
+        "expectedFee": 4600,
+        "actualFee": 3795,
+        "expectedNet": 110400,
+        "actualNet": 111205,
+        "delta": 805,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 805원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608082"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608058",
+        "orderId": "LM-2608058",
+        "channel": "d2c",
+        "date": "2026-08-14",
+        "gross": 105000,
+        "refund": 0,
+        "expectedFee": 4200,
+        "actualFee": 3465,
+        "expectedNet": 100800,
+        "actualNet": 101535,
+        "delta": 735,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 735원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608058"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608070",
+        "orderId": "LM-2608070",
+        "channel": "d2c",
+        "date": "2026-08-17",
+        "gross": 105000,
+        "refund": 0,
+        "expectedFee": 4200,
+        "actualFee": 3465,
+        "expectedNet": 100800,
+        "actualNet": 101535,
+        "delta": 735,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 735원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608070"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608046",
+        "orderId": "LM-2608046",
+        "channel": "d2c",
+        "date": "2026-08-11",
+        "gross": 95000,
+        "refund": 0,
+        "expectedFee": 3800,
+        "actualFee": 3135,
+        "expectedNet": 91200,
+        "actualNet": 91865,
+        "delta": 665,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 665원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608046"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
         "key": "d2c:LM-2608127",
         "orderId": "LM-2608127",
         "channel": "d2c",
         "date": "2026-08-30",
         "gross": 91000,
         "refund": 0,
-        "expectedFee": 3003,
+        "expectedFee": 3640,
         "actualFee": 3003,
-        "expectedNet": 87997,
+        "expectedNet": 87360,
         "actualNet": 87997,
-        "delta": 0,
-        "kind": "timing",
-        "explanation": "정산 금액은 일치하지만 기준일 현재 입금이 확인되지 않았습니다. 입금 예정일 확인 후 이월 승인할 수 있습니다.",
+        "delta": 637,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 637원 차이가 있습니다.",
         "sources": [
           "SRC-ORD-01",
           "SRC-SET-D2C"
@@ -2838,6 +3558,246 @@
         ],
         "dueDate": "2026-09-02",
         "paidDate": null
+      },
+      {
+        "key": "d2c:LM-2608103",
+        "orderId": "LM-2608103",
+        "channel": "d2c",
+        "date": "2026-08-24",
+        "gross": 81000,
+        "refund": 0,
+        "expectedFee": 3240,
+        "actualFee": 2673,
+        "expectedNet": 77760,
+        "actualNet": 78327,
+        "delta": 567,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 567원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608103"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608115",
+        "orderId": "LM-2608115",
+        "channel": "d2c",
+        "date": "2026-08-27",
+        "gross": 81000,
+        "refund": 0,
+        "expectedFee": 3240,
+        "actualFee": 2673,
+        "expectedNet": 77760,
+        "actualNet": 78327,
+        "delta": 567,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 567원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608115"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608010",
+        "orderId": "LM-2608010",
+        "channel": "d2c",
+        "date": "2026-08-03",
+        "gross": 75000,
+        "refund": 0,
+        "expectedFee": 3000,
+        "actualFee": 2475,
+        "expectedNet": 72000,
+        "actualNet": 72525,
+        "delta": 525,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 525원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608010"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608079",
+        "orderId": "LM-2608079",
+        "channel": "d2c",
+        "date": "2026-08-19",
+        "gross": 71000,
+        "refund": 0,
+        "expectedFee": 2840,
+        "actualFee": 2343,
+        "expectedNet": 68160,
+        "actualNet": 68657,
+        "delta": 497,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 497원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608079"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608091",
+        "orderId": "LM-2608091",
+        "channel": "d2c",
+        "date": "2026-08-22",
+        "gross": 71000,
+        "refund": 0,
+        "expectedFee": 2840,
+        "actualFee": 2343,
+        "expectedNet": 68160,
+        "actualNet": 68657,
+        "delta": 497,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 497원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608091"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608067",
+        "orderId": "LM-2608067",
+        "channel": "d2c",
+        "date": "2026-08-16",
+        "gross": 61000,
+        "refund": 0,
+        "expectedFee": 2440,
+        "actualFee": 2013,
+        "expectedNet": 58560,
+        "actualNet": 58987,
+        "delta": 427,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 427원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608067"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608043",
+        "orderId": "LM-2608043",
+        "channel": "d2c",
+        "date": "2026-08-10",
+        "gross": 51000,
+        "refund": 0,
+        "expectedFee": 2040,
+        "actualFee": 1683,
+        "expectedNet": 48960,
+        "actualNet": 49317,
+        "delta": 357,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 357원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608043"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608055",
+        "orderId": "LM-2608055",
+        "channel": "d2c",
+        "date": "2026-08-13",
+        "gross": 51000,
+        "refund": 0,
+        "expectedFee": 2040,
+        "actualFee": 1683,
+        "expectedNet": 48960,
+        "actualNet": 49317,
+        "delta": 357,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 357원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608055"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608124",
+        "orderId": "LM-2608124",
+        "channel": "d2c",
+        "date": "2026-08-29",
+        "gross": 47000,
+        "refund": 0,
+        "expectedFee": 1880,
+        "actualFee": 1551,
+        "expectedNet": 45120,
+        "actualNet": 45449,
+        "delta": 329,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 329원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608124"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
+      },
+      {
+        "key": "d2c:LM-2608031",
+        "orderId": "LM-2608031",
+        "channel": "d2c",
+        "date": "2026-08-08",
+        "gross": 41000,
+        "refund": 0,
+        "expectedFee": 1640,
+        "actualFee": 1353,
+        "expectedNet": 39360,
+        "actualNet": 39647,
+        "delta": 287,
+        "kind": "fee",
+        "explanation": "가상 계약 수수료 4%를 순매출에 적용한 예상 수수료와 287원 차이가 있습니다.",
+        "sources": [
+          "SRC-ORD-01",
+          "SRC-SET-D2C"
+        ],
+        "settlementIds": [
+          "ST-2608031"
+        ],
+        "dueDate": "2026-08-31",
+        "paidDate": "2026-08-31"
       },
       {
         "key": "naver:LM-2608128",
@@ -3795,966 +4755,6 @@
         ],
         "settlementIds": [
           "ST-2608126"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608001",
-        "orderId": "LM-2608001",
-        "channel": "d2c",
-        "date": "2026-08-01",
-        "gross": 119000,
-        "refund": 0,
-        "expectedFee": 3927,
-        "actualFee": 3927,
-        "expectedNet": 115073,
-        "actualNet": 115073,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608001"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608004",
-        "orderId": "LM-2608004",
-        "channel": "d2c",
-        "date": "2026-08-01",
-        "gross": 173000,
-        "refund": 0,
-        "expectedFee": 5709,
-        "actualFee": 5709,
-        "expectedNet": 167291,
-        "actualNet": 167291,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608004"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608007",
-        "orderId": "LM-2608007",
-        "channel": "d2c",
-        "date": "2026-08-02",
-        "gross": 217000,
-        "refund": 0,
-        "expectedFee": 7161,
-        "actualFee": 7161,
-        "expectedNet": 209839,
-        "actualNet": 209839,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608007"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608010",
-        "orderId": "LM-2608010",
-        "channel": "d2c",
-        "date": "2026-08-03",
-        "gross": 75000,
-        "refund": 0,
-        "expectedFee": 2475,
-        "actualFee": 2475,
-        "expectedNet": 72525,
-        "actualNet": 72525,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608010"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608013",
-        "orderId": "LM-2608013",
-        "channel": "d2c",
-        "date": "2026-08-03",
-        "gross": 129000,
-        "refund": 0,
-        "expectedFee": 4257,
-        "actualFee": 4257,
-        "expectedNet": 124743,
-        "actualNet": 124743,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608013"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608016",
-        "orderId": "LM-2608016",
-        "channel": "d2c",
-        "date": "2026-08-04",
-        "gross": 173000,
-        "refund": 0,
-        "expectedFee": 5709,
-        "actualFee": 5709,
-        "expectedNet": 167291,
-        "actualNet": 167291,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608016"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608019",
-        "orderId": "LM-2608019",
-        "channel": "d2c",
-        "date": "2026-08-05",
-        "gross": 227000,
-        "refund": 0,
-        "expectedFee": 7491,
-        "actualFee": 7491,
-        "expectedNet": 219509,
-        "actualNet": 219509,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608019"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608025",
-        "orderId": "LM-2608025",
-        "channel": "d2c",
-        "date": "2026-08-06",
-        "gross": 129000,
-        "refund": 0,
-        "expectedFee": 4257,
-        "actualFee": 4257,
-        "expectedNet": 124743,
-        "actualNet": 124743,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608025"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608028",
-        "orderId": "LM-2608028",
-        "channel": "d2c",
-        "date": "2026-08-07",
-        "gross": 183000,
-        "refund": 0,
-        "expectedFee": 6039,
-        "actualFee": 6039,
-        "expectedNet": 176961,
-        "actualNet": 176961,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608028"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608031",
-        "orderId": "LM-2608031",
-        "channel": "d2c",
-        "date": "2026-08-08",
-        "gross": 41000,
-        "refund": 0,
-        "expectedFee": 1353,
-        "actualFee": 1353,
-        "expectedNet": 39647,
-        "actualNet": 39647,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608031"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608037",
-        "orderId": "LM-2608037",
-        "channel": "d2c",
-        "date": "2026-08-09",
-        "gross": 139000,
-        "refund": 0,
-        "expectedFee": 4587,
-        "actualFee": 4587,
-        "expectedNet": 134413,
-        "actualNet": 134413,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608037"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608040",
-        "orderId": "LM-2608040",
-        "channel": "d2c",
-        "date": "2026-08-10",
-        "gross": 183000,
-        "refund": 0,
-        "expectedFee": 6039,
-        "actualFee": 6039,
-        "expectedNet": 176961,
-        "actualNet": 176961,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608040"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608043",
-        "orderId": "LM-2608043",
-        "channel": "d2c",
-        "date": "2026-08-10",
-        "gross": 51000,
-        "refund": 0,
-        "expectedFee": 1683,
-        "actualFee": 1683,
-        "expectedNet": 49317,
-        "actualNet": 49317,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608043"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608046",
-        "orderId": "LM-2608046",
-        "channel": "d2c",
-        "date": "2026-08-11",
-        "gross": 95000,
-        "refund": 0,
-        "expectedFee": 3135,
-        "actualFee": 3135,
-        "expectedNet": 91865,
-        "actualNet": 91865,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608046"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608049",
-        "orderId": "LM-2608049",
-        "channel": "d2c",
-        "date": "2026-08-12",
-        "gross": 149000,
-        "refund": 0,
-        "expectedFee": 4917,
-        "actualFee": 4917,
-        "expectedNet": 144083,
-        "actualNet": 144083,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608049"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608052",
-        "orderId": "LM-2608052",
-        "channel": "d2c",
-        "date": "2026-08-12",
-        "gross": 193000,
-        "refund": 0,
-        "expectedFee": 6369,
-        "actualFee": 6369,
-        "expectedNet": 186631,
-        "actualNet": 186631,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608052"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608055",
-        "orderId": "LM-2608055",
-        "channel": "d2c",
-        "date": "2026-08-13",
-        "gross": 51000,
-        "refund": 0,
-        "expectedFee": 1683,
-        "actualFee": 1683,
-        "expectedNet": 49317,
-        "actualNet": 49317,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608055"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608058",
-        "orderId": "LM-2608058",
-        "channel": "d2c",
-        "date": "2026-08-14",
-        "gross": 105000,
-        "refund": 0,
-        "expectedFee": 3465,
-        "actualFee": 3465,
-        "expectedNet": 101535,
-        "actualNet": 101535,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608058"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608061",
-        "orderId": "LM-2608061",
-        "channel": "d2c",
-        "date": "2026-08-15",
-        "gross": 149000,
-        "refund": 0,
-        "expectedFee": 4917,
-        "actualFee": 4917,
-        "expectedNet": 144083,
-        "actualNet": 144083,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608061"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608064",
-        "orderId": "LM-2608064",
-        "channel": "d2c",
-        "date": "2026-08-15",
-        "gross": 203000,
-        "refund": 0,
-        "expectedFee": 6699,
-        "actualFee": 6699,
-        "expectedNet": 196301,
-        "actualNet": 196301,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608064"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608067",
-        "orderId": "LM-2608067",
-        "channel": "d2c",
-        "date": "2026-08-16",
-        "gross": 61000,
-        "refund": 0,
-        "expectedFee": 2013,
-        "actualFee": 2013,
-        "expectedNet": 58987,
-        "actualNet": 58987,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608067"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608070",
-        "orderId": "LM-2608070",
-        "channel": "d2c",
-        "date": "2026-08-17",
-        "gross": 105000,
-        "refund": 0,
-        "expectedFee": 3465,
-        "actualFee": 3465,
-        "expectedNet": 101535,
-        "actualNet": 101535,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608070"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608073",
-        "orderId": "LM-2608073",
-        "channel": "d2c",
-        "date": "2026-08-17",
-        "gross": 159000,
-        "refund": 0,
-        "expectedFee": 5247,
-        "actualFee": 5247,
-        "expectedNet": 153753,
-        "actualNet": 153753,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608073"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608076",
-        "orderId": "LM-2608076",
-        "channel": "d2c",
-        "date": "2026-08-18",
-        "gross": 203000,
-        "refund": 0,
-        "expectedFee": 6699,
-        "actualFee": 6699,
-        "expectedNet": 196301,
-        "actualNet": 196301,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608076"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608079",
-        "orderId": "LM-2608079",
-        "channel": "d2c",
-        "date": "2026-08-19",
-        "gross": 71000,
-        "refund": 0,
-        "expectedFee": 2343,
-        "actualFee": 2343,
-        "expectedNet": 68657,
-        "actualNet": 68657,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608079"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608082",
-        "orderId": "LM-2608082",
-        "channel": "d2c",
-        "date": "2026-08-19",
-        "gross": 115000,
-        "refund": 0,
-        "expectedFee": 3795,
-        "actualFee": 3795,
-        "expectedNet": 111205,
-        "actualNet": 111205,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608082"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608085",
-        "orderId": "LM-2608085",
-        "channel": "d2c",
-        "date": "2026-08-20",
-        "gross": 159000,
-        "refund": 15000,
-        "expectedFee": 4752,
-        "actualFee": 4752,
-        "expectedNet": 139248,
-        "actualNet": 139248,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608085"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608088",
-        "orderId": "LM-2608088",
-        "channel": "d2c",
-        "date": "2026-08-21",
-        "gross": 213000,
-        "refund": 0,
-        "expectedFee": 7029,
-        "actualFee": 7029,
-        "expectedNet": 205971,
-        "actualNet": 205971,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608088"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608091",
-        "orderId": "LM-2608091",
-        "channel": "d2c",
-        "date": "2026-08-22",
-        "gross": 71000,
-        "refund": 0,
-        "expectedFee": 2343,
-        "actualFee": 2343,
-        "expectedNet": 68657,
-        "actualNet": 68657,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608091"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608094",
-        "orderId": "LM-2608094",
-        "channel": "d2c",
-        "date": "2026-08-22",
-        "gross": 125000,
-        "refund": 0,
-        "expectedFee": 4125,
-        "actualFee": 4125,
-        "expectedNet": 120875,
-        "actualNet": 120875,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608094"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608097",
-        "orderId": "LM-2608097",
-        "channel": "d2c",
-        "date": "2026-08-23",
-        "gross": 169000,
-        "refund": 0,
-        "expectedFee": 5577,
-        "actualFee": 5577,
-        "expectedNet": 163423,
-        "actualNet": 163423,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608097"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608100",
-        "orderId": "LM-2608100",
-        "channel": "d2c",
-        "date": "2026-08-24",
-        "gross": 213000,
-        "refund": 0,
-        "expectedFee": 7029,
-        "actualFee": 7029,
-        "expectedNet": 205971,
-        "actualNet": 205971,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608100"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608103",
-        "orderId": "LM-2608103",
-        "channel": "d2c",
-        "date": "2026-08-24",
-        "gross": 81000,
-        "refund": 0,
-        "expectedFee": 2673,
-        "actualFee": 2673,
-        "expectedNet": 78327,
-        "actualNet": 78327,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608103"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608106",
-        "orderId": "LM-2608106",
-        "channel": "d2c",
-        "date": "2026-08-25",
-        "gross": 125000,
-        "refund": 0,
-        "expectedFee": 4125,
-        "actualFee": 4125,
-        "expectedNet": 120875,
-        "actualNet": 120875,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608106"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608109",
-        "orderId": "LM-2608109",
-        "channel": "d2c",
-        "date": "2026-08-26",
-        "gross": 179000,
-        "refund": 0,
-        "expectedFee": 5907,
-        "actualFee": 5907,
-        "expectedNet": 173093,
-        "actualNet": 173093,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608109"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608112",
-        "orderId": "LM-2608112",
-        "channel": "d2c",
-        "date": "2026-08-27",
-        "gross": 223000,
-        "refund": 0,
-        "expectedFee": 7359,
-        "actualFee": 7359,
-        "expectedNet": 215641,
-        "actualNet": 215641,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608112"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608115",
-        "orderId": "LM-2608115",
-        "channel": "d2c",
-        "date": "2026-08-27",
-        "gross": 81000,
-        "refund": 0,
-        "expectedFee": 2673,
-        "actualFee": 2673,
-        "expectedNet": 78327,
-        "actualNet": 78327,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608115"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608118",
-        "orderId": "LM-2608118",
-        "channel": "d2c",
-        "date": "2026-08-28",
-        "gross": 135000,
-        "refund": 0,
-        "expectedFee": 4455,
-        "actualFee": 4455,
-        "expectedNet": 130545,
-        "actualNet": 130545,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608118"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608121",
-        "orderId": "LM-2608121",
-        "channel": "d2c",
-        "date": "2026-08-29",
-        "gross": 179000,
-        "refund": 0,
-        "expectedFee": 5907,
-        "actualFee": 5907,
-        "expectedNet": 173093,
-        "actualNet": 173093,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608121"
-        ],
-        "dueDate": "2026-08-31",
-        "paidDate": "2026-08-31"
-      },
-      {
-        "key": "d2c:LM-2608124",
-        "orderId": "LM-2608124",
-        "channel": "d2c",
-        "date": "2026-08-29",
-        "gross": 47000,
-        "refund": 0,
-        "expectedFee": 1551,
-        "actualFee": 1551,
-        "expectedNet": 45449,
-        "actualNet": 45449,
-        "delta": 0,
-        "kind": "matched",
-        "explanation": "주문 순매출과 정산액이 수수료 정책에 따라 원 단위까지 일치합니다.",
-        "sources": [
-          "SRC-ORD-01",
-          "SRC-SET-D2C"
-        ],
-        "settlementIds": [
-          "ST-2608124"
         ],
         "dueDate": "2026-08-31",
         "paidDate": "2026-08-31"
@@ -5748,8 +5748,8 @@
       {
         "rowKey": "coupang:LM-2608045",
         "disposition": "exclude_duplicate",
-        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
-        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
         "actor": "데모 검토자",
         "at": "2026-08-31T09:00:00.000Z",
         "fingerprint": "a005d9a30e2a17dd6cd5b51776c4136f6d935342b692512c36f5de273c4100f2"
@@ -5757,8 +5757,8 @@
       {
         "rowKey": "coupang:LM-2608063",
         "disposition": "accepted_variance",
-        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
-        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
         "actor": "데모 검토자",
         "at": "2026-08-31T09:00:00.000Z",
         "fingerprint": "46e986652300c094bd9283b7bdfa906d326acd6e005f2f2b52a89ee50ec4e90f"
@@ -5766,8 +5766,8 @@
       {
         "rowKey": "coupang:LM-2608012",
         "disposition": "accepted_variance",
-        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
-        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
         "actor": "데모 검토자",
         "at": "2026-08-31T09:00:00.000Z",
         "fingerprint": "5995b64c8eaecce2074dd655a8686d6ab35c62f143394f0d45ef5ef354de58d1"
@@ -5775,50 +5775,429 @@
       {
         "rowKey": "d2c:LM-2608034",
         "disposition": "accepted_variance",
-        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
-        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
         "actor": "데모 검토자",
         "at": "2026-08-31T09:00:00.000Z",
-        "fingerprint": "847b66d7c6398e0ca6322cf299f8527b4aaae750de0f1017bc722225f919005f"
+        "fingerprint": "a29238d3dc0ca8d325b3cc6fc4e0d6f47984c7b71c60f2b6a789db145e466b9f"
       },
       {
         "rowKey": "d2c:LM-2608022",
         "disposition": "accepted_variance",
-        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
-        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
         "actor": "데모 검토자",
         "at": "2026-08-31T09:00:00.000Z",
-        "fingerprint": "7f1faca0c38acae71c7819d88bc7c9b1b1be3352f610e26439d17629fe608620"
+        "fingerprint": "c61fbf7adfa5a668345949bcfc58e3081a354a9ad7aa77d11ca8e1d3176c96d2"
+      },
+      {
+        "rowKey": "d2c:LM-2608019",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "c972b567b49ece1efb0b59ac0c60cc00209da3d258ec6dc914c309cce62738a5"
+      },
+      {
+        "rowKey": "d2c:LM-2608112",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "6ff983a9d5b3f69e09ee9b07d528a0785896e83a9345aaaf369e469e485b29a7"
+      },
+      {
+        "rowKey": "d2c:LM-2608007",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "aa2ac1897734f5460873cf2886dff8734b6d6a4af09913371420381129b68626"
+      },
+      {
+        "rowKey": "d2c:LM-2608088",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "765dad6730bd4b201f055c59d36bc4b6332c343b4176b5e2997c97d534788a74"
+      },
+      {
+        "rowKey": "d2c:LM-2608100",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "62a6cb0f87a8efc92daf9ba5217405d8819d9ef2d412efd43aeb38c49a100d1a"
+      },
+      {
+        "rowKey": "d2c:LM-2608064",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "a656240e6b7803ae42ec15bc37cc4616e3c265f29aee3a329e5d3c894e91369e"
+      },
+      {
+        "rowKey": "d2c:LM-2608076",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "95dc27ce2be7f323922401aae1f63f6cb2e8741407d413fa81b4b3a8c4d2674b"
+      },
+      {
+        "rowKey": "d2c:LM-2608052",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "8a2e2ded421bebc23dfee27cca3757dfa7e85c89e0cc3d4381d7d26735fb7ead"
+      },
+      {
+        "rowKey": "d2c:LM-2608028",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "44f04a4d997f4adaf4ef231b8dbe077e3c5b20c0cb6751971ef364f5cd01a256"
+      },
+      {
+        "rowKey": "d2c:LM-2608040",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "d7f55c015d59074071e7975b9358c00a2ee649d5d370d78945fb25fb0c086b45"
+      },
+      {
+        "rowKey": "d2c:LM-2608109",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "7b2a80735532bae2d546be4a75bd401b321e057331942009ca84ed44b01553b7"
+      },
+      {
+        "rowKey": "d2c:LM-2608121",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "c4bfc226afc9e43403a253e2f4db6104e1a709402fa9d33a6b49b76f41fb9da0"
+      },
+      {
+        "rowKey": "d2c:LM-2608004",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "116c9298106ed420355c73a4da67da3944fbaaec8e2bdd7f03ca15e5d8ede5d7"
+      },
+      {
+        "rowKey": "d2c:LM-2608016",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "66b5ce2e8be2b45752ba53cd97a97857213976f79fcd962187904483a9c3a3ee"
       },
       {
         "rowKey": "naver:LM-2608080",
         "disposition": "accepted_variance",
-        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
-        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
         "actor": "데모 검토자",
         "at": "2026-08-31T09:00:00.000Z",
         "fingerprint": "8e601f37202da1524bf816f83766f70c659a9ccb23e79fc530a75c0d29cda7c4"
       },
       {
-        "rowKey": "d2c:LM-2608127",
-        "disposition": "carry_forward",
-        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
-        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "rowKey": "d2c:LM-2608097",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
         "actor": "데모 검토자",
         "at": "2026-08-31T09:00:00.000Z",
-        "fingerprint": "dadc58ad823e2c4c8770742b64d65f78e89336ae837a9477f203bed0f7d97531"
+        "fingerprint": "ecaf319a52832f53a7aa989ed93733fa009d992fad88c4f2262dd88940779ab6"
+      },
+      {
+        "rowKey": "d2c:LM-2608073",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "7e3e2260189313ad748a2987c44dda4833e9a954b8c816749872cf338f2ccce3"
+      },
+      {
+        "rowKey": "d2c:LM-2608049",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "52456a3a8d86e64b8edd7a0628898106c6aab7b51015c36cc9ac09a9f5873d3d"
+      },
+      {
+        "rowKey": "d2c:LM-2608061",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "3dd40992e66f43d4fa67ceeb520d43d3d20a7c5d409b5a429a1d953d022aebbe"
+      },
+      {
+        "rowKey": "d2c:LM-2608085",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "0a562c7771a05e1eba302dc3e97460f66b53bcb37c507e747633227606748e50"
+      },
+      {
+        "rowKey": "d2c:LM-2608037",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "6cebdc1ca6aa72abec3551fa5b7e9b672273f1711a9471675cebbedc73364be9"
+      },
+      {
+        "rowKey": "d2c:LM-2608118",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "0455be2f32bc53105e0001febb63a33f18bbc0737b8332277fce13735741f42f"
+      },
+      {
+        "rowKey": "d2c:LM-2608013",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "24ceb94d0a3397bdc3938f04c230b4f513e48b6acf239574d36a605fffbb4c44"
+      },
+      {
+        "rowKey": "d2c:LM-2608025",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "6f7dd7449a12bd334fc39a106a4d666346ad35beb5746161e9e2b365b8eba491"
+      },
+      {
+        "rowKey": "d2c:LM-2608094",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "a2a767399d359b731fd24a26ac408867675fb203ea01a1840488a3743afbb5ec"
+      },
+      {
+        "rowKey": "d2c:LM-2608106",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "cf8629acfb02eaadfc6cad17cd75a906389651bbb8b21afa4743f85ab7262fef"
+      },
+      {
+        "rowKey": "d2c:LM-2608001",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "84f93052b1457a4272702dd605146dca0f1f85f8444abfd3ab9e4fce3fbb793e"
+      },
+      {
+        "rowKey": "d2c:LM-2608082",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "6c9e60490311c998eed95886a4c267e520cf8db19ffd3dda169bcd903a61e6f4"
+      },
+      {
+        "rowKey": "d2c:LM-2608058",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "b5696588c6b0d134651a26a42a6f0371bfd92fc22529019be9c64d9e0af48e92"
+      },
+      {
+        "rowKey": "d2c:LM-2608070",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "6706201294488fd26d2f47f7deccd57a51836ac08d6d7d9ec323c599d98c17e5"
+      },
+      {
+        "rowKey": "d2c:LM-2608046",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "8277bdd7e6a0a155ea241ca9de228ba2ce4babd13122623beffc69ca19adae47"
+      },
+      {
+        "rowKey": "d2c:LM-2608127",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "53e379314deb7c17c9b54023ebb29635fbed3dc5846d94071817b5d22f7fa836"
+      },
+      {
+        "rowKey": "d2c:LM-2608103",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "dc606e3ff034a1fd6d814d6d3fcd14d05d9ad110f2739bbbaed62cce920732ae"
+      },
+      {
+        "rowKey": "d2c:LM-2608115",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "6c4418f44faefd388cb34daa6dd797e21e6b5800062f2a9496143c3ae11a2946"
+      },
+      {
+        "rowKey": "d2c:LM-2608010",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "ccb7a5e6545cfa6850118c66a25cecae30bc0c3a10d520a77e08d2dad74fa59e"
+      },
+      {
+        "rowKey": "d2c:LM-2608079",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "0b8fd4a2052a6cc0cfdb9767b8a4f42505abf5b28af66fc605774ebe74b44996"
+      },
+      {
+        "rowKey": "d2c:LM-2608091",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "e541e95ad27f8f78a776d1f70ffbea0668c7982c86961aadbd66848fa51ed952"
+      },
+      {
+        "rowKey": "d2c:LM-2608067",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "f8989f03dc8f8256b00fdec631012237f453b2f67b38fb873fef1c35659a0a2d"
+      },
+      {
+        "rowKey": "d2c:LM-2608043",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "b1bd260e0d1fec4e40b8b2d11858e3176d26b822e6da800f07f38beb2e557c9a"
+      },
+      {
+        "rowKey": "d2c:LM-2608055",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "2146ac90bd2f13f75f651d8e6209671ef6c9febe95e7067347ab14d4ac909748"
+      },
+      {
+        "rowKey": "d2c:LM-2608124",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "2532ed865f205ea41c5144f3e6219f69fb6e6db851fa37a1971cc3425ff6dda9"
+      },
+      {
+        "rowKey": "d2c:LM-2608031",
+        "disposition": "accepted_variance",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
+        "actor": "데모 검토자",
+        "at": "2026-08-31T09:00:00.000Z",
+        "fingerprint": "6f157700154c174d8b444bda64f31df404c88d5049f16b2b78adf967d1210688"
       },
       {
         "rowKey": "naver:LM-2608128",
         "disposition": "carry_forward",
-        "note": "합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
-        "evidence": "SYNTHETIC-SRC-ORD-01",
+        "note": "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+        "evidence": "SYNTHETIC-POLICY-CHECK",
         "actor": "데모 검토자",
         "at": "2026-08-31T09:00:00.000Z",
         "fingerprint": "f1ea3a6b2429ada5c950a7f2f6bbdc1b48ba0aac14669960a3e6524349b05b92"
       }
     ],
-    "hash": "346283a9189f0097131295ea650221edcbcf92376dfdcad3bf049f04a5c22ebd"
+    "policyChanges": [
+      {
+        "version": 2,
+        "period": "2026-08",
+        "before": {
+          "d2c": 330,
+          "naver": 385,
+          "coupang": 880
+        },
+        "after": {
+          "d2c": 400,
+          "naver": 385,
+          "coupang": 880
+        },
+        "note": "합성 정책 변경 검증용 월별 요율입니다.",
+        "evidence": "SYNTHETIC-POLICY-V2",
+        "at": "2026-08-31T09:00:00.000Z"
+      }
+    ],
+    "hash": "a87f310eec4d11f1873e6b7d6f99939a531e33a433bbb31efd6afbf6be341a6b"
   },
   "audit": [
     {
@@ -5840,86 +6219,464 @@
       "hash": "f33d8b64ff5cc072b2674dad8bf8c416439854503586f195df2ed7748ea28f65"
     },
     {
-      "type": "resolved",
+      "type": "policy_updated",
       "actor": "데모 검토자",
       "at": "2026-08-31T09:00:00.000Z",
-      "detail": "LM-2608045 · exclude_duplicate · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "detail": "2026-08 정책 v2: {\"d2c\":330,\"naver\":385,\"coupang\":880} -> {\"d2c\":400,\"naver\":385,\"coupang\":880} / 합성 정책 변경 검증용 월별 요율입니다. / 근거: SYNTHETIC-POLICY-V2",
       "id": "EVT-0003",
       "previousHash": "f33d8b64ff5cc072b2674dad8bf8c416439854503586f195df2ed7748ea28f65",
-      "hash": "25646ed41da0ed0f95dc0db345fa5be5b2ed1f506a358c2c6e35b07801901d34"
+      "hash": "766a4292f9a4893c166d1ab8802daebb4f698a72314929ab3c23337c50e5d0b9"
     },
     {
-      "type": "resolved",
-      "actor": "데모 검토자",
+      "type": "reconciled",
+      "actor": "규칙 엔진",
       "at": "2026-08-31T09:00:00.000Z",
-      "detail": "LM-2608063 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "detail": "128건 대사 완료 · 일치 80건 · 확인 필요 48건 · krw-net-v1.2.0",
       "id": "EVT-0004",
-      "previousHash": "25646ed41da0ed0f95dc0db345fa5be5b2ed1f506a358c2c6e35b07801901d34",
-      "hash": "86dc4979b5192566461763ee3b997a04adaf7122b881aa52b3ec0db842558507"
+      "previousHash": "766a4292f9a4893c166d1ab8802daebb4f698a72314929ab3c23337c50e5d0b9",
+      "hash": "055315de31e40b4f2fe48f54682847c607031d7e70cd31048536c973cdeb159d"
     },
     {
       "type": "resolved",
       "actor": "데모 검토자",
       "at": "2026-08-31T09:00:00.000Z",
-      "detail": "LM-2608012 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "detail": "LM-2608045 · exclude_duplicate · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
       "id": "EVT-0005",
-      "previousHash": "86dc4979b5192566461763ee3b997a04adaf7122b881aa52b3ec0db842558507",
-      "hash": "f86099ea24e56e79bcfcbec2e70c5646ea2c9f3a1f5823b117cfe116a5dff6c9"
+      "previousHash": "055315de31e40b4f2fe48f54682847c607031d7e70cd31048536c973cdeb159d",
+      "hash": "ac553b96f6be917e6fb45bad2ea2b330d2afe744a794a4fb37f95ab2a4c9fb2d"
     },
     {
       "type": "resolved",
       "actor": "데모 검토자",
       "at": "2026-08-31T09:00:00.000Z",
-      "detail": "LM-2608034 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "detail": "LM-2608063 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
       "id": "EVT-0006",
-      "previousHash": "f86099ea24e56e79bcfcbec2e70c5646ea2c9f3a1f5823b117cfe116a5dff6c9",
-      "hash": "28b11cdc2e3dc8b97040fbd956f759ff7d428fc2641082f5444662ef4de6d226"
+      "previousHash": "ac553b96f6be917e6fb45bad2ea2b330d2afe744a794a4fb37f95ab2a4c9fb2d",
+      "hash": "1984e5d954a2ddffe57c73c513af5dc938f8641f0cb9f2451b5216fcbc4e4229"
     },
     {
       "type": "resolved",
       "actor": "데모 검토자",
       "at": "2026-08-31T09:00:00.000Z",
-      "detail": "LM-2608022 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "detail": "LM-2608012 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
       "id": "EVT-0007",
-      "previousHash": "28b11cdc2e3dc8b97040fbd956f759ff7d428fc2641082f5444662ef4de6d226",
-      "hash": "67269e04bbd440fe7f3f1e7c8a26359704492494cfda45c4dd1c21215169b921"
+      "previousHash": "1984e5d954a2ddffe57c73c513af5dc938f8641f0cb9f2451b5216fcbc4e4229",
+      "hash": "26408f8ea585174e25804a28a04239efc0998c96a851bd560ce316841667f43a"
     },
     {
       "type": "resolved",
       "actor": "데모 검토자",
       "at": "2026-08-31T09:00:00.000Z",
-      "detail": "LM-2608080 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "detail": "LM-2608034 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
       "id": "EVT-0008",
-      "previousHash": "67269e04bbd440fe7f3f1e7c8a26359704492494cfda45c4dd1c21215169b921",
-      "hash": "418896df2f2ae5a90825eaab9a8e35489305a4345e519c7fc989c1ac805549c3"
+      "previousHash": "26408f8ea585174e25804a28a04239efc0998c96a851bd560ce316841667f43a",
+      "hash": "a716bc3dd5254c5983f30ca8c2aa459d75a897ae74909b52387d2610f2eaa51b"
     },
     {
       "type": "resolved",
       "actor": "데모 검토자",
       "at": "2026-08-31T09:00:00.000Z",
-      "detail": "LM-2608127 · carry_forward · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "detail": "LM-2608022 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
       "id": "EVT-0009",
-      "previousHash": "418896df2f2ae5a90825eaab9a8e35489305a4345e519c7fc989c1ac805549c3",
-      "hash": "9d89ea759ace5473dbd50683592e18e8e104cefe9d6bb667a35c069019193904"
+      "previousHash": "a716bc3dd5254c5983f30ca8c2aa459d75a897ae74909b52387d2610f2eaa51b",
+      "hash": "ac47e84ddd13a84ac6ea2f389a0b92bfa849822173d4844318e73ae18d981c45"
     },
     {
       "type": "resolved",
       "actor": "데모 검토자",
       "at": "2026-08-31T09:00:00.000Z",
-      "detail": "LM-2608128 · carry_forward · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
+      "detail": "LM-2608019 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
       "id": "EVT-0010",
-      "previousHash": "9d89ea759ace5473dbd50683592e18e8e104cefe9d6bb667a35c069019193904",
-      "hash": "6af9e2fc5bc1829798d7cfd62a973f95f1deaf3bb5f7211891a49483ca6c5009"
+      "previousHash": "ac47e84ddd13a84ac6ea2f389a0b92bfa849822173d4844318e73ae18d981c45",
+      "hash": "ea0079d8aea3a2b249211721e4c7fe849d6ba39fbfe6a293a12b6d51cfb5596a"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608112 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0011",
+      "previousHash": "ea0079d8aea3a2b249211721e4c7fe849d6ba39fbfe6a293a12b6d51cfb5596a",
+      "hash": "d2d055b1a7fb18c461c9150da7b79eaec871ce246c7bacf2bf3aa7e67283f1ef"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608007 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0012",
+      "previousHash": "d2d055b1a7fb18c461c9150da7b79eaec871ce246c7bacf2bf3aa7e67283f1ef",
+      "hash": "6205fb4fc210e7b72e9f04b5f503ee4562e97493cc39189744d7eb7627d178ec"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608088 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0013",
+      "previousHash": "6205fb4fc210e7b72e9f04b5f503ee4562e97493cc39189744d7eb7627d178ec",
+      "hash": "4de3de3f95ad75550b11cd8ab7efb7d7bd3f6596c94ed0da5fe7f9776bbaa334"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608100 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0014",
+      "previousHash": "4de3de3f95ad75550b11cd8ab7efb7d7bd3f6596c94ed0da5fe7f9776bbaa334",
+      "hash": "128a64dced2be76c11450f1e75ba2ce7e093db7737bd3d4122fa6a2a199f396a"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608064 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0015",
+      "previousHash": "128a64dced2be76c11450f1e75ba2ce7e093db7737bd3d4122fa6a2a199f396a",
+      "hash": "1ff9070223900be177dfa52d799d642c459a06c08ab9d9ad2a790f443015d89c"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608076 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0016",
+      "previousHash": "1ff9070223900be177dfa52d799d642c459a06c08ab9d9ad2a790f443015d89c",
+      "hash": "910aed214deca8595c19d82d219f34d6479c525f663d5243ff1d0776e252da28"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608052 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0017",
+      "previousHash": "910aed214deca8595c19d82d219f34d6479c525f663d5243ff1d0776e252da28",
+      "hash": "fa59bdca97235cf1107969b6b6730306dde6b052f4778fb68c359ccce0b94248"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608028 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0018",
+      "previousHash": "fa59bdca97235cf1107969b6b6730306dde6b052f4778fb68c359ccce0b94248",
+      "hash": "593e4c47c2f9222cb029c03c6974d54a6bb98a6b8dfc1ea65758e9cfe0324035"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608040 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0019",
+      "previousHash": "593e4c47c2f9222cb029c03c6974d54a6bb98a6b8dfc1ea65758e9cfe0324035",
+      "hash": "f2a3e2d247b6630b91862c2d25f037a21c460c31c2fe0d1af0733107610b3dfe"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608109 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0020",
+      "previousHash": "f2a3e2d247b6630b91862c2d25f037a21c460c31c2fe0d1af0733107610b3dfe",
+      "hash": "4a3c4c643fc1d996cb66303e6a2066023257a672064e941f557605a1e2ddf563"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608121 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0021",
+      "previousHash": "4a3c4c643fc1d996cb66303e6a2066023257a672064e941f557605a1e2ddf563",
+      "hash": "3b793f707b62bd035b1ee8c74c0749177191a57523bdc88ec094fdc829f79f52"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608004 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0022",
+      "previousHash": "3b793f707b62bd035b1ee8c74c0749177191a57523bdc88ec094fdc829f79f52",
+      "hash": "68ec09bf594d28ae44fdad983372680aebcaa2332a067feab5d372bd5242c207"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608016 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0023",
+      "previousHash": "68ec09bf594d28ae44fdad983372680aebcaa2332a067feab5d372bd5242c207",
+      "hash": "30d87ac7d6bddb01b60f3939016410f8f5790250bc53f2e6000d022dda4207ab"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608080 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0024",
+      "previousHash": "30d87ac7d6bddb01b60f3939016410f8f5790250bc53f2e6000d022dda4207ab",
+      "hash": "1833719a0b6e43f89fe59c52ac0c9efa804d67286f70d864fb0097c65e5d7395"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608097 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0025",
+      "previousHash": "1833719a0b6e43f89fe59c52ac0c9efa804d67286f70d864fb0097c65e5d7395",
+      "hash": "ab367b6849b619b55387b09a3ff9b38dd79fb13c317d6a57d501b8dad6462143"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608073 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0026",
+      "previousHash": "ab367b6849b619b55387b09a3ff9b38dd79fb13c317d6a57d501b8dad6462143",
+      "hash": "0c6b0f1c9adb19b2ea42991c93978ca04bbbd171be2f939a126c5089555a5ecf"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608049 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0027",
+      "previousHash": "0c6b0f1c9adb19b2ea42991c93978ca04bbbd171be2f939a126c5089555a5ecf",
+      "hash": "f6c7c8276b7f0f87951ab8b12a547ac21c7d15311fce51421f3c3d8658475781"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608061 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0028",
+      "previousHash": "f6c7c8276b7f0f87951ab8b12a547ac21c7d15311fce51421f3c3d8658475781",
+      "hash": "61b8f2158fea4f36f1d924bd19747c67ac3ab10486a9259dc9304606b17f79f4"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608085 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0029",
+      "previousHash": "61b8f2158fea4f36f1d924bd19747c67ac3ab10486a9259dc9304606b17f79f4",
+      "hash": "1c41079362d8af7d3c93332cb9c7a4312dc9b6919b5ddbf112ed45064beebc7a"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608037 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0030",
+      "previousHash": "1c41079362d8af7d3c93332cb9c7a4312dc9b6919b5ddbf112ed45064beebc7a",
+      "hash": "2d602a31349b49dece5f9e7e61b7b4debc853e943fe16cfc7c925a3be8d4bb77"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608118 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0031",
+      "previousHash": "2d602a31349b49dece5f9e7e61b7b4debc853e943fe16cfc7c925a3be8d4bb77",
+      "hash": "f0bdc6b2c5653004bc940873dcfb0fa3eff486aeadd329c5a0962383aef31394"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608013 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0032",
+      "previousHash": "f0bdc6b2c5653004bc940873dcfb0fa3eff486aeadd329c5a0962383aef31394",
+      "hash": "20a9262e190b73cba6fefedff803b73e764ef22f4347e929bb2d171ea3db0276"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608025 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0033",
+      "previousHash": "20a9262e190b73cba6fefedff803b73e764ef22f4347e929bb2d171ea3db0276",
+      "hash": "f837994337d37840be9bd3e7c0767a80d7c8cf2f518d6fcd4a60570295a1d806"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608094 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0034",
+      "previousHash": "f837994337d37840be9bd3e7c0767a80d7c8cf2f518d6fcd4a60570295a1d806",
+      "hash": "4a64e340bfcdf285dc0b4351d94045483ea212f3f16dd87e144cbe839992fb18"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608106 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0035",
+      "previousHash": "4a64e340bfcdf285dc0b4351d94045483ea212f3f16dd87e144cbe839992fb18",
+      "hash": "11470fe491262aee0b75fb46b68a098d6a56b10e4ca219db4525e946ff06630e"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608001 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0036",
+      "previousHash": "11470fe491262aee0b75fb46b68a098d6a56b10e4ca219db4525e946ff06630e",
+      "hash": "0bba163f2ff8b7a10556fb9d254f3b1b39c78b0b77cb67186def7809d391ccd0"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608082 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0037",
+      "previousHash": "0bba163f2ff8b7a10556fb9d254f3b1b39c78b0b77cb67186def7809d391ccd0",
+      "hash": "22b63b7d03e25b3e3fc6fa8ca734d6dfb861293e9b1940368314e0711c995e13"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608058 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0038",
+      "previousHash": "22b63b7d03e25b3e3fc6fa8ca734d6dfb861293e9b1940368314e0711c995e13",
+      "hash": "c1cec5b87e02fe63fb7ec1b57adc0e8a6a37b7835a1cad1e57f1c536998d0430"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608070 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0039",
+      "previousHash": "c1cec5b87e02fe63fb7ec1b57adc0e8a6a37b7835a1cad1e57f1c536998d0430",
+      "hash": "f44fa445995228a77a9a09b2aac229eb9aa3409a4731491aa2630a3876bd92d3"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608046 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0040",
+      "previousHash": "f44fa445995228a77a9a09b2aac229eb9aa3409a4731491aa2630a3876bd92d3",
+      "hash": "8e7e699b6cbc8268c6158c29296529af15b91702bd151be36509c16b13db2d74"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608127 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0041",
+      "previousHash": "8e7e699b6cbc8268c6158c29296529af15b91702bd151be36509c16b13db2d74",
+      "hash": "092990e9ab401f98ab8e8914eb43cc9398bc35c56954879150ad0afdf84ac974"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608103 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0042",
+      "previousHash": "092990e9ab401f98ab8e8914eb43cc9398bc35c56954879150ad0afdf84ac974",
+      "hash": "29b73aad2afeb02a50a51b567fe717ae2d69e32e1f4dbcfc2b56ec1398d7ee69"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608115 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0043",
+      "previousHash": "29b73aad2afeb02a50a51b567fe717ae2d69e32e1f4dbcfc2b56ec1398d7ee69",
+      "hash": "4dd8ac05804b21685acb0447c6965d22f6acf7b6c7a78c3dd6c7d61c6185917a"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608010 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0044",
+      "previousHash": "4dd8ac05804b21685acb0447c6965d22f6acf7b6c7a78c3dd6c7d61c6185917a",
+      "hash": "db32d3ef51a9785ac24284d43f4c9f8d77417bbbdda828ecade60d5dd6dcfeca"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608079 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0045",
+      "previousHash": "db32d3ef51a9785ac24284d43f4c9f8d77417bbbdda828ecade60d5dd6dcfeca",
+      "hash": "b7d307601b4909db5612767c6a23c075525591be01346e8282f188dc6ae7cf06"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608091 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0046",
+      "previousHash": "b7d307601b4909db5612767c6a23c075525591be01346e8282f188dc6ae7cf06",
+      "hash": "a93e27675bf91ead701acee5d532dd18094dc3a327f16b9d993800e1845135a6"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608067 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0047",
+      "previousHash": "a93e27675bf91ead701acee5d532dd18094dc3a327f16b9d993800e1845135a6",
+      "hash": "32ab9ba5e7b7d7647446a6be74489690130f816b04c3340ffe7017ffe428196f"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608043 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0048",
+      "previousHash": "32ab9ba5e7b7d7647446a6be74489690130f816b04c3340ffe7017ffe428196f",
+      "hash": "99bcd024048b244e0e53a0dffdab7d8694f610e37e3a9eeddfd62550b54a2215"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608055 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0049",
+      "previousHash": "99bcd024048b244e0e53a0dffdab7d8694f610e37e3a9eeddfd62550b54a2215",
+      "hash": "fe39f80e653c211d052309445c4af43674819ea218396c3b7af70d61778d5944"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608124 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0050",
+      "previousHash": "fe39f80e653c211d052309445c4af43674819ea218396c3b7af70d61778d5944",
+      "hash": "614ac9da64453101172c452e46bf2ca55e2ccb6194c28d6289b0a37a7c2b0576"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608031 · accepted_variance · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0051",
+      "previousHash": "614ac9da64453101172c452e46bf2ca55e2ccb6194c28d6289b0a37a7c2b0576",
+      "hash": "4da3cfb05fd9a2ca0cb670a30d64d4d856f915c107bb300812a6a59e7f7fffc2"
+    },
+    {
+      "type": "resolved",
+      "actor": "데모 검토자",
+      "at": "2026-08-31T09:00:00.000Z",
+      "detail": "LM-2608128 · carry_forward · 변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다. · 근거: SYNTHETIC-POLICY-CHECK",
+      "id": "EVT-0052",
+      "previousHash": "4da3cfb05fd9a2ca0cb670a30d64d4d856f915c107bb300812a6a59e7f7fffc2",
+      "hash": "109a4fd5f85570b5fe82232296b6eef5f4ebecfe500bc8bf01372b67cfb8ced8"
     },
     {
       "type": "closed",
       "actor": "데모 검토자",
       "at": "2026-08-31T09:00:00.000Z",
-      "detail": "2026-08 마감 확정 · 8건의 승인 근거 포함 · 스냅샷 346283a9189f0097…",
-      "id": "EVT-0011",
-      "previousHash": "6af9e2fc5bc1829798d7cfd62a973f95f1deaf3bb5f7211891a49483ca6c5009",
-      "hash": "97194d695b48ba9f93a8bf02f9a123a6f42fc0ac5e5cb6c8a242222ca159dc35"
+      "detail": "2026-08 마감 확정 · 48건의 승인 근거 포함 · 스냅샷 a87f310eec4d11f1…",
+      "id": "EVT-0053",
+      "previousHash": "109a4fd5f85570b5fe82232296b6eef5f4ebecfe500bc8bf01372b67cfb8ced8",
+      "hash": "66f35258caec41d90c37c29e7182140496ee8909acaac47ad9a58c783e4fd1a9"
     }
   ],
-  "notice": "Deterministic synthetic fixture. Not a real financial close."
+  "notice": "Synthetic monthly policy change fixture. No real contract or approval."
 }

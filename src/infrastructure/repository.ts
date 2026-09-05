@@ -4,6 +4,7 @@ import { applyCommand, type Command } from "@/application/workbench";
 import { createDemoWorkspace, type DemoSessionOptions } from "@/application/showcase";
 import { cloneWorkspaceProfile } from "@/application/onboarding";
 import type { Database, DbSession } from "./database";
+import { attachLibrary, RETENTION_MS } from "./workspace-library";
 
 const TTL_MS = 6 * 60 * 60 * 1000;
 async function recordEvents(
@@ -45,6 +46,7 @@ export class WorkspaceRepository {
     now = new Date(),
     seedOptions: DemoSessionOptions = {},
     clone?: { session: string; expectedVersion: number; brandName: string },
+    library?: { owner: string; handle: string },
   ): Promise<Workspace> {
     return this.database.transaction(async (transaction) => {
       await transaction.query("DELETE FROM closepilot_workspaces WHERE expires_at < $1", [
@@ -53,9 +55,22 @@ export class WorkspaceRepository {
       await transaction.query("DELETE FROM closepilot_rate_limits WHERE expires_at < $1", [
         now.toISOString(),
       ]);
+      if (library) {
+        await transaction.query("SELECT pg_advisory_xact_lock(hashtext($1))", [library.owner]);
+        const [count] = await transaction.query<{ count: number }>(
+          "SELECT count(*)::integer AS count FROM closepilot_library WHERE owner_hash = $1",
+          [library.owner],
+        );
+        if (count.count >= 12)
+          throw new DomainError(
+            "LIBRARY_FULL",
+            "보관함은 작업 12개까지 저장할 수 있습니다. 기존 월별 작업을 다시 열어 주세요.",
+            409,
+          );
+      }
       const hour = now.toISOString().slice(0, 13),
         day = now.toISOString().slice(0, 10);
-      const expiry = new Date(now.getTime() + TTL_MS).toISOString();
+      const expiry = new Date(now.getTime() + (library ? RETENTION_MS : TTL_MS)).toISOString();
       await consumeLimit(transaction, `sessions:${clientBucket}:${hour}`, 10, expiry);
       await consumeLimit(
         transaction,
@@ -96,6 +111,7 @@ export class WorkspaceRepository {
         [session, workspace, workspace.version, workspace.status, expiry],
       );
       await recordEvents(transaction, session, workspace, 0);
+      if (library) await attachLibrary(transaction, session, library.owner, library.handle, now);
       return workspace;
     });
   }
@@ -116,6 +132,8 @@ export class WorkspaceRepository {
     session: string,
     key: string,
     command: Command,
+    expectedScope?: string,
+    libraryOwner?: string,
   ): Promise<{ workspace: Workspace; replayed: boolean }> {
     if (!/^[a-zA-Z0-9_-]{16,100}$/.test(key))
       throw new DomainError(
@@ -134,6 +152,12 @@ export class WorkspaceRepository {
           "SESSION_EXPIRED",
           "데모 세션이 만료되었습니다. 새 데모를 시작하세요.",
           401,
+        );
+      if (expectedScope && result.state.draftScope !== expectedScope)
+        throw new DomainError(
+          "WORKSPACE_CHANGED",
+          "다른 탭에서 작업이 전환되었습니다. 현재 작업을 확인한 뒤 다시 시도하세요.",
+          409,
         );
       const [receipt] = await transaction.query<{ request_hash: string }>(
         "SELECT request_hash FROM closepilot_receipts WHERE session_hash = $1 AND idempotency_key = $2",
@@ -154,7 +178,31 @@ export class WorkspaceRepository {
           "데모의 변경 기록이 최대 100개에 도달했습니다. 필요한 결과를 내려받은 뒤 새 데모를 시작하세요.",
           429,
         );
-      const workspace = applyCommand(result.state, command);
+      let followupSource: Workspace | undefined;
+      if (command.action === "record_followup") {
+        if (result.state.status === "closed")
+          throw new DomainError(
+            "CLOSE_LOCKED",
+            "확정한 작업의 이월 검토 기록은 변경할 수 없습니다.",
+            409,
+          );
+        const [source] = await transaction.query<{ state: Workspace }>(
+          `SELECT w.state FROM closepilot_library l JOIN closepilot_workspaces w ON w.session_hash = l.workspace_hash
+           WHERE l.handle = $1 AND l.owner_hash = $2 AND w.expires_at > now()
+           AND EXISTS (SELECT 1 FROM closepilot_library own WHERE own.workspace_hash = $3 AND own.owner_hash = $2)
+           FOR SHARE OF w`,
+          [command.sourceId, libraryOwner ?? "", session],
+        );
+        if (!source)
+          throw new DomainError("WORKSPACE_NOT_FOUND", "연결할 마감을 찾을 수 없습니다.", 404);
+        followupSource = source.state;
+      }
+      const workspace = applyCommand(
+        result.state,
+        command,
+        undefined,
+        followupSource ? { followupSource } : undefined,
+      );
       await transaction.query(
         "UPDATE closepilot_workspaces SET state = $2::jsonb, version = $3, status = $4 WHERE session_hash = $1",
         [session, workspace, workspace.version, workspace.status],

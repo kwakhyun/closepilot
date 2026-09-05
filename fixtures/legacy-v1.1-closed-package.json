@@ -1,7 +1,7 @@
 {
   "snapshot": {
     "period": "2026-08",
-    "ruleVersion": "krw-net-v1.2.0",
+    "ruleVersion": "krw-net-v1.1.0",
     "closedAt": "2026-08-31T09:00:00.000Z",
     "closedBy": "데모 검토자",
     "gross": 17072000,
@@ -5818,7 +5818,7 @@
         "fingerprint": "f1ea3a6b2429ada5c950a7f2f6bbdc1b48ba0aac14669960a3e6524349b05b92"
       }
     ],
-    "hash": "346283a9189f0097131295ea650221edcbcf92376dfdcad3bf049f04a5c22ebd"
+    "hash": "2402866290bef63d3b448df4864a5e749baafb31fe5394e0c0bbdb5adbe6c874"
   },
   "audit": [
     {
@@ -5834,10 +5834,10 @@
       "type": "reconciled",
       "actor": "규칙 엔진",
       "at": "2026-08-31T09:00:00.000Z",
-      "detail": "krw-net-v1.2.0 규칙으로 최초 대사를 실행했습니다. 금액은 원 단위 정수로 계산합니다.",
+      "detail": "krw-net-v1.1.0 규칙으로 최초 대사를 실행했습니다. 금액은 원 단위 정수로 계산합니다.",
       "id": "EVT-0002",
       "previousHash": "d8bef54af9d1aa712d3ff2daba9c222cf51b7628d9492d8997725b685e333805",
-      "hash": "f33d8b64ff5cc072b2674dad8bf8c416439854503586f195df2ed7748ea28f65"
+      "hash": "67724bd2aee70ea33c57cce22b19b183af5e863a23fc3f7711b3b2ae534bc27a"
     },
     {
       "type": "resolved",
@@ -5845,8 +5845,8 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608045 · exclude_duplicate · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0003",
-      "previousHash": "f33d8b64ff5cc072b2674dad8bf8c416439854503586f195df2ed7748ea28f65",
-      "hash": "25646ed41da0ed0f95dc0db345fa5be5b2ed1f506a358c2c6e35b07801901d34"
+      "previousHash": "67724bd2aee70ea33c57cce22b19b183af5e863a23fc3f7711b3b2ae534bc27a",
+      "hash": "6a90d065afbc322732eb66dbd19db833bc3783a3d0a0809f6d622637d980a107"
     },
     {
       "type": "resolved",
@@ -5854,8 +5854,8 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608063 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0004",
-      "previousHash": "25646ed41da0ed0f95dc0db345fa5be5b2ed1f506a358c2c6e35b07801901d34",
-      "hash": "86dc4979b5192566461763ee3b997a04adaf7122b881aa52b3ec0db842558507"
+      "previousHash": "6a90d065afbc322732eb66dbd19db833bc3783a3d0a0809f6d622637d980a107",
+      "hash": "074f4d30c38ccac2cc962e74644dce4741e37184fee10d6df4a9a698640813c4"
     },
     {
       "type": "resolved",
@@ -5863,8 +5863,8 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608012 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0005",
-      "previousHash": "86dc4979b5192566461763ee3b997a04adaf7122b881aa52b3ec0db842558507",
-      "hash": "f86099ea24e56e79bcfcbec2e70c5646ea2c9f3a1f5823b117cfe116a5dff6c9"
+      "previousHash": "074f4d30c38ccac2cc962e74644dce4741e37184fee10d6df4a9a698640813c4",
+      "hash": "6a40f580033d4fffde2f5caf19b079239c068d1dd661ca79392732285e03379d"
     },
     {
       "type": "resolved",
@@ -5872,8 +5872,8 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608034 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0006",
-      "previousHash": "f86099ea24e56e79bcfcbec2e70c5646ea2c9f3a1f5823b117cfe116a5dff6c9",
-      "hash": "28b11cdc2e3dc8b97040fbd956f759ff7d428fc2641082f5444662ef4de6d226"
+      "previousHash": "6a40f580033d4fffde2f5caf19b079239c068d1dd661ca79392732285e03379d",
+      "hash": "9bdebc036a0f6a5e08ff0dcd05d57d85fc0f69bc4007c344c22a6078f3a0d58c"
     },
     {
       "type": "resolved",
@@ -5881,8 +5881,8 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608022 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0007",
-      "previousHash": "28b11cdc2e3dc8b97040fbd956f759ff7d428fc2641082f5444662ef4de6d226",
-      "hash": "67269e04bbd440fe7f3f1e7c8a26359704492494cfda45c4dd1c21215169b921"
+      "previousHash": "9bdebc036a0f6a5e08ff0dcd05d57d85fc0f69bc4007c344c22a6078f3a0d58c",
+      "hash": "eca93393292a4af0ed412027f6100716207db828dc1a4156ccded3277ff0c040"
     },
     {
       "type": "resolved",
@@ -5890,8 +5890,8 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608080 · accepted_variance · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0008",
-      "previousHash": "67269e04bbd440fe7f3f1e7c8a26359704492494cfda45c4dd1c21215169b921",
-      "hash": "418896df2f2ae5a90825eaab9a8e35489305a4345e519c7fc989c1ac805549c3"
+      "previousHash": "eca93393292a4af0ed412027f6100716207db828dc1a4156ccded3277ff0c040",
+      "hash": "8122094e9d8c84616d0fd91b3805a30d99dc66d25dd073ca0a4e973703624304"
     },
     {
       "type": "resolved",
@@ -5899,8 +5899,8 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608127 · carry_forward · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0009",
-      "previousHash": "418896df2f2ae5a90825eaab9a8e35489305a4345e519c7fc989c1ac805549c3",
-      "hash": "9d89ea759ace5473dbd50683592e18e8e104cefe9d6bb667a35c069019193904"
+      "previousHash": "8122094e9d8c84616d0fd91b3805a30d99dc66d25dd073ca0a4e973703624304",
+      "hash": "d39c930a20586a32e1f516499adda314be302a83eb03b07b4af9653b688025bf"
     },
     {
       "type": "resolved",
@@ -5908,17 +5908,17 @@
       "at": "2026-08-31T09:00:00.000Z",
       "detail": "LM-2608128 · carry_forward · 합성 데이터 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다. · 근거: SYNTHETIC-SRC-ORD-01",
       "id": "EVT-0010",
-      "previousHash": "9d89ea759ace5473dbd50683592e18e8e104cefe9d6bb667a35c069019193904",
-      "hash": "6af9e2fc5bc1829798d7cfd62a973f95f1deaf3bb5f7211891a49483ca6c5009"
+      "previousHash": "d39c930a20586a32e1f516499adda314be302a83eb03b07b4af9653b688025bf",
+      "hash": "1cefefec57542769f415ceffe647fa2c2406db3a64296b1149dfd2da638bda20"
     },
     {
       "type": "closed",
       "actor": "데모 검토자",
       "at": "2026-08-31T09:00:00.000Z",
-      "detail": "2026-08 마감 확정 · 8건의 승인 근거 포함 · 스냅샷 346283a9189f0097…",
+      "detail": "2026-08 마감 확정 · 8건의 승인 근거 포함 · 스냅샷 2402866290bef63d…",
       "id": "EVT-0011",
-      "previousHash": "6af9e2fc5bc1829798d7cfd62a973f95f1deaf3bb5f7211891a49483ca6c5009",
-      "hash": "97194d695b48ba9f93a8bf02f9a123a6f42fc0ac5e5cb6c8a242222ca159dc35"
+      "previousHash": "1cefefec57542769f415ceffe647fa2c2406db3a64296b1149dfd2da638bda20",
+      "hash": "622ff7c28bd9343fadf5bff9a39d1efb2b6d67c48683b2721347b4f50eceba20"
     }
   ],
   "notice": "Deterministic synthetic fixture. Not a real financial close."

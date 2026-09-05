@@ -192,6 +192,8 @@ const EVENT_LABELS = {
   resolved: "검토 승인",
   closed: "마감 확정",
   analysis_created: "검토 안내 생성",
+  policy_updated: "월별 정책 변경",
+  followup_recorded: "이월 근거 검토",
 };
 export function AuditPanel({
   workspace,

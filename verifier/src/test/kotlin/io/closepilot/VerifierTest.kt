@@ -37,6 +37,29 @@ import kotlin.test.assertIs
 class VerifierTest {
     private val fixture: String get() = Files.readString(Path.of("../fixtures/closed-package.json"))
 
+    @Test fun `legacy package remains verifiable without rewriting its hash`() {
+        val result = verifyClosePackage(Files.readString(Path.of("../fixtures/legacy-v1.1-closed-package.json")))
+        assertEquals("2402866290bef63d3b448df4864a5e749baafb31fe5394e0c0bbdb5adbe6c874", result.snapshotHash)
+    }
+    @Test fun `monthly policy changes replay using the final profile rates`() {
+        val text = Files.readString(Path.of("../fixtures/policy-closed-package.json"))
+        val snapshot = Json.parseToJsonElement(text).jsonObject.getValue("snapshot").jsonObject
+        assertEquals("krw-net-v1.2.0", snapshot.getValue("ruleVersion").jsonPrimitive.content)
+        assertEquals(2, snapshot.getValue("profile").jsonObject.getValue("version").jsonPrimitive.int)
+        assertEquals(128, verifyClosePackage(text).rows)
+    }
+    @Test fun `profile and replay rates cannot disagree even with a new checksum`() {
+        val root = Json.parseToJsonElement(fixture).jsonObject
+        val snapshot = root.getValue("snapshot").jsonObject
+        val profile = snapshot.getValue("profile").jsonObject
+        val policy = profile.getValue("policy").jsonObject
+        val fees = JsonObject(policy.getValue("feeBps").jsonObject + ("d2c" to JsonPrimitive(400)))
+        val changedProfile = JsonObject(profile + ("policy" to JsonObject(policy + ("feeBps" to fees))))
+        val body = JsonObject(snapshot.filterKeys { it != "hash" } + ("profile" to changedProfile))
+        val changed = JsonObject(root + ("snapshot" to JsonObject(body + ("hash" to JsonPrimitive(sha256(body))))))
+        assertFailsWith<IllegalArgumentException> { verifyClosePackage(changed.toString()) }
+    }
+
     @Test fun `rounding stays exact at the monetary boundary`() {
         assertEquals(2L, feeFor(Won.of(15), BasisPoints.of(1000)).amount)
         assertEquals(38_500_000_000L, feeFor(Won.of(1_000_000_000_000L), BasisPoints.of(385)).amount)

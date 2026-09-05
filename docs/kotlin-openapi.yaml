@@ -125,7 +125,7 @@ components:
       additionalProperties: false
       required: [ruleVersion, asOf, feeBps, orders, settlements]
       properties:
-        ruleVersion: { const: krw-net-v1.1.0 }
+        ruleVersion: { enum: [krw-net-v1.1.0, krw-net-v1.2.0] }
         asOf: { type: string, format: date }
         feeBps: { $ref: "#/components/schemas/FeePolicy" }
         orders:
@@ -178,7 +178,7 @@ components:
       type: object
       required: [ruleVersion, engine, rows, summary]
       properties:
-        ruleVersion: { const: krw-net-v1.1.0 }
+        ruleVersion: { enum: [krw-net-v1.1.0, krw-net-v1.2.0] }
         engine: { const: kotlin-jvm }
         rows: { type: array, items: { $ref: "#/components/schemas/ReconciliationRow" } }
         summary:

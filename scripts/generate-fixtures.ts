@@ -1,7 +1,12 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { seedWorkspace } from "../src/domain/seed";
 import { applyCommand, reviewedRows, workspaceView } from "../src/application/workbench";
-import { SCHEMA, JSONB_GUARDS, REVIEW_DRAFT_STORAGE } from "../src/infrastructure/schema";
+import {
+  SCHEMA,
+  JSONB_GUARDS,
+  REVIEW_DRAFT_STORAGE,
+  WORKSPACE_LIBRARY,
+} from "../src/infrastructure/schema";
 import { RULE_VERSION } from "../src/domain/model";
 import { reconcile } from "../src/domain/reconcile";
 import { createDemoWorkspace } from "../src/application/showcase";
@@ -78,6 +83,60 @@ const monthlyWorkspace = createDemoWorkspace("2024-02-29T09:00:00.000Z", {
   period: "2024-02",
   showcase: "completed",
 });
+let policyWorkspace = seedWorkspace(at);
+policyWorkspace = applyCommand(
+  policyWorkspace,
+  {
+    action: "apply_policy",
+    expectedVersion: policyWorkspace.version,
+    period: policyWorkspace.period,
+    feeBps: { ...policyWorkspace.profile!.policy.feeBps, d2c: 400 },
+    note: "합성 정책 변경 검증용 월별 요율입니다.",
+    evidence: "SYNTHETIC-POLICY-V2",
+  },
+  at,
+);
+policyWorkspace = applyCommand(
+  policyWorkspace,
+  { action: "reconcile", expectedVersion: policyWorkspace.version },
+  at,
+);
+for (const row of reviewedRows(policyWorkspace).filter((row) => row.kind !== "matched")) {
+  policyWorkspace = applyCommand(
+    policyWorkspace,
+    {
+      action: "resolve",
+      expectedVersion: policyWorkspace.version,
+      rowKey: row.key,
+      disposition:
+        row.kind === "timing"
+          ? "carry_forward"
+          : row.kind === "duplicate"
+            ? "exclude_duplicate"
+            : "accepted_variance",
+      note: "변경한 합성 요율과 원본 자료를 대조한 테스트 승인입니다.",
+      evidence: "SYNTHETIC-POLICY-CHECK",
+    },
+    at,
+  );
+}
+policyWorkspace = applyCommand(
+  policyWorkspace,
+  { action: "close", expectedVersion: policyWorkspace.version },
+  at,
+);
+writeFileSync(
+  "fixtures/policy-closed-package.json",
+  JSON.stringify(
+    {
+      snapshot: policyWorkspace.close,
+      audit: policyWorkspace.events,
+      notice: "Synthetic monthly policy change fixture. No real contract or approval.",
+    },
+    null,
+    2,
+  ) + "\n",
+);
 writeFileSync(
   "fixtures/monthly-closed-package.json",
   JSON.stringify(
@@ -141,4 +200,8 @@ console.log(
 writeFileSync(
   "migrations/003_review_drafts.sql",
   `-- Generated from src/infrastructure/schema.ts by npm run fixtures.\n${REVIEW_DRAFT_STORAGE.trim()}\n`,
+);
+writeFileSync(
+  "migrations/004_workspace_library.sql",
+  `-- Generated from src/infrastructure/schema.ts by npm run fixtures.\n${WORKSPACE_LIBRARY.trim()}\n`,
 );

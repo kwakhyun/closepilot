@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: ClosePilot 데모 REST API
-  version: 1.2.0
+  version: 1.3.0
   description: |
     가상 데이터를 사용하는 포트폴리오 데모입니다. 실제 결제, 송금, 회계 전표 생성은 수행하지 않습니다.
     AI 검토 메모 초안은 현재 거래에 저장된 합성 근거만 읽으며 금액을 바꾸거나 거래를 승인하고 마감할 권한이 없습니다.
@@ -36,11 +36,13 @@ paths:
   /api/session:
     post:
       operationId: createSession
-      summary: 6시간 동안 사용할 별도의 데모 작업 공간 생성
+      summary: 30일 보관할 합성 작업과 6시간 접근 세션 생성
       description: |
         cloneCurrent=true이면 현재 세션 쿠키와 expectedVersion, brandName이 필요합니다.
         서버에 저장된 현재 프로필을 복제하며 templateId 또는 showcase와 함께 사용할 수 없습니다.
         profile 객체 등 클라이언트가 보낸 임의의 설정은 받지 않습니다.
+        별도 HttpOnly 보관함 쿠키를 발급하며 같은 보관함은 최대 12개 작업을 보관합니다.
+        기존 버전의 작업은 자동 편입하거나 보관 기간을 연장하지 않습니다.
       security: []
       parameters:
         - $ref: "#/components/parameters/Origin"
@@ -81,6 +83,98 @@ paths:
         "403": { $ref: "#/components/responses/Error" }
         "429": { $ref: "#/components/responses/Error" }
         "500": { $ref: "#/components/responses/Error" }
+  /api/workspaces:
+    get:
+      operationId: listWorkspaces
+      summary: 같은 브라우저의 보관된 작업 목록
+      description: 보관함 쿠키가 없으면 빈 목록입니다. 마지막으로 연 작업부터 최대 12개를 반환하며 인증 토큰은 포함하지 않습니다.
+      security:
+        - library: []
+        - {}
+      responses:
+        "200":
+          description: 보관 기간이 남은 작업 목록
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [workspaces]
+                properties:
+                  workspaces:
+                    type: array
+                    maxItems: 12
+                    items:
+                      type: object
+                      required: [id, scope, period, brand, status, createdAt, expiresAt]
+                      properties:
+                        id: { type: string, format: uuid }
+                        scope: { type: string, description: 비인증용 작업 식별값 }
+                        period: { type: string }
+                        brand: { type: string }
+                        status: { enum: [open, review, closed] }
+                        createdAt: { type: string, format: date-time }
+                        expiresAt: { type: string, format: date-time }
+        "500": { $ref: "#/components/responses/Error" }
+    post:
+      operationId: openWorkspace
+      summary: 보관된 작업을 새 접근 세션으로 다시 열기
+      description: UUID와 보관함 소유 권한을 함께 확인합니다. 마감 내용과 보관 만료일은 변경하지 않습니다.
+      security:
+        - library: []
+      parameters:
+        - $ref: "#/components/parameters/Origin"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [id]
+              properties:
+                id: { type: string, format: uuid }
+      responses:
+        "200":
+          description: 기존 작업과 새 HttpOnly 접근 세션 쿠키
+          headers:
+            Set-Cookie: { schema: { type: string } }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/WorkspaceView" }
+        "400": { $ref: "#/components/responses/Error" }
+        "401": { $ref: "#/components/responses/Error" }
+        "403": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
+        "500": { $ref: "#/components/responses/Error" }
+  /api/imports/templates:
+    get:
+      operationId: listMappingTemplates
+      summary: 같은 보관함과 현재 프로필에 저장한 열 연결 조회
+      description: 유효한 작업 세션이 필요하며 보관함 쿠키가 없으면 빈 목록입니다. 자료 반영 때 저장된 매핑 스냅샷만 반환합니다.
+      responses:
+        "200":
+          description: 최근 작업부터 최대 12개 설정
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  templates:
+                    type: array
+                    maxItems: 12
+                    items:
+                      type: object
+                      properties:
+                        id: { type: string, format: uuid }
+                        period: { type: string }
+                        mappings:
+                          type: object
+                          properties:
+                            orders: { type: object, additionalProperties: { type: string } }
+                            settlements: { type: object, additionalProperties: { type: string } }
+                            updatedAt: { type: string, format: date-time }
+        "401": { $ref: "#/components/responses/Error" }
+        "500": { $ref: "#/components/responses/Error" }
   /api/workspace:
     get:
       operationId: getWorkspace
@@ -101,12 +195,17 @@ paths:
         같은 요청 키와 본문으로 재시도하면 명령을 다시 적용하지 않고 최신 작업 상태를 반환합니다.
         같은 키에 다른 본문을 보내면 HTTP 409를 반환합니다.
         상태, 감사 이벤트, 요청 처리 이력은 하나의 트랜잭션에 저장합니다.
+        웹 클라이언트는 X-Workspace-Scope로 현재 작업을 명시하며 다른 탭에서 전환된 경우 409로 거부합니다.
       parameters:
         - $ref: "#/components/parameters/Origin"
         - name: Idempotency-Key
           in: header
           required: true
           schema: { type: string, pattern: "^[a-zA-Z0-9_-]{16,100}$" }
+        - name: X-Workspace-Scope
+          in: header
+          required: false
+          schema: { type: string }
       requestBody:
         required: true
         content:
@@ -117,6 +216,8 @@ paths:
                 - $ref: "#/components/schemas/ResolveCommand"
                 - $ref: "#/components/schemas/CloseCommand"
                 - $ref: "#/components/schemas/ImportCommand"
+                - $ref: "#/components/schemas/PolicyCommand"
+                - $ref: "#/components/schemas/FollowupCommand"
               discriminator: { propertyName: action }
       responses:
         "200":
@@ -301,6 +402,24 @@ paths:
         "403": { $ref: "#/components/responses/Error" }
         "413": { $ref: "#/components/responses/Error" }
         "415": { $ref: "#/components/responses/Error" }
+  /api/followups:
+    get:
+      operationId: listFollowups
+      summary: 같은 보관함과 브랜드의 이전 마감 이월 검토 근거 조회
+      description: 활성 세션과 보관함 쿠키가 필요합니다. 실제 입금 확인이 아니며 조회는 상태를 변경하지 않습니다.
+      responses:
+        "200":
+          description: 현재 버전과 작업 범위, 이전 마감별 후보 정산 및 검토 기록을 반환합니다. 보관함 쿠키가 없으면 sources는 빈 배열입니다.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [expectedVersion, scope, sources]
+                properties:
+                  expectedVersion: { type: integer }
+                  scope: { type: string }
+                  sources: { type: array, items: { type: object } }
+        "401": { $ref: "#/components/responses/Error" }
   /api/analysis:
     get:
       operationId: deterministicGuide
@@ -390,6 +509,10 @@ paths:
         "409": { $ref: "#/components/responses/Error" }
 components:
   securitySchemes:
+    library:
+      type: apiKey
+      in: cookie
+      name: closepilot_library
     session:
       type: apiKey
       in: cookie
@@ -424,6 +547,50 @@ components:
       type: object
       description: 표준 항목명과 업로드한 CSV 열 이름의 대응 관계입니다. 연결하지 않은 원본 열은 저장하지 않습니다.
       additionalProperties: { type: string, maxLength: 100 }
+    PolicyCommand:
+      type: object
+      additionalProperties: false
+      required: [action, expectedVersion, period, feeBps, note, evidence]
+      properties:
+        action: { const: apply_policy }
+        expectedVersion: { type: integer, minimum: 1 }
+        period: { type: string, pattern: '^\d{4}-\d{2}$' }
+        feeBps:
+          type: object
+          additionalProperties: false
+          required: [d2c, naver, coupang]
+          properties:
+            d2c: { type: integer, minimum: 0, maximum: 10000 }
+            naver: { type: integer, minimum: 0, maximum: 10000 }
+            coupang: { type: integer, minimum: 0, maximum: 10000 }
+        note: { type: string, minLength: 10, maxLength: 600 }
+        evidence: { type: string, minLength: 5, maxLength: 200 }
+    FollowupCommand:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          action,
+          expectedVersion,
+          sourceId,
+          sourceHash,
+          rowKey,
+          settlementIds,
+          status,
+          note,
+          evidence,
+        ]
+      properties:
+        action: { const: record_followup }
+        expectedVersion: { type: integer, minimum: 1 }
+        sourceId: { type: string, format: uuid }
+        sourceHash: { type: string, pattern: "^[a-f0-9]{64}$" }
+        rowKey: { type: string, minLength: 1, maxLength: 100 }
+        settlementIds:
+          { type: array, maxItems: 1000, items: { type: string, minLength: 1, maxLength: 100 } }
+        status: { enum: [waiting, evidence_reviewed] }
+        note: { type: string, minLength: 10, maxLength: 600 }
+        evidence: { type: string, minLength: 5, maxLength: 200 }
     ReconcileCommand:
       type: object
       additionalProperties: false
@@ -544,7 +711,7 @@ components:
           }
         events: { type: array, items: { type: object } }
         auditValid: { type: boolean }
-        ruleVersion: { const: krw-net-v1.1.0 }
+        ruleVersion: { enum: [krw-net-v1.1.0, krw-net-v1.2.0] }
         sandbox: { const: true }
         demoMode:
           {

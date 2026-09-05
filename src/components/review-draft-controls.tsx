@@ -32,7 +32,10 @@ export function ReviewDraftControls({
           note,
           evidence,
           fingerprint,
-          expiresAt: Date.parse(createdAt) + 6 * 60 * 60 * 1000,
+          expiresAt: Math.min(
+            Date.now() + 6 * 60 * 60 * 1000,
+            Date.parse(createdAt) + 30 * 24 * 60 * 60 * 1000,
+          ),
         });
         setMessage("이 탭에 임시 저장했습니다. 검토 승인은 아직 하지 않았습니다.");
       } else if (action === "restore") {

@@ -37,6 +37,7 @@ import { type SessionSelection, useWorkspaceSession } from "./use-workspace-sess
 import { PolicySimulator } from "./policy-simulator";
 import { PackageInspector } from "./package-inspector";
 import { MonthWorkspace } from "./month-workspace";
+import { FollowupPanel } from "./followup-panel";
 import { periodLabel } from "@/domain/period";
 import "./workbench-tools.css";
 
@@ -389,8 +390,8 @@ export function Dashboard() {
                 <div className="notice warm stale-notice">
                   <RefreshCw size={18} />
                   <p>
-                    <b>새 자료를 반영했습니다.</b> 아래 수치는 미리보기입니다. 대사를 다시 실행해야
-                    검토 승인과 마감 확정을 진행할 수 있습니다.
+                    <b>자료 또는 정책이 변경되었습니다.</b> 아래 수치는 미리보기입니다. 대사를 다시
+                    실행해야 검토 승인과 마감 확정을 진행할 수 있습니다.
                   </p>
                 </div>
               )}
@@ -456,6 +457,7 @@ export function Dashboard() {
                       workspace={workspace}
                       busy={busy}
                       onPrepareSession={prepareSession}
+                      onOpen={reset}
                     />
                   )}
                   {settingsView === "brand" && (
@@ -466,13 +468,24 @@ export function Dashboard() {
                     />
                   )}
                   {settingsView === "policy" && (
-                    <PolicySimulator key={`policy:${sessionRevision}`} workspace={workspace} />
+                    <PolicySimulator
+                      key={`policy:${sessionRevision}`}
+                      workspace={workspace}
+                      busy={busy}
+                      onCommand={onCommand}
+                    />
                   )}
                 </>
               )}
               {section === "audit" && (
                 <>
                   <PackageInspector key={`package:${sessionRevision}`} workspace={workspace} />
+                  <FollowupPanel
+                    key={`followup:${sessionRevision}:${workspace.version}`}
+                    workspace={workspace}
+                    busy={busy}
+                    onCommand={onCommand}
+                  />
                   <AuditPanel
                     workspace={workspace}
                     onVerify={() =>
@@ -596,12 +609,12 @@ export function Dashboard() {
         <div className="reset-body">
           <p>
             {pendingSession?.period
-              ? `${pendingSession.period} 합성 자료로 별도 작업공간을 만듭니다. 현재 세션으로 돌아오는 기능은 없으므로 아래 파일을 먼저 내려받으세요. 기존 마감의 금액과 승인 기록은 변경하지 않습니다.`
+              ? `${pendingSession.period} 합성 자료로 별도 작업공간을 만듭니다. 보관함에 있는 기존 작업은 보관 기간 안에 다시 열 수 있습니다. 기존 마감의 금액과 승인 기록은 변경하지 않습니다.`
               : pendingSession?.brandName
                 ? `${workspace?.profile.brandName ?? "현재 브랜드"} 설정을 ${pendingSession.brandName} 작업공간으로 복제합니다. 거래 자료와 검토 기록은 새 가상 데이터로 시작합니다.`
                 : pendingTemplate && pendingTemplate.templateId !== workspace?.profile.templateId
-                  ? `${pendingTemplate.brandName} 온보딩 설정으로 새 작업공간을 만듭니다. 현재 자료와 검토 기록에는 다시 접근할 수 없습니다.`
-                  : "새 데모를 시작하면 현재 자료와 검토 기록에 다시 접근할 수 없습니다. 필요한 결과를 먼저 CSV로 내려받으세요. 마감을 확정했다면 마감 증빙 파일도 저장해 주세요."}
+                  ? `${pendingTemplate.brandName} 온보딩 설정으로 새 작업공간을 만듭니다. 보관된 기존 작업은 월별 작업 보관함에서 다시 열 수 있습니다.`
+                  : "별도의 합성 자료로 새 데모를 시작합니다. 보관함에 있는 기존 작업은 생성일로부터 30일간 다시 열 수 있습니다. 필요한 마감 증빙은 파일로도 내려받으세요."}
           </p>
           {workspace && (
             <a href="/api/export?format=csv" download className="text-button">

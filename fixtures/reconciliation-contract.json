@@ -1,7 +1,7 @@
 {
   "generatedBy": "TypeScript reconciliation domain",
   "request": {
-    "ruleVersion": "krw-net-v1.1.0",
+    "ruleVersion": "krw-net-v1.2.0",
     "asOf": "2026-08-31",
     "feeBps": {
       "d2c": 330,
@@ -134,7 +134,7 @@
     ]
   },
   "expected": {
-    "ruleVersion": "krw-net-v1.1.0",
+    "ruleVersion": "krw-net-v1.2.0",
     "engine": "kotlin-jvm",
     "rows": [
       {

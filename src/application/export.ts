@@ -1,5 +1,4 @@
 import { csvCell } from "@/domain/csv";
-import { RULE_VERSION } from "@/domain/model";
 import type { WorkspaceView } from "./workbench";
 
 export function buildReconciliationCsv(workspace: WorkspaceView): string {
@@ -35,7 +34,7 @@ export function buildReconciliationCsv(workspace: WorkspaceView): string {
       row.resolution?.disposition || "",
       row.resolution?.note || "",
       row.resolution?.evidence || "",
-      RULE_VERSION,
+      workspace.ruleVersion,
     ]),
   ]
     .map((row) => row.map(csvCell).join(","))

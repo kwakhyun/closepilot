@@ -14,9 +14,34 @@ import { digest } from "@/domain/canonical";
 import { importCsv } from "@/domain/csv";
 import { describeReconciliation } from "@/domain/review-copy";
 import { createProfileSnapshot, profileCatalog } from "@/domain/onboarding";
+import { feePolicySchema, policyCandidate } from "./policy-change";
+import { followupEvidence } from "@/domain/followup";
 
 const revision = { expectedVersion: z.number().int().positive() };
 export const commandSchema = z.discriminatedUnion("action", [
+  z
+    .object({
+      action: z.literal("apply_policy"),
+      ...revision,
+      period: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/),
+      feeBps: feePolicySchema,
+      note: z.string().trim().min(10).max(600),
+      evidence: z.string().trim().min(5).max(200),
+    })
+    .strict(),
+  z
+    .object({
+      action: z.literal("record_followup"),
+      ...revision,
+      sourceId: z.string().uuid(),
+      sourceHash: z.string().regex(/^[a-f0-9]{64}$/),
+      rowKey: z.string().min(1).max(100),
+      settlementIds: z.array(z.string().min(1).max(100)).max(1000),
+      status: z.enum(["waiting", "evidence_reviewed"]),
+      note: z.string().trim().min(10).max(600),
+      evidence: z.string().trim().min(5).max(200),
+    })
+    .strict(),
   z.object({ action: z.literal("reconcile"), ...revision }).strict(),
   z
     .object({
@@ -60,7 +85,13 @@ function reconcileWorkspace(workspace: Workspace) {
 export function reviewedRows(workspace: Workspace): ReviewedRow[] {
   return reconcileWorkspace(workspace).map((row) => {
     const resolution = workspace.resolutions[row.key];
-    return { ...row, resolution: resolution?.fingerprint === digest(row) ? resolution : null };
+    return {
+      ...row,
+      resolution:
+        !resolution?.invalidatedByPolicy && resolution?.fingerprint === digest(row)
+          ? resolution
+          : null,
+    };
   });
 }
 export function workspaceView(workspace: Workspace) {
@@ -88,6 +119,7 @@ export function workspaceView(workspace: Workspace) {
       }),
     ),
     demoMode: workspace.demoMode,
+    policyChanges: workspace.policyChanges ?? [],
     // Full evidence stays in storage and is served only by the package export.
     close: workspace.close
       ? {
@@ -114,7 +146,7 @@ export function workspaceView(workspace: Workspace) {
       timing: issues.filter((row) => row.kind === "timing").length,
     },
     auditValid: verifyAudit(workspace.events),
-    ruleVersion: RULE_VERSION,
+    ruleVersion: workspace.close?.ruleVersion ?? RULE_VERSION,
     sandbox: true,
   };
 }
@@ -124,6 +156,7 @@ export function applyCommand(
   current: Workspace,
   command: Command,
   now = new Date().toISOString(),
+  context?: { followupSource: Workspace },
 ): Workspace {
   if (current.version !== command.expectedVersion)
     throw new DomainError(
@@ -142,7 +175,85 @@ export function applyCommand(
   const workspace = structuredClone(current);
   workspace.profile ??= workspaceProfile(current);
   const actor = "데모 검토자";
-  if (command.action === "import") {
+  if (command.action === "apply_policy") {
+    const candidate = policyCandidate(workspace, command.feeBps, command.period);
+    workspaceView(candidate);
+    const before = structuredClone(workspace.profile.policy.feeBps);
+    workspace.profile.policy.feeBps = structuredClone(command.feeBps);
+    const fingerprints = new Map(
+      reconcileWorkspace(workspace).map((row) => [row.key, digest(row)]),
+    );
+    for (const resolution of Object.values(workspace.resolutions)) {
+      if (fingerprints.get(resolution.rowKey) !== resolution.fingerprint)
+        resolution.invalidatedByPolicy = true;
+    }
+    workspace.profile.version++;
+    (workspace.policyChanges ??= []).push({
+      version: workspace.profile.version,
+      period: workspace.period,
+      before,
+      after: structuredClone(command.feeBps),
+      note: command.note,
+      evidence: command.evidence,
+      at: now,
+    });
+    workspace.status = "open";
+    workspace.lastRunAt = null;
+    appendEvent(workspace, {
+      type: "policy_updated",
+      actor,
+      at: now,
+      detail: `${workspace.period} 정책 v${workspace.profile.version}: ${JSON.stringify(before)} -> ${JSON.stringify(command.feeBps)} / ${command.note} / 근거: ${command.evidence}`,
+    });
+  } else if (command.action === "record_followup") {
+    if (!context?.followupSource)
+      throw new DomainError(
+        "INVALID_FOLLOWUP_SOURCE",
+        "서버에서 확인한 이전 마감이 필요합니다.",
+        409,
+      );
+    const evidence = followupEvidence(
+      workspace,
+      context.followupSource,
+      command.sourceHash,
+      command.rowKey,
+    );
+    const selected = evidence.settlements.filter((entry) =>
+      command.settlementIds.includes(entry.id),
+    );
+    if (
+      new Set(command.settlementIds).size !== command.settlementIds.length ||
+      selected.length !== command.settlementIds.length ||
+      new Set(selected.map((entry) => entry.id)).size !== selected.length
+    )
+      throw new DomainError(
+        "INVALID_FOLLOWUP_EVIDENCE",
+        "중복되거나 연결되지 않은 정산 근거가 포함되어 있습니다.",
+      );
+    if (command.status === "evidence_reviewed" && (!workspace.lastRunAt || !selected.length))
+      throw new DomainError(
+        "FOLLOWUP_REVIEW_REQUIRED",
+        "최신 대사를 실행하고 연결할 정산 근거를 선택하세요.",
+        409,
+      );
+    (workspace.followups ??= {})[evidence.key] = {
+      sourceHash: command.sourceHash,
+      sourcePeriod: context.followupSource.close!.period,
+      rowKey: command.rowKey,
+      settlementIds: command.settlementIds,
+      status: command.status,
+      note: command.note,
+      evidence: command.evidence,
+      fingerprint: evidence.fingerprint,
+      at: now,
+    };
+    appendEvent(workspace, {
+      type: "followup_recorded",
+      actor,
+      at: now,
+      detail: `${command.sourceHash.slice(0, 16)} / ${command.rowKey} / ${command.status} / 정산 ${command.settlementIds.join(", ")} / ${command.note} / 근거: ${command.evidence}`,
+    });
+  } else if (command.action === "import") {
     const fileDigest = digest(command.csv.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n"));
     if (workspace.sources.some((source) => source.digest === fileDigest))
       throw new DomainError(
@@ -284,6 +395,12 @@ export function applyCommand(
       },
       rows: reconcileWorkspace(workspace),
       resolutions: view.rows.flatMap((row) => (row.resolution ? [row.resolution] : [])),
+      ...(workspace.policyChanges?.length
+        ? { policyChanges: structuredClone(workspace.policyChanges) }
+        : {}),
+      ...(workspace.followups && Object.keys(workspace.followups).length
+        ? { followups: structuredClone(workspace.followups) }
+        : {}),
     };
     workspace.close = { ...body, hash: digest(body) };
     workspace.status = "closed";

@@ -60,10 +60,13 @@ fun verifyClosePackage(text: String): VerificationReport {
     require(text.toByteArray(Charsets.UTF_8).size <= 5_000_000) { "Package exceeds 5 MB" }
     val root = Json.parseToJsonElement(text).jsonObject
     val snapshot = root.getValue("snapshot").jsonObject
-    require(snapshot.string("ruleVersion") == RULE_VERSION) { "Unsupported rule version" }
+    require(snapshot.string("ruleVersion") in SUPPORTED_RULE_VERSIONS) { "Unsupported rule version" }
     val snapshotHash = snapshot.string("hash")
     require(sha256(JsonObject(snapshot.filterKeys { it != "hash" })) == snapshotHash) { "Snapshot checksum mismatch" }
     val inputs = snapshot.getValue("inputs").jsonObject
+    val profile = snapshot.getValue("profile").jsonObject
+    require(profile.string("period") == snapshot.string("period") && profile.string("asOf") == inputs.string("asOf")) { "Profile period mismatch" }
+    require(canonical(profile.getValue("policy").jsonObject.getValue("feeBps")) == canonical(inputs.getValue("feeBps"))) { "Profile policy mismatch" }
     require(inputs.array("orders").size in 1..500 && inputs.array("settlements").size <= 1_000) { "Invalid input size" }
     val orders = inputs.array("orders").map { element ->
         val row = element.jsonObject
