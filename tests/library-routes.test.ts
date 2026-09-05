@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { randomBytes, randomUUID } from "node:crypto";
 import { createDatabase, type Database } from "@/infrastructure/database";
 import { WorkspaceRepository } from "@/infrastructure/repository";
@@ -39,7 +39,11 @@ describe("library HTTP capabilities", () => {
     );
   });
   beforeEach(() => {
+    vi.stubEnv("APP_ORIGIN", "http://localhost");
     state.cookies.clear();
+  });
+  afterEach(() => {
+    vi.unstubAllEnvs();
   });
   afterAll(async () => {
     await state.database?.close();
@@ -76,5 +80,13 @@ describe("library HTTP capabilities", () => {
     const text = await response.text();
     expect(text).not.toContain(owner);
     expect(text).not.toContain(hashToken(owner));
+  });
+  it("uses the configured public origin rather than the internal request URL", async () => {
+    vi.stubEnv("APP_ORIGIN", "https://close.example");
+    state.cookies.set("closepilot_library", owner);
+    const denied = await POST(request());
+    expect(denied.status).toBe(403);
+    expect((await denied.json()).error.code).toBe("ORIGIN_DENIED");
+    expect((await POST(request(handle, "https://close.example"))).status).toBe(200);
   });
 });
