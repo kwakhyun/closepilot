@@ -1,4 +1,4 @@
-name: Verify portfolio
+name: Verify ClosePilot
 on:
   push:
   pull_request:

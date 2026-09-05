@@ -551,6 +551,12 @@ test("완료된 합성 예시는 읽기 전용이며 다음 월 정책과 이월
     .toBeGreaterThan(0);
   for (const width of [1440, 390, 320]) {
     await page.setViewportSize({ width, height: 900 });
+    await page.locator(".guide-product-image").evaluate(async (element) => {
+      const image = element as HTMLImageElement;
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      await image.decode();
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+    });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );

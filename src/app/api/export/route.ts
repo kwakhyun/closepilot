@@ -17,7 +17,7 @@ export async function GET(request: Request) {
             snapshot: workspace.close,
             audit: workspace.events,
             notice:
-              "가상 거래로 만든 포트폴리오 데모입니다. 검토를 승인해도 원본 금액은 바뀌지 않습니다. SHA-256은 내용이 달라졌는지 확인하는 체크섬이며, 전자서명이 아닙니다.",
+              "가상 거래로 만든 매출 마감 데모입니다. 검토를 승인해도 원본 금액은 바뀌지 않습니다. SHA-256은 내용이 달라졌는지 확인하는 체크섬이며, 전자서명이 아닙니다.",
           },
           null,
           2,

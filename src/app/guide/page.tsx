@@ -74,7 +74,7 @@ export default function Guide() {
             </a>
           </div>
           <div className="guide-disclaimer">
-            개인 포트폴리오 · 가상 브랜드와 거래 사용 · 실제 결제 없음
+            가상 브랜드와 거래를 사용하는 공개 데모입니다. 실제 결제는 처리하지 않습니다.
           </div>
         </section>
         <Image
@@ -89,7 +89,7 @@ export default function Guide() {
               {view.summary.total}
               <small>건</small>
             </strong>
-            <span>직접 만든 가상 주문</span>
+            <span>샘플 주문</span>
           </div>
           <div>
             <strong>
@@ -175,8 +175,8 @@ export default function Guide() {
               ))}
             </div>
             <p>
-              처음 보는 검토자는 아래 세 단계만 따라가도 핵심 설계와 완료 결과를 확인할 수 있습니다.
-              자료 반영부터 마감까지 직접 실행하는 전체 흐름은 별도 시연 문서에 남겼습니다.
+              아래 세 단계로 거래 검토와 마감 결과 조회를 체험할 수 있습니다. 자료 반영부터 마감까지
+              직접 실행하려면 전체 시연 순서를 참고하세요.
             </p>
             <ol className="guide-instructions">
               <li>
@@ -250,7 +250,7 @@ export default function Guide() {
           </div>
         </section>
         <section className="guide-section">
-          <span className="guide-section-index">04 / SCOPE & HONESTY</span>
+          <span className="guide-section-index">04 / SCOPE</span>
           <div className="guide-section-content">
             <h2>구현 범위와 남은 과제.</h2>
             <div className="scope-grid">
@@ -292,9 +292,12 @@ export default function Guide() {
         </section>
         <section className="guide-cta">
           <div>
-            <span className="eyebrow">문제 가설에서 검증 가능한 데모까지</span>
-            <h2>문제 정의부터 구현, 검증, 배포까지.</h2>
-            <p>고객 문제 가설, 도메인 설계, 검증 결과와 운영 방법을 저장소에 기록했습니다.</p>
+            <span className="eyebrow">매출 마감 데모</span>
+            <h2>거래를 검토하고 마감 결과를 확인하세요.</h2>
+            <p>
+              합성 자료로 대사를 실행하고, 예외 거래의 근거를 기록한 뒤 마감 증빙을 내려받을 수
+              있습니다.
+            </p>
           </div>
           <Link href="/" className="button primary">
             대시보드 열기

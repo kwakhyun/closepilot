@@ -4,7 +4,7 @@ import { applyCommand, workspaceView } from "@/application/workbench";
 
 const now = "2026-08-31T09:00:00.000Z";
 
-describe("completed portfolio showcase", () => {
+describe("completed demo showcase", () => {
   it("builds a clearly labelled, fully reviewed and immutable synthetic close", () => {
     const workspace = createDemoWorkspace(now, { showcase: "completed" });
     const view = workspaceView(workspace);
