@@ -14,6 +14,7 @@ export interface Database extends DbSession {
 export async function createDatabase(
   connection?: string,
   localPath = ".data/closepilot",
+  localSnapshot?: Blob,
 ): Promise<Database> {
   let database: Database;
   if (connection) {
@@ -80,11 +81,18 @@ export async function createDatabase(
       await mkdir(dirname(resolve(localPath)), { recursive: true });
     }
     const { PGlite } = await import("@electric-sql/pglite");
-    const client = new PGlite(localPath);
-    await client.exec(SCHEMA);
-    await client.exec(JSONB_GUARDS);
-    await client.exec(REVIEW_DRAFT_STORAGE);
-    await client.exec(WORKSPACE_LIBRARY);
+    const client = new PGlite(localPath, { loadDataDir: localSnapshot });
+    try {
+      await client.exec(SCHEMA);
+      await client.exec(JSONB_GUARDS);
+      await client.exec(REVIEW_DRAFT_STORAGE);
+      await client.exec(WORKSPACE_LIBRARY);
+    } catch (error) {
+      // Preserve the initialization failure even when an incomplete runtime
+      // cannot be closed; a ready client must not survive a failed migration.
+      await client.close().catch(() => {});
+      throw error;
+    }
     database = {
       async query<T extends Record<string, unknown>>(query: string, params: unknown[] = []) {
         return (await client.query<T>(query, params)).rows;

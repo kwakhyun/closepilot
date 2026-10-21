@@ -4,7 +4,8 @@ import { digest } from "@/domain/canonical";
 import { buildReviewEvidence, ruleBasedReviewDraft } from "@/application/review-draft";
 import { reviewedRows } from "@/application/workbench";
 import type { ReviewDraftResponse } from "@/domain/review-draft";
-import { createDatabase, type Database } from "@/infrastructure/database";
+import type { Database } from "@/infrastructure/database";
+import { createTestDatabase } from "./helpers/database";
 import { WorkspaceRepository } from "@/infrastructure/repository";
 import { ReviewDraftStore, REVIEW_DRAFT_LIMITS } from "@/infrastructure/review-draft-store";
 
@@ -34,7 +35,7 @@ describe("shared AI admission and cache", () => {
     };
   }
   beforeAll(async () => {
-    db = await createDatabase(process.env.TEST_DATABASE_URL, "memory://");
+    db = await createTestDatabase();
     // Remove only this suite's future-dated leases left by an interrupted run.
     await db.query(
       "DELETE FROM closepilot_review_drafts WHERE lease_until >= '2090-01-01' AND lease_until < '2090-02-01'",

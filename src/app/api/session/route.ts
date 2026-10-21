@@ -47,6 +47,7 @@ export async function POST(request: Request) {
       ? {
           session: await sessionHash(),
           expectedVersion: expectedVersion!,
+          expectedScope: request.headers.get("x-workspace-scope") || "",
           brandName: options.brandName!,
         }
       : undefined;

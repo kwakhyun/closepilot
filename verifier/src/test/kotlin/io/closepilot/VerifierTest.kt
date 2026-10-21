@@ -13,6 +13,7 @@ import io.closepilot.domain.Settlement
 import io.closepilot.domain.Won
 import io.closepilot.domain.feeFor
 import io.closepilot.domain.reconcile
+import io.closepilot.domain.sumWon
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
@@ -65,6 +66,53 @@ class VerifierTest {
         assertEquals(38_500_000_000L, feeFor(Won.of(1_000_000_000_000L), BasisPoints.of(385)).amount)
         assertFailsWith<IllegalArgumentException> { Won.of(Won.MAX + 1) }
         assertFailsWith<IllegalArgumentException> { BasisPoints.of(10001) }
+    }
+    @Test fun `signed totals permit intermediate overflow but reject final overflow`() {
+        val amounts = listOf(800_000_000_000L, 500_000_000_000L, -600_000_000_000L)
+        assertEquals(700_000_000_000L, amounts.map { Won.of(it) }.sumWon().amount)
+        assertEquals(700_000_000_000L, amounts.reversed().map { Won.of(it) }.sumWon().amount)
+        assertEquals(-700_000_000_000L, amounts.map { Won.of(-it) }.sumWon().amount)
+        assertFailsWith<IllegalArgumentException> { listOf(Won.of(Won.MAX), Won.of(1)).sumWon() }
+        assertFailsWith<IllegalArgumentException> { listOf(Won.of(-Won.MAX), Won.of(-1)).sumWon() }
+    }
+    @Test fun `http boundaries accept the TypeScript signed sum close package`() {
+        val text = Files.readString(Path.of("../fixtures/signed-sum-closed-package.json"))
+        val snapshot = Json.parseToJsonElement(text).jsonObject.getValue("snapshot").jsonObject
+        val request = JsonObject(snapshot.getValue("inputs").jsonObject + ("ruleVersion" to snapshot.getValue("ruleVersion")))
+        val expectedRows = JsonArray(snapshot.getValue("rows").jsonArray.map {
+            JsonObject(it.jsonObject.filterKeys { field -> field != "explanation" })
+        })
+        val server = VerifierHttpServer(0).start()
+        try {
+            val client = HttpClient.newHttpClient()
+            val reconciliation = client.send(
+                HttpRequest.newBuilder(URI("http://127.0.0.1:${server.port}/reconcile"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(request.toString()))
+                    .build(),
+                HttpResponse.BodyHandlers.ofString(),
+            )
+            assertEquals(200, reconciliation.statusCode())
+            val result = Json.parseToJsonElement(reconciliation.body()).jsonObject
+            assertEquals(canonical(expectedRows), canonical(result.getValue("rows")))
+            for (field in listOf("expectedNet", "actualNet", "delta")) {
+                assertEquals(snapshot.getValue(field), result.getValue("summary").jsonObject.getValue(field))
+            }
+            val verification = client.send(
+                HttpRequest.newBuilder(URI("http://127.0.0.1:${server.port}/verify"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(text))
+                    .build(),
+                HttpResponse.BodyHandlers.ofString(),
+            )
+            assertEquals(200, verification.statusCode())
+            val report = Json.parseToJsonElement(verification.body()).jsonObject
+            assertEquals(true, report.getValue("valid").jsonPrimitive.boolean)
+            assertEquals(129, report.getValue("rows").jsonPrimitive.int)
+            assertEquals(9, report.getValue("reviewed").jsonPrimitive.int)
+        } finally {
+            server.stop()
+        }
     }
     @Test fun `independently replays the TypeScript close package`() {
         val result = verifyClosePackage(fixture)

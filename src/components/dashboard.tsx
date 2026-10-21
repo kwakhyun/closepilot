@@ -75,6 +75,7 @@ export function Dashboard() {
   const [importOpen, setImportOpen] = useState(false);
   const [closeOpen, setCloseOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
+  const resetError = resetOpen && toast?.error ? toast.message : "";
   const [pendingSession, setPendingSession] = useState<SessionSelection | null>(null);
   const [mobileNav, setMobileNav] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -194,6 +195,7 @@ export function Dashboard() {
   }
 
   async function reset(selection?: SessionSelection) {
+    setToast(null);
     const nextSelection =
       selection ??
       pendingSession ??
@@ -218,7 +220,10 @@ export function Dashboard() {
   }
 
   function prepareSession(selection: SessionSelection) {
-    setPendingSession(selection);
+    setToast(null);
+    setPendingSession(
+      selection.cloneCurrent ? { ...selection, sourceScope: workspace?.draftScope } : selection,
+    );
     setResetOpen(true);
   }
 
@@ -381,7 +386,11 @@ export function Dashboard() {
                     <b>미리 완료된 합성 마감 예시입니다.</b> 실제 고객 승인이나 결제 처리가 아니며,
                     검토 기록과 마감 증빙의 읽기 전용 결과를 빠르게 살펴볼 수 있습니다.
                   </p>
-                  <a href="/api/export?format=json" download className="text-button">
+                  <a
+                    href={`/api/export?format=json&scope=${encodeURIComponent(workspace.draftScope)}`}
+                    download
+                    className="text-button"
+                  >
                     마감 증빙 내려받기
                   </a>
                 </div>
@@ -596,6 +605,7 @@ export function Dashboard() {
         open={resetOpen}
         onClose={() => {
           setResetOpen(false);
+          setToast(null);
           setPendingSession(null);
         }}
         title={
@@ -617,22 +627,36 @@ export function Dashboard() {
                   : "별도의 합성 자료로 새 데모를 시작합니다. 보관함에 있는 기존 작업은 생성일로부터 30일간 다시 열 수 있습니다. 필요한 마감 증빙은 파일로도 내려받으세요."}
           </p>
           {workspace && (
-            <a href="/api/export?format=csv" download className="text-button">
+            <a
+              href={`/api/export?format=csv&scope=${encodeURIComponent(workspace.draftScope)}`}
+              download
+              className="text-button"
+            >
               <Download size={16} />
               현재 대사 결과 다운로드
             </a>
           )}
           {workspace?.close && (
-            <a href="/api/export?format=json" download className="text-button">
+            <a
+              href={`/api/export?format=json&scope=${encodeURIComponent(workspace.draftScope)}`}
+              download
+              className="text-button"
+            >
               <Download size={16} />
               현재 마감 증빙 다운로드
             </a>
+          )}
+          {resetError && (
+            <p className="form-error" role="alert">
+              {resetError}
+            </p>
           )}
           <div className="modal-footer">
             <button
               className="button secondary"
               onClick={() => {
                 setResetOpen(false);
+                setToast(null);
                 setPendingSession(null);
               }}
             >
@@ -651,7 +675,7 @@ export function Dashboard() {
           </div>
         </div>
       </Modal>
-      {toast && (
+      {toast && !resetError && (
         <div
           className={`toast ${toast.error ? "error-toast" : ""}`}
           role={toast.error ? "alert" : "status"}

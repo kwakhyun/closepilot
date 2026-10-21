@@ -1,7 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { randomUUID } from "node:crypto";
 import { digest } from "@/domain/canonical";
-import { createDatabase, type Database } from "@/infrastructure/database";
+import type { Database } from "@/infrastructure/database";
+import { createTestDatabase } from "./helpers/database";
 import { WorkspaceRepository } from "@/infrastructure/repository";
 import { WorkspaceLibrary } from "@/infrastructure/workspace-library";
 import { missingMappingHeaders } from "@/components/mapping-templates";
@@ -10,7 +11,7 @@ describe("browser workspace library", () => {
   let database: Database, repository: WorkspaceRepository, library: WorkspaceLibrary;
   const hash = () => digest(randomUUID());
   beforeAll(async () => {
-    database = await createDatabase(process.env.TEST_DATABASE_URL, "memory://");
+    database = await createTestDatabase();
     repository = new WorkspaceRepository(database);
     library = new WorkspaceLibrary(database);
   });

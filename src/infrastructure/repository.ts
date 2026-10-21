@@ -5,6 +5,7 @@ import { createDemoWorkspace, type DemoSessionOptions } from "@/application/show
 import { cloneWorkspaceProfile } from "@/application/onboarding";
 import type { Database, DbSession } from "./database";
 import { attachLibrary, RETENTION_MS } from "./workspace-library";
+import { assertWorkspaceScope } from "./workspace-scope";
 
 const TTL_MS = 6 * 60 * 60 * 1000;
 async function recordEvents(
@@ -45,7 +46,7 @@ export class WorkspaceRepository {
     clientBucket: string,
     now = new Date(),
     seedOptions: DemoSessionOptions = {},
-    clone?: { session: string; expectedVersion: number; brandName: string },
+    clone?: { session: string; expectedVersion: number; expectedScope: string; brandName: string },
     library?: { owner: string; handle: string },
   ): Promise<Workspace> {
     return this.database.transaction(async (transaction) => {
@@ -90,6 +91,7 @@ export class WorkspaceRepository {
             "복제할 세션이 만료되었습니다. 새 데모를 시작하세요.",
             401,
           );
+        assertWorkspaceScope(source.state, clone.expectedScope);
         if (source.state.version !== clone.expectedVersion)
           throw new DomainError(
             "VERSION_CONFLICT",
@@ -153,12 +155,7 @@ export class WorkspaceRepository {
           "데모 세션이 만료되었습니다. 새 데모를 시작하세요.",
           401,
         );
-      if (expectedScope && result.state.draftScope !== expectedScope)
-        throw new DomainError(
-          "WORKSPACE_CHANGED",
-          "다른 탭에서 작업이 전환되었습니다. 현재 작업을 확인한 뒤 다시 시도하세요.",
-          409,
-        );
+      if (expectedScope) assertWorkspaceScope(result.state, expectedScope);
       const [receipt] = await transaction.query<{ request_hash: string }>(
         "SELECT request_hash FROM closepilot_receipts WHERE session_hash = $1 AND idempotency_key = $2",
         [session, key],

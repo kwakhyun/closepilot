@@ -9,6 +9,7 @@ export interface SessionSelection {
   brandName?: string;
   showcase?: "completed";
   cloneCurrent?: true;
+  sourceScope?: string;
   expectedVersion?: number;
   period?: string;
 }
@@ -43,14 +44,18 @@ async function createSession(
   selection?: SessionSelection,
   signal?: AbortSignal,
 ): Promise<WorkspaceView> {
+  const { sourceScope, ...options } = selection ?? {};
   return responseData(
     await fetch(selection?.workspaceId ? "/api/workspaces" : "/api/session", {
       method: "POST",
       signal,
       ...(selection
         ? {
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(selection.workspaceId ? { id: selection.workspaceId } : selection),
+            headers: {
+              "Content-Type": "application/json",
+              ...(selection.cloneCurrent ? { "X-Workspace-Scope": sourceScope || "" } : {}),
+            },
+            body: JSON.stringify(selection.workspaceId ? { id: selection.workspaceId } : options),
           }
         : {}),
     }),

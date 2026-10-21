@@ -2,12 +2,15 @@ import { workspaceView } from "@/application/workbench";
 import { buildReconciliationCsv } from "@/application/export";
 import { DomainError } from "@/domain/model";
 import { observeRequest, repository, sessionHash } from "@/infrastructure/http";
+import { assertWorkspaceScope } from "@/infrastructure/workspace-scope";
 
 export const runtime = "nodejs";
 export async function GET(request: Request) {
   return observeRequest(request, "export.download", async () => {
     const workspace = await (await repository()).get(await sessionHash());
-    const format = new URL(request.url).searchParams.get("format") || "csv";
+    const params = new URL(request.url).searchParams;
+    assertWorkspaceScope(workspace, params.get("scope"));
+    const format = params.get("format") || "csv";
     if (format === "json") {
       if (!workspace.close)
         throw new DomainError("CLOSE_REQUIRED", "마감 패키지는 확정 후 내려받을 수 있습니다.", 409);

@@ -18,6 +18,11 @@ describe("integer KRW arithmetic", () => {
   );
   it("rejects aggregate overflow even for individually valid rows", () => {
     expect(() => sumWon([MAX_AMOUNT, 1])).toThrow();
+    expect(() => sumWon([-MAX_AMOUNT, -1])).toThrow();
+  });
+  it("bounds the final signed sum rather than intermediate totals", () => {
+    expect(sumWon([800_000_000_000, 500_000_000_000, -600_000_000_000])).toBe(700_000_000_000);
+    expect(sumWon([-800_000_000_000, -500_000_000_000, 600_000_000_000])).toBe(-700_000_000_000);
   });
   it.each([-1, 10_001, 1.5])("rejects an invalid basis-point policy: %s", (value) => {
     expect(() => feeFor(100, value)).toThrow();

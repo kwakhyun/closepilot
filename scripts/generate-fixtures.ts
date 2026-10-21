@@ -125,6 +125,78 @@ policyWorkspace = applyCommand(
   { action: "close", expectedVersion: policyWorkspace.version },
   at,
 );
+// Keep the seed and public command path intact so the verifier consumes a package
+// that the TypeScript application actually permits users to import and close.
+let signedSumWorkspace = seedWorkspace(at);
+signedSumWorkspace = applyCommand(
+  signedSumWorkspace,
+  {
+    action: "import",
+    expectedVersion: signedSumWorkspace.version,
+    kind: "orders",
+    filename: "signed-sum-orders.csv",
+    csv: "order_id,channel,date,gross,refund\nSIGNED-SUM,d2c,2026-08-01,0,0",
+  },
+  at,
+);
+signedSumWorkspace = applyCommand(
+  signedSumWorkspace,
+  {
+    action: "import",
+    expectedVersion: signedSumWorkspace.version,
+    kind: "settlements",
+    filename: "signed-sum-settlements.csv",
+    csv: [
+      "settlement_id,order_id,channel,gross,refund,fee,net,due_date,paid_date",
+      "SIGNED-A,SIGNED-SUM,d2c,0,0,0,800000000000,2026-08-31,2026-08-31",
+      "SIGNED-B,SIGNED-SUM,d2c,0,0,0,500000000000,2026-08-31,2026-08-31",
+      "SIGNED-C,SIGNED-SUM,d2c,0,0,0,-600000000000,2026-08-31,2026-08-31",
+    ].join("\n"),
+  },
+  at,
+);
+signedSumWorkspace = applyCommand(
+  signedSumWorkspace,
+  { action: "reconcile", expectedVersion: signedSumWorkspace.version },
+  at,
+);
+for (const row of reviewedRows(signedSumWorkspace).filter((row) => row.kind !== "matched")) {
+  signedSumWorkspace = applyCommand(
+    signedSumWorkspace,
+    {
+      action: "resolve",
+      expectedVersion: signedSumWorkspace.version,
+      rowKey: row.key,
+      disposition:
+        row.kind === "timing"
+          ? "carry_forward"
+          : row.kind === "duplicate"
+            ? "exclude_duplicate"
+            : "accepted_variance",
+      note: "합성 정산액 상쇄 검증용 승인입니다. 실제 증빙이나 고객 확인을 의미하지 않습니다.",
+      evidence: "SYNTHETIC-SIGNED-SUM",
+    },
+    at,
+  );
+}
+signedSumWorkspace = applyCommand(
+  signedSumWorkspace,
+  { action: "close", expectedVersion: signedSumWorkspace.version },
+  at,
+);
+writeFileSync(
+  "fixtures/signed-sum-closed-package.json",
+  JSON.stringify(
+    {
+      snapshot: signedSumWorkspace.close,
+      audit: signedSumWorkspace.events,
+      notice:
+        "Synthetic signed-sum regression fixture generated through import, reconciliation, review and close commands.",
+    },
+    null,
+    2,
+  ) + "\n",
+);
 writeFileSync(
   "fixtures/policy-closed-package.json",
   JSON.stringify(

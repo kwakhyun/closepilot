@@ -28,7 +28,8 @@ export function simulatePolicy(workspace: Workspace, input: z.infer<typeof simul
     after: after.summary,
     changes: after.rows.flatMap((row) => {
       const previous = before.rows.find((entry) => entry.key === row.key)!;
-      return previous.expectedFee === row.expectedFee && previous.kind === row.kind
+      const needsReview = !!previous.resolution && !row.resolution;
+      return previous.expectedFee === row.expectedFee && previous.kind === row.kind && !needsReview
         ? []
         : [
             {
@@ -38,7 +39,7 @@ export function simulatePolicy(workspace: Workspace, input: z.infer<typeof simul
               afterFee: row.expectedFee,
               beforeKind: previous.kind,
               afterKind: row.kind,
-              needsReview: !!previous.resolution && !row.resolution,
+              needsReview,
             },
           ];
     }),

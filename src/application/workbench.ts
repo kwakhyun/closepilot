@@ -94,6 +94,13 @@ export function reviewedRows(workspace: Workspace): ReviewedRow[] {
     };
   });
 }
+export function workspaceScope(workspace: Workspace) {
+  return (
+    workspace.draftScope ??
+    digest({ createdAt: workspace.createdAt, profile: workspaceProfile(workspace).id })
+  );
+}
+
 export function workspaceView(workspace: Workspace) {
   const profile = workspaceProfile(workspace);
   const rows = reviewedRows(workspace);
@@ -110,8 +117,7 @@ export function workspaceView(workspace: Workspace) {
     events: workspace.events,
     lastRunAt: workspace.lastRunAt,
     createdAt: workspace.createdAt,
-    draftScope:
-      workspace.draftScope ?? digest({ createdAt: workspace.createdAt, profile: profile.id }),
+    draftScope: workspaceScope(workspace),
     reviewFingerprints: Object.fromEntries(
       issues.map(({ resolution, ...row }) => {
         void resolution;

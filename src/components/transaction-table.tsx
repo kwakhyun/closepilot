@@ -108,7 +108,7 @@ export function TransactionTable({
         </div>
         <a
           className="button ghost small"
-          href="/api/export?format=csv"
+          href={`/api/export?format=csv&scope=${encodeURIComponent(workspace.draftScope)}`}
           download
           aria-label="전체 CSV 다운로드"
           title="전체 CSV 다운로드"

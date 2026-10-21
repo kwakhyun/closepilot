@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { randomUUID } from "node:crypto";
-import { createDatabase, type Database } from "@/infrastructure/database";
+import type { Database } from "@/infrastructure/database";
+import { createTestDatabase } from "./helpers/database";
 import { WorkspaceRepository } from "@/infrastructure/repository";
 import { digest } from "@/domain/canonical";
 import { applyCommand, reviewedRows, workspaceView } from "@/application/workbench";
@@ -16,7 +17,7 @@ describe("PostgreSQL transaction boundary", () => {
     return id;
   }
   beforeAll(async () => {
-    database = await createDatabase(process.env.TEST_DATABASE_URL, "memory://");
+    database = await createTestDatabase();
     repository = new WorkspaceRepository(database);
   });
   afterAll(async () => {
@@ -165,7 +166,12 @@ describe("PostgreSQL transaction boundary", () => {
       session(),
       new Date(),
       {},
-      { session: id, expectedVersion: source.version, brandName: "COPY" },
+      {
+        session: id,
+        expectedVersion: source.version,
+        expectedScope: source.draftScope!,
+        brandName: "COPY",
+      },
     );
     expect(copied.profile?.mappings).toEqual(source.profile?.mappings);
     expect(copied.profile?.policy).toEqual(source.profile?.policy);
@@ -182,7 +188,7 @@ describe("PostgreSQL transaction boundary", () => {
         session(),
         new Date(),
         {},
-        { session: id, expectedVersion: 1, brandName: "STALE" },
+        { session: id, expectedVersion: 1, expectedScope: source.draftScope!, brandName: "STALE" },
       ),
     ).rejects.toMatchObject({ code: "VERSION_CONFLICT" });
     await expect(
@@ -191,9 +197,37 @@ describe("PostgreSQL transaction boundary", () => {
         session(),
         new Date(),
         {},
-        { session: session(), expectedVersion: 1, brandName: "MISSING" },
+        {
+          session: session(),
+          expectedVersion: 1,
+          expectedScope: source.draftScope!,
+          brandName: "MISSING",
+        },
       ),
     ).rejects.toMatchObject({ code: "SESSION_EXPIRED" });
+  });
+  it("accepts the displayed fallback scope of a legacy workspace without rewriting its state", async () => {
+    const id = await create();
+    const legacy = await repository.get(id);
+    delete legacy.draftScope;
+    await database.query(
+      "UPDATE closepilot_workspaces SET state = $2::jsonb WHERE session_hash = $1",
+      [id, legacy],
+    );
+    const copied = await repository.create(
+      session(),
+      session(),
+      new Date(),
+      {},
+      {
+        session: id,
+        expectedVersion: legacy.version,
+        expectedScope: workspaceView(legacy).draftScope,
+        brandName: "LEGACY COPY",
+      },
+    );
+    expect(copied.profile?.policy).toEqual(legacy.profile?.policy);
+    expect(await repository.get(id)).toEqual(legacy);
   });
   it("enforces closed immutability and append-only audit updates in the database", async () => {
     const id = await create();

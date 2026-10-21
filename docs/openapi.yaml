@@ -38,7 +38,8 @@ paths:
       operationId: createSession
       summary: 30일 보관할 합성 작업과 6시간 접근 세션 생성
       description: |
-        cloneCurrent=true이면 현재 세션 쿠키와 expectedVersion, brandName이 필요합니다.
+        cloneCurrent=true이면 현재 세션 쿠키와 expectedVersion, brandName, X-Workspace-Scope 헤더가 필요합니다.
+        헤더에는 복제를 준비한 화면의 draftScope를 전달합니다. 누락하면 400, 다른 작업이면 409를 반환합니다.
         서버에 저장된 현재 프로필을 복제하며 templateId 또는 showcase와 함께 사용할 수 없습니다.
         profile 객체 등 클라이언트가 보낸 임의의 설정은 받지 않습니다.
         별도 HttpOnly 보관함 쿠키를 발급하며 같은 보관함은 최대 12개 작업을 보관합니다.
@@ -46,6 +47,11 @@ paths:
       security: []
       parameters:
         - $ref: "#/components/parameters/Origin"
+        - name: X-Workspace-Scope
+          in: header
+          required: false
+          description: cloneCurrent=true일 때 필수인 화면의 draftScope입니다. 인증 권한이 아니며 서버가 원본 작업 잠금 안에서 일치 여부를 검사합니다.
+          schema: { type: string }
       requestBody:
         required: false
         content:
@@ -377,7 +383,11 @@ paths:
         required: true
         content:
           application/json:
-            schema: { type: object, description: /api/export?format=json에서 내려받은 원본 패키지 }
+            schema:
+              {
+                type: object,
+                description: /api/export에 format=json과 화면의 scope를 전달해 내려받은 원본 패키지,
+              }
       responses:
         "200":
           description: 패키지 검사 실패는 valid=false와 package=null로 반환합니다.
@@ -482,7 +492,13 @@ paths:
     get:
       operationId: exportEvidence
       summary: 대사 결과 CSV 또는 확정한 마감 증빙 JSON 다운로드
+      description: 세션 쿠키로 조회한 작업과 화면의 scope가 일치해야 합니다. scope는 인증 권한이 아니며 누락하면 400, 다른 작업이면 409를 반환합니다.
       parameters:
+        - name: scope
+          in: query
+          required: true
+          description: 다운로드를 시작한 화면의 draftScope입니다.
+          schema: { type: string }
         - name: format
           in: query
           schema: { type: string, enum: [csv, json], default: csv }
@@ -659,7 +675,7 @@ components:
             citations: { type: array, minItems: 1, maxItems: 8, items: { type: string } }
     WorkspaceView:
       type: object
-      description: 화면용 조회 응답입니다. 전체 타입은 src/application/workbench.ts의 WorkspaceView를 참고하세요. close는 요약 메타데이터만 포함하며 전체 마감 증빙은 /api/export?format=json으로 제공합니다.
+      description: 화면용 조회 응답입니다. 전체 타입은 src/application/workbench.ts의 WorkspaceView를 참고하세요. close는 요약 메타데이터만 포함하며 전체 마감 증빙은 /api/export에 format=json과 화면의 scope를 전달해 내려받습니다.
       required:
         [
           version,

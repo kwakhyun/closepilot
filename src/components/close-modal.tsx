@@ -112,7 +112,11 @@ export function CloseModal({
                 <span>마감 결과 체크섬 · SHA-256</span>
                 <code>{workspace.close.hash}</code>
               </div>
-              <a href="/api/export?format=json" className="button primary full-width" download>
+              <a
+                href={`/api/export?format=json&scope=${encodeURIComponent(workspace.draftScope)}`}
+                className="button primary full-width"
+                download
+              >
                 <Download size={17} />
                 마감 증빙 다운로드 (JSON)
               </a>

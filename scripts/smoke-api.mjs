@@ -247,7 +247,9 @@ await check("closed writes are denied while identical close retries succeed", as
   assert.equal(view.version, version);
 });
 await check("CSV export neutralizes formula injection", async () => {
-  const response = await request("/api/export?format=csv");
+  const response = await request(
+    `/api/export?format=csv&scope=${encodeURIComponent(view.draftScope)}`,
+  );
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-disposition"), /attachment/);
   const csv = await response.text();
@@ -256,7 +258,9 @@ await check("CSV export neutralizes formula injection", async () => {
 });
 let closePackage;
 await check("exported package has intact snapshot and audit checksums", async () => {
-  const response = await request("/api/export?format=json");
+  const response = await request(
+    `/api/export?format=json&scope=${encodeURIComponent(view.draftScope)}`,
+  );
   assert.equal(response.status, 200);
   closePackage = await response.json();
   const { hash: expectedHash, ...snapshot } = closePackage.snapshot;

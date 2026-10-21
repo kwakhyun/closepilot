@@ -9,12 +9,26 @@ async function openFirstIssue(page: Page) {
 }
 
 test("선택한 온보딩 프로필을 마감 점검에 일관되게 표시하고 Escape로 닫는다", async ({ page }) => {
+  test.setTimeout(60_000);
   await page.goto("/");
   await page.getByRole("button", { name: "자료 가져오기" }).click();
   const importDialog = page.getByRole("dialog", { name: "CSV 자료 가져오기" });
   await importDialog.getByRole("button", { name: "샘플 주문 불러오기" }).click();
   await expect(importDialog.locator(".validation-success")).toContainText("3행 검증 완료");
   await page.keyboard.press("Escape");
+  // Both tabs start at version 1; a later cookie change must not retarget the prepared clone.
+  const stalePage = await page.context().newPage();
+  await stalePage.goto("/?view=onboarding");
+  await stalePage.getByRole("button", { name: "월별 작업", exact: true }).click();
+  await stalePage.getByLabel("마감 월", { exact: true }).fill("2026-09");
+  await stalePage.getByRole("button", { name: "이 월로 새 작업 시작" }).click();
+  const staleDialog = stalePage.getByRole("dialog", { name: "새 월의 작업을 시작할까요?" });
+  const exportHref = await staleDialog
+    .getByRole("link", { name: "현재 대사 결과 다운로드" })
+    .getAttribute("href");
+  expect(exportHref).toContain("&scope=");
+  expect((await stalePage.request.get(exportHref!)).status()).toBe(200);
+  const sourceScope = new URL(exportHref!, stalePage.url()).searchParams.get("scope");
   await page.getByRole("button", { name: "온보딩 설계", exact: true }).click();
   await expect(page.getByRole("heading", { name: "브랜드 설정 라이브러리" })).toBeVisible();
   await page.getByRole("button", { name: "이 설정으로 새 데모" }).click();
@@ -23,6 +37,46 @@ test("선택한 온보딩 프로필을 마감 점검에 일관되게 표시하�
   await expect(resetDialog).toBeVisible();
   await resetDialog.getByRole("button", { name: "새 데모 시작" }).click();
   await expect(page.getByText("MORROW FOODS 프로필로 새 데모를 시작했습니다.")).toBeVisible();
+
+  const active = await (await page.request.get("/api/workspace")).json();
+  expect(active.version).toBe(1);
+  expect(active.draftScope).not.toBe(sourceScope);
+  const deniedExport = await stalePage.request.get(exportHref!);
+  expect(deniedExport.status()).toBe(409);
+  expect((await deniedExport.json()).error.code).toBe("WORKSPACE_CHANGED");
+  expect(deniedExport.headers()["content-disposition"]).toBeUndefined();
+  for (const width of [1440, 390]) {
+    await stalePage.setViewportSize({ width, height: 900 });
+    await expect(staleDialog).toBeVisible();
+    // Capture a fresh rejection at each width before the normal toast lifetime elapses.
+    const cloneResponse = stalePage.waitForResponse(
+      (response) =>
+        response.url().endsWith("/api/session") && response.request().method() === "POST",
+    );
+    await staleDialog.getByRole("button", { name: "새 월 작업 시작" }).click();
+    const deniedClone = await cloneResponse;
+    expect(deniedClone.status()).toBe(409);
+    expect(deniedClone.request().headers()["x-workspace-scope"]).toBe(sourceScope);
+    const cloneError = staleDialog.getByRole("alert");
+    await expect(cloneError).toBeVisible();
+    await expect(cloneError).toContainText("다른 탭에서 작업이 전환되었습니다.");
+    await expect(cloneError).toBeInViewport();
+    await expect
+      .poll(() => stalePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+      .toBe(true);
+    await stalePage.screenshot({
+      path: `test-results/workspace-scope-${width}.png`,
+      animations: "disabled",
+    });
+  }
+  expect(await (await page.request.get("/api/workspace")).json()).toEqual(active);
+  const library = await (await page.request.get("/api/workspaces")).json();
+  expect(library.workspaces).toHaveLength(2);
+  await staleDialog.getByRole("button", { name: "계속 작업하기" }).click();
+  await stalePage.getByRole("button", { name: "이 월로 새 작업 시작" }).click();
+  await expect(staleDialog).toBeVisible();
+  await expect(staleDialog.getByRole("alert")).toHaveCount(0);
+  await stalePage.close();
 
   await page.getByRole("button", { name: "자료 가져오기" }).click();
   await expect(importDialog.locator(".validation-success")).toHaveCount(0);
@@ -293,7 +347,9 @@ test("주문·정산 자료 반영부터 재대사, 전건 검토, 마감 증빙
   const download = await downloadPromise;
   expect(download.suggestedFilename()).toMatch(/^closepilot-2026-08-close\.json$/);
   const view = await (await page.request.get("/api/workspace")).json();
-  const evidence = await (await page.request.get("/api/export?format=json")).json();
+  const evidence = await (
+    await page.request.get(`/api/export?format=json&scope=${encodeURIComponent(view.draftScope)}`)
+  ).json();
   expect(Object.keys(view.close).sort()).toEqual(["closedAt", "closedBy", "hash"]);
   expect(evidence.snapshot.hash).toBe(view.close.hash);
   expect(evidence.snapshot.inputs.orders).toHaveLength(131);
@@ -340,9 +396,15 @@ test("주문·정산 자료 반영부터 재대사, 전건 검토, 마감 증빙
   await page.getByLabel("자사몰 수수료율 (%)", { exact: true }).fill("4");
   await page.getByRole("button", { name: "현재 정책과 비교" }).click();
   await expect(page.locator(".impact-summary")).toContainText("재검토 대상");
-  expect((await (await page.request.get("/api/export?format=json")).json()).snapshot.hash).toBe(
-    evidence.snapshot.hash,
-  );
+  expect(
+    (
+      await (
+        await page.request.get(
+          `/api/export?format=json&scope=${encodeURIComponent(view.draftScope)}`,
+        )
+      ).json()
+    ).snapshot.hash,
+  ).toBe(evidence.snapshot.hash);
   for (const width of [1440, 320, 390]) {
     await page.setViewportSize({ width, height: 900 });
     await settleToolViewport(page, width);

@@ -37,4 +37,8 @@ fun feeFor(netSales: Won, rate: BasisPoints): Won {
     return Won.of(fee.longValueExact())
 }
 
-fun Iterable<Won>.sumWon(): Won = fold(Won.ZERO) { total, amount -> total + amount }
+fun Iterable<Won>.sumWon(): Won {
+    // Signed settlement totals must not depend on row order; bound only the final sum.
+    val total = fold(BigInteger.ZERO) { sum, amount -> sum.add(BigInteger.valueOf(amount.amount)) }
+    return Won.of(total.longValueExact())
+}
