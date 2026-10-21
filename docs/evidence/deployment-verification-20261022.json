@@ -1,0 +1,225 @@
+{
+  "site": "https://closepilot-delta.vercel.app",
+  "commit": "924826e6b4a68c6ba73aa46308ca89a9dc9c1fe2",
+  "deploymentId": "dpl_HPAA3xiEmP7pJAriT36MiWVM6zHK",
+  "state": "READY",
+  "target": "production",
+  "alias": [
+    "closepilot-delta.vercel.app",
+    "closepilot-khyun.vercel.app",
+    "closepilot-git-main-khyun.vercel.app"
+  ],
+  "health": {
+    "status": "ok",
+    "storage": "postgresql",
+    "mode": "synthetic-sandbox"
+  },
+  "pages": [
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/guide",
+      "status": 200
+    }
+  ],
+  "runtimeLogQuery": {
+    "level": [
+      "error",
+      "fatal"
+    ],
+    "lookback": "10m",
+    "returnedEntries": 0
+  },
+  "runtimeSamples": [
+    {
+      "operation": "package.inspect",
+      "path": "/api/packages/inspect",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 27.9
+    },
+    {
+      "operation": "followups.list",
+      "path": "/api/followups",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 11.2
+    },
+    {
+      "operation": "workspace.read",
+      "path": "/api/workspace",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 13.3
+    },
+    {
+      "operation": "workspace.command",
+      "path": "/api/commands",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 30.4
+    },
+    {
+      "operation": "workspace.command",
+      "path": "/api/commands",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 48.8
+    },
+    {
+      "operation": "workspace.read",
+      "path": "/api/workspace",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 12
+    },
+    {
+      "operation": "policy.simulate",
+      "path": "/api/policy/simulate",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 19.5
+    },
+    {
+      "operation": "workspace.read",
+      "path": "/api/workspace",
+      "method": "GET",
+      "status": 200,
+      "durationMs": 20.2
+    },
+    {
+      "operation": "workspace.command",
+      "path": "/api/commands",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 30.6
+    },
+    {
+      "operation": "workspace.command",
+      "path": "/api/commands",
+      "method": "POST",
+      "status": 200,
+      "durationMs": 29.4
+    }
+  ],
+  "testedAt": "2026-10-21T21:03:30.096Z",
+  "browserStats": {
+    "startTime": "2026-10-21T21:03:30.096Z",
+    "duration": 28124.938,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "browserScenarios": [
+    {
+      "name": "선택한 온보딩 프로필을 마감 점검에 일관되게 표시하고 Escape로 닫는다",
+      "status": "expected",
+      "attempts": 1,
+      "durationMs": 5590
+    },
+    {
+      "name": "주문·정산 자료 반영부터 재대사, 전건 검토, 마감 증빙 다운로드까지 완결한다",
+      "status": "expected",
+      "attempts": 1,
+      "durationMs": 14231
+    },
+    {
+      "name": "소액 승인 무효화가 배포 정책 미리보기와 실제 적용에 반영된다",
+      "status": "expected",
+      "attempts": 1,
+      "durationMs": 6195
+    }
+  ],
+  "browserObservations": {
+    "선택한 온보딩 프로필을 마감 점검에 일관되게 표시하고 Escape로 닫는다": {
+      "pageErrors": [],
+      "responses": [
+        {
+          "path": "/api/workspace",
+          "status": 401
+        },
+        {
+          "path": "/api/session",
+          "status": 409
+        },
+        {
+          "path": "/api/session",
+          "status": 409
+        }
+      ],
+      "failedRequests": [
+        {
+          "path": "/api/imports/templates",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "path": "/api/imports/templates",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 401 ()",
+        "Failed to load resource: the server responded with a status of 409 ()",
+        "Failed to load resource: the server responded with a status of 409 ()"
+      ]
+    },
+    "주문·정산 자료 반영부터 재대사, 전건 검토, 마감 증빙 다운로드까지 완결한다": {
+      "pageErrors": [],
+      "responses": [
+        {
+          "path": "/api/workspace",
+          "status": 401
+        }
+      ],
+      "failedRequests": [],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 401 ()"
+      ]
+    },
+    "소액 승인 무효화가 배포 정책 미리보기와 실제 적용에 반영된다": {
+      "pageErrors": [],
+      "responses": [
+        {
+          "path": "/api/workspace",
+          "status": 401
+        }
+      ],
+      "failedRequests": [],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 401 ()"
+      ]
+    }
+  },
+  "apiSmoke": {
+    "report": "api-smoke-production-20261022.json",
+    "checks": 20,
+    "durationMs": 7742
+  },
+  "interpretation": {
+    "expectedHttpErrors": "401 before synthetic session creation; 409 for deliberate stale-workspace clone requests. Stale export 409 was asserted separately through APIRequestContext.",
+    "abortedRequests": "Two import-template requests were cancelled when the import dialog was dismissed.",
+    "unhandledBrowserErrors": 0,
+    "observedBrowserResponses5xx": 0
+  },
+  "scope": {
+    "syntheticSessionsCreated": 6,
+    "realAIProviderCalls": false,
+    "kotlinRuntime": "Not hosted on Vercel; existing signed-sum fixture passed deployed TypeScript package inspection.",
+    "dbInitialization": "PGlite test setup fix is covered by local/CI tests, not a production initialization change.",
+    "browser": "Chromium; isolated temporary contexts; no route mocks, retries, local server, tracing or video."
+  },
+  "guideImageCheck": {
+    "status": "passed",
+    "path": "/guide",
+    "viewport": 390,
+    "image": {
+      "width": 390,
+      "height": 243,
+      "complete": true
+    },
+    "pageErrors": []
+  }
+}
