@@ -1,0 +1,217 @@
+{
+  "date": "2026-10-22",
+  "scope": "npm registry dependency audit, upstream release metadata and local dependency-path inspection",
+  "runtime": "Node.js 24.19.0",
+  "commands": [
+    "npm audit --json",
+    "npm audit --omit=dev --json",
+    "npm ci --no-fund"
+  ],
+  "before": {
+    "all": {
+      "info": 0,
+      "low": 0,
+      "moderate": 3,
+      "high": 5,
+      "critical": 0,
+      "total": 8
+    }
+  },
+  "after": {
+    "all": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 5,
+      "critical": 0,
+      "total": 5
+    },
+    "production": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    }
+  },
+  "fixed": {
+    "packages": [
+      "vitest",
+      "@vitest/mocker",
+      "@vitest/coverage-v8"
+    ],
+    "version": "4.1.12",
+    "auditPackageCount": 3,
+    "advisories": [
+      "https://github.com/advisories/GHSA-qxg6-89mg-rqv8",
+      "https://github.com/advisories/GHSA-xp26-3454-mjgp"
+    ],
+    "release": "https://github.com/vitest-dev/vitest/releases/tag/v4.1.12"
+  },
+  "remaining": {
+    "advisory": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+    "package": "braces",
+    "version": "3.0.3",
+    "patchedVersion": null,
+    "dependencyChain": [
+      "eslint-config-next",
+      "@next/eslint-plugin-next",
+      "fast-glob",
+      "micromatch",
+      "braces"
+    ],
+    "auditPackageCount": 5,
+    "independentAdvisoryCount": 1,
+    "scope": "development-only ESLint dependency tree",
+    "codeInspection": "The Next ESLint helper calls fast-glob for settings.next.rootDir patterns. This project does not set rootDir and uses context.cwd. This limits exposure in the current configuration; it does not patch the installed dependency."
+  },
+  "checkedPublishedAlternatives": {
+    "bracesLatest": "3.0.3",
+    "nextEslintPluginLatest": {
+      "version": "16.4.2",
+      "fastGlob": "3.3.1"
+    },
+    "fastGlobLatest": {
+      "version": "3.3.3",
+      "micromatch": "^4.0.8"
+    },
+    "micromatchLatest": {
+      "version": "4.0.8",
+      "braces": "^3.0.3"
+    },
+    "auditSuggestedDowngrade": {
+      "package": "eslint-config-next",
+      "version": "14.2.35",
+      "decision": "Rejected: Next 14 configuration requires ESLint 7 or 8; this Next 16 project uses ESLint 9 and flat config.",
+      "eslintPeer": "^7.23.0 || ^8.0.0"
+    }
+  },
+  "installation": {
+    "initialClient": "npm 10.9.4",
+    "initialFailure": "Cannot read properties of null (reading edgesOut) while resolving optional peers; package files remained unchanged.",
+    "lockfileGenerationClient": "npm 12.2.1 via one-time npm exec; no global installation",
+    "cleanReinstallClient": "npm 10.9.4",
+    "cleanReinstall": "passed",
+    "forceOrLegacyPeerDeps": false
+  },
+  "changedPackageVersions": [
+    {
+      "package": "@vitest/coverage-v8",
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    {
+      "package": "@vitest/expect",
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    {
+      "package": "@vitest/mocker",
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    {
+      "package": "@vitest/pretty-format",
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    {
+      "package": "@vitest/runner",
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    {
+      "package": "@vitest/snapshot",
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    {
+      "package": "@vitest/spy",
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    {
+      "package": "@vitest/utils",
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    {
+      "package": "chai",
+      "before": "6.2.2",
+      "after": "6.3.0"
+    },
+    {
+      "package": "obug",
+      "before": "2.1.4",
+      "after": "2.2.1"
+    },
+    {
+      "package": "std-env",
+      "before": "4.2.0",
+      "after": "4.3.0"
+    },
+    {
+      "package": "tinyexec",
+      "before": "1.3.0",
+      "after": "1.3.1"
+    },
+    {
+      "package": "tinyrainbow",
+      "before": "3.1.1",
+      "after": "3.2.0"
+    },
+    {
+      "package": "vitest",
+      "before": "4.1.11",
+      "after": "4.1.12"
+    }
+  ],
+  "productionPackageVersionsChanged": false,
+  "decision": "Applied the supported Vitest patch. Kept all lint rules, test timeouts and coverage thresholds. Did not suppress audits, downgrade Next configuration, or replace braces with an unverified fork or local shim.",
+  "validation": {
+    "verify": {
+      "status": "passed",
+      "architectureModules": 74,
+      "testFiles": 24,
+      "tests": 216,
+      "testDurationSeconds": 55.54,
+      "build": "Next.js 16.3.8"
+    },
+    "coverage": {
+      "status": "passed",
+      "tests": 216,
+      "durationSeconds": 61.72,
+      "statements": 94.77,
+      "branches": 88.44,
+      "functions": 97.01,
+      "lines": 95.17
+    },
+    "playwright": {
+      "status": "passed",
+      "tests": 6,
+      "retries": 0,
+      "reportedDuration": "2.2m"
+    },
+    "httpSmoke": {
+      "status": "passed",
+      "checks": 20,
+      "durationMs": 560,
+      "report": "api-smoke-dev-deps-20261022.json"
+    },
+    "fixtures": {
+      "status": "passed",
+      "trackedChanges": 0
+    },
+    "kotlin": {
+      "status": "passed",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "rerunTasks": true,
+      "snapshotHash": "346283a9189f0097131295ea650221edcbcf92376dfdcad3bf049f04a5c22ebd"
+    },
+    "database": "Dedicated local PGlite; PostgreSQL covered by the push CI, not a local PostgreSQL run."
+  }
+}

@@ -16,7 +16,7 @@
 | 브라우저 회귀    | 핵심 사용자 흐름 전체 성공                                  | Playwright 6개 통과, 재시도 없음                        |
 | 프로덕션 빌드    | Next.js 빌드 성공                                           | 통과                                                    |
 | 독립 검증기      | Kotlin 테스트와 마감 패키지 재계산 성공                     | 16개 테스트 통과, 부호 있는 합계 패키지 CLI 재계산 통과 |
-| 실제 HTTP 흐름   | 세션 생성부터 확정과 내보내기까지 20단계 성공               | 로컬 20단계 통과, 11.89초                               |
+| 실제 HTTP 흐름   | 세션 생성부터 확정과 내보내기까지 20단계 성공               | 로컬 20단계 통과, 0.56초                                |
 | 보안 의존성      | 운영 의존성 high 이상 0건, 개발 의존성 별도 확인            | 운영 0건, 개발 high 경고 5개(동일한 미패치 취약점 경로) |
 
 커버리지는 `vitest.config.mts`에 명시한 `src/domain/**`, `src/application/**`, `src/infrastructure/http.ts`, `src/infrastructure/repository.ts`, `src/infrastructure/review-draft-store.ts`, `src/infrastructure/workspace-library.ts`를 대상으로 한다. UI 컴포넌트, Next.js Route Handler와 외부 모델 어댑터는 이 수치에 포함하지 않으며 각각 Playwright, HTTP smoke, API 공급자 대역과 구조화 출력 및 규칙 기반 전환 테스트로 검증한다.
@@ -35,6 +35,20 @@
 - 데스크톱과 390px 모바일 흐름에서 사용자 지정 열 연결을 복제한다. 복제 전 세션의 CSV 응답을 지연시켰다가 도착시켜도 새 미리보기에 반영되지 않는지 확인한다.
 
 Kotlin 테스트는 TypeScript가 생성한 `fixtures/reconciliation-contract.json`의 대표 행과 합계를 `/reconcile` HTTP 응답과 비교한다. 현재 기본 마감 패키지는 128행, 자동 일치 120건, 검토 근거 8건, 감사 이벤트 11건이며 SHA-256은 `346283a9189f0097131295ea650221edcbcf92376dfdcad3bf049f04a5c22ebd`다. 구형 v1.1 패키지도 별도로 검증하고 원래 해시를 유지한다. 이는 합성 입력에 대한 무결성 검사 결과이며 서명이나 실제 거래 승인을 뜻하지 않는다.
+
+## 2026-10-22 개발 의존성 재검사와 Vitest 패치
+
+개발 의존성 경고 5개를 다시 조사했다. `braces@3.0.3`의 [재귀 패턴 처리 취약점](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) 하나가 Next ESLint 설정까지 전파된 결과이며, 공식 수정 버전은 여전히 없다. npm 레지스트리에서 최신 `@next/eslint-plugin-next@16.4.2`, `fast-glob@3.3.3`, `micromatch@4.0.8`의 의존성을 확인했지만 모두 해당 경로를 포함한다. npm이 제안한 `eslint-config-next@14.2.35`는 ESLint 7·8을 요구하므로 현재 Next 16과 ESLint 9 설정에 적용하지 않았다. 취약점 제외, 린트 규칙 제거, 비공식 대체 패키지도 사용하지 않았다.
+
+이번 재검사에서는 Vitest 관련 moderate 경고 3개가 추가로 조회됐다. 공식 [4.1.12 패치](https://github.com/vitest-dev/vitest/releases/tag/v4.1.12)가 제공되어 `vitest`와 `@vitest/coverage-v8`을 같은 버전으로 고정했다. `@vitest/mocker`를 포함해 버전이 변경된 14개 패키지는 모두 개발 의존성이며 운영 패키지 버전은 유지됐다. 변경 후 전체 audit는 high 5개, moderate 0개로 감소했고 `npm audit --omit=dev`는 0개다. 기존 5개를 해결한 결과로 표현하지 않는다. [패치 및 잔여 위험 근거](evidence/security-audit-dev-deps-20261022.json)
+
+Node.js 24.19.0과 npm 10.9.4의 최초 설치는 선택적 peer 계산 중 `edgesOut` 오류로 실패했으며 당시 파일 변경은 없었다. Node 24를 지원하는 npm 12.2.1을 일회성으로 실행해 잠금 파일을 만들고, 다시 기존 npm 10.9.4의 `npm ci`로 정상 설치했다. 전역 npm, peer 검사와 설치 설정은 변경하지 않았다.
+
+동일한 Node 환경과 독립 PGlite에서 `npm run verify`가 74개 모듈 계층 검사, 타입 검사, ESLint, 24개 파일의 테스트 216개(55.54초), Next.js 16.3.8 빌드를 통과했다. 커버리지 실행도 216개가 통과했다(61.72초). 문장 94.77%, 분기 88.44%, 함수 97.01%, 줄 95.17%로 기존 측정값과 같으며 테스트 제한과 커버리지 기준은 유지했다.
+
+프로덕션 빌드를 사용한 Playwright 회귀 6개는 실행별 PGlite에서 재시도 없이 통과했다(2.2분). 전용 로컬 서버의 [HTTP smoke 20단계](evidence/api-smoke-dev-deps-20261022.json)는 0.56초에 통과했으며 서버는 검사 후 종료했다. `npm run fixtures` 재생성 후 fixture와 migration의 변경은 없었다. JDK 21에서 Gradle의 `--rerun-tasks`로 Kotlin 테스트 16개를 실제 재실행해 실패, 오류와 건너뜀 없이 통과했다. 기본 마감 패키지 CLI 재계산도 기존 해시 `346283a9189f0097131295ea650221edcbcf92376dfdcad3bf049f04a5c22ebd`와 일치했다.
+
+이번 로컬 검증은 PGlite를 사용하며 실제 PostgreSQL 검증은 푸시 후 CI에서 확인한다. 공개 배포 흐름이나 실제 AI 공급자 호출은 다시 실행하지 않았다. 배포 검증 기록은 아래 절의 대상 커밋에 대한 결과로 유지한다.
 
 ## 2026-10-22 공개 배포 주요 흐름 검증
 
